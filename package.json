@@ -1,0 +1,26 @@
+{
+  "name": "bobrik",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "vitest"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.14.11",
+    "@types/yargs": "^17.0.32",
+    "prettier": "^3.3.3",
+    "typescript": "^5.5.3",
+    "vitest": "^2.0.4",
+    "vitest-directory-snapshot": "^0.2.0"
+  },
+  "dependencies": {
+    "vite": "^5.3.4",
+    "yargs": "^17.7.2",
+    "zod": "^3.23.8"
+  }
+}

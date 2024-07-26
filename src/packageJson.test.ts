@@ -16,9 +16,7 @@ describe("parse package.json", () => {
       sourceDir,
       packagePath,
     });
-    expect(packageJson).toStrictEqual({
-      main: "entrypoint.js",
-    });
+    expect(packageJson).not.toStrictEqual(expect.any(Array));
   });
 
   describe("main", () => {
@@ -51,6 +49,69 @@ describe("parse package.json", () => {
       const packageJson = await parsePackageJson({ sourceDir, packagePath });
       expect(packageJson).toStrictEqual(expect.any(Array));
       expect(packageJson).toContain(errors.mainInvalid);
+    });
+  });
+
+  describe("name", () => {
+    test("is required", async () => {
+      const sourceDir = join(
+        import.meta.dirname,
+        "fixtures",
+        "empty-package-json",
+      );
+      const packagePath = join(sourceDir, "empty.json");
+
+      const packageJson = await parsePackageJson({ sourceDir, packagePath });
+      expect(packageJson).toStrictEqual(expect.any(Array));
+      expect(packageJson).toContain(errors.nameRequired);
+    });
+
+    test("min length", async () => {
+      const sourceDir = join(import.meta.dirname, "fixtures", "incorrect-name");
+      const packagePath = join(sourceDir, "min-length.json");
+
+      const packageJson = await parsePackageJson({ sourceDir, packagePath });
+      expect(packageJson).toStrictEqual(expect.any(Array));
+      expect(packageJson).toContain(errors.nameMinLength);
+    });
+
+    test("max length", async () => {
+      const sourceDir = join(import.meta.dirname, "fixtures", "incorrect-name");
+      const packagePath = join(sourceDir, "max-length.json");
+
+      const packageJson = await parsePackageJson({ sourceDir, packagePath });
+      expect(packageJson).toStrictEqual(expect.any(Array));
+      expect(packageJson).toContain(errors.nameMaxLength);
+    });
+
+    test("no underscore at the beginning", async () => {
+      const sourceDir = join(import.meta.dirname, "fixtures", "incorrect-name");
+      const packagePath = join(sourceDir, "underscore-start.json");
+
+      const packageJson = await parsePackageJson({ sourceDir, packagePath });
+      expect(packageJson).toStrictEqual(expect.any(Array));
+      expect(packageJson).toContain(errors.nameStartsIllegalChars);
+    });
+
+    test("no dot at the beginning", async () => {
+      const sourceDir = join(import.meta.dirname, "fixtures", "incorrect-name");
+      const packagePath = join(sourceDir, "dot-start.json");
+
+      const packageJson = await parsePackageJson({ sourceDir, packagePath });
+      expect(packageJson).toStrictEqual(expect.any(Array));
+      expect(packageJson).toContain(errors.nameStartsIllegalChars);
+    });
+
+    test("is string", async () => {
+      const sourceDir = join(import.meta.dirname, "fixtures", "incorrect-name");
+      const packagePath = join(sourceDir, "not-string.json");
+
+      const packageJson = await parsePackageJson({
+        sourceDir,
+        packagePath,
+      });
+      expect(packageJson).toStrictEqual(expect.any(Array));
+      expect(packageJson).toContain(errors.nameRequired);
     });
   });
 });

@@ -14,14 +14,18 @@ async function fileExists(filePath: string) {
 
 function createPackageJsonSchema(sourceDir: string) {
   return z.object({
-    main: z
-      .string({
-        message: errors.mainRequired,
-      })
-      .refine((main) => {
-        const mainFinalPath = join(sourceDir, main);
-        return fileExists(mainFinalPath);
-      }, errors.mainInvalid),
+    main: z.string({ message: errors.mainRequired }).refine((main) => {
+      const mainFinalPath = join(sourceDir, main);
+      return fileExists(mainFinalPath);
+    }, errors.mainInvalid),
+    name: z
+      .string({ message: errors.nameRequired })
+      .min(1, errors.nameMinLength)
+      .max(214, errors.nameMaxLength)
+      .refine(
+        (name) => ["_", "."].every((start) => !name.startsWith(start)),
+        errors.nameStartsIllegalChars,
+      ),
   });
 }
 type PackageJsonSchema = ReturnType<typeof createPackageJsonSchema>;

@@ -1,3 +1,4 @@
 {
-  "main": "entrypoint.js"
+  "main": "entrypoint.js",
+  "name": "correct-name"
 }

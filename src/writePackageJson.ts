@@ -12,6 +12,7 @@ export async function writePackageJson(
 ) {
   const res = {
     name: parsed.name,
+    type: "module",
     exports: {
       ".": {
         default: buildResult.entryPointPath,

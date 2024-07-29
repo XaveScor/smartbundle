@@ -1,8 +1,8 @@
 export const errors = {
-  mainRequired:
-    "The `main` field is required string. Please, verify the value. More info: https://docs.npmjs.com/cli/v10/configuring-npm/package-json#main",
-  mainInvalid:
-    "The `main` field must be a path to entrypoint. Please, verify the value. More info: https://docs.npmjs.com/cli/v10/configuring-npm/package-json#main",
+  exportsRequired:
+    "The `exports` field is required string. Please, verify the value. More info: https://nodejs.org/api/packages.html#package-entry-points",
+  exportsInvalid:
+    "The `exports` field must be a path to entrypoint. Please, verify the value. More info: https://nodejs.org/api/packages.html#package-entry-points",
   nameRequired:
     "The `name` field is required string. Please, verify the value. More info: https://docs.npmjs.com/cli/v10/configuring-npm/package-json#name",
   nameMinLength:

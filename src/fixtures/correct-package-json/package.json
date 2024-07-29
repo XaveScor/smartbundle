@@ -1,4 +1,4 @@
 {
-  "main": "entrypoint.js",
+  "exports": "./entrypoint.js",
   "name": "correct-name"
 }

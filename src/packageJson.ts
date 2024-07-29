@@ -14,10 +14,10 @@ async function fileExists(filePath: string) {
 
 function createPackageJsonSchema(sourceDir: string) {
   return z.object({
-    main: z.string({ message: errors.mainRequired }).refine((main) => {
-      const mainFinalPath = join(sourceDir, main);
+    exports: z.string({ message: errors.exportsRequired }).refine((exports) => {
+      const mainFinalPath = join(sourceDir, exports);
       return fileExists(mainFinalPath);
-    }, errors.mainInvalid),
+    }, errors.exportsInvalid),
     name: z
       .string({ message: errors.nameRequired })
       .min(1, errors.nameMinLength)

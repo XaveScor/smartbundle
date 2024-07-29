@@ -19,7 +19,7 @@ describe("parse package.json", () => {
     expect(packageJson).not.toStrictEqual(expect.any(Array));
   });
 
-  describe("main", () => {
+  describe("exports", () => {
     test("required", async () => {
       const sourceDir = join(
         import.meta.dirname,
@@ -30,25 +30,33 @@ describe("parse package.json", () => {
 
       const packageJson = await parsePackageJson({ sourceDir, packagePath });
       expect(packageJson).toStrictEqual(expect.any(Array));
-      expect(packageJson).toContain(errors.mainRequired);
+      expect(packageJson).toContain(errors.exportsRequired);
     });
 
     test("should be a string", async () => {
-      const sourceDir = join(import.meta.dirname, "fixtures", "incorrect-main");
+      const sourceDir = join(
+        import.meta.dirname,
+        "fixtures",
+        "incorrect-exports",
+      );
       const packagePath = join(sourceDir, "non-string-main.json");
 
       const packageJson = await parsePackageJson({ sourceDir, packagePath });
       expect(packageJson).toStrictEqual(expect.any(Array));
-      expect(packageJson).toContain(errors.mainRequired);
+      expect(packageJson).toContain(errors.exportsRequired);
     });
 
     test("should be a path to a valid file", async () => {
-      const sourceDir = join(import.meta.dirname, "fixtures", "incorrect-main");
+      const sourceDir = join(
+        import.meta.dirname,
+        "fixtures",
+        "incorrect-exports",
+      );
       const packagePath = join(sourceDir, "file-not-exists.json");
 
       const packageJson = await parsePackageJson({ sourceDir, packagePath });
       expect(packageJson).toStrictEqual(expect.any(Array));
-      expect(packageJson).toContain(errors.mainInvalid);
+      expect(packageJson).toContain(errors.exportsInvalid);
     });
   });
 

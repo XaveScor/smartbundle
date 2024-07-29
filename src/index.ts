@@ -1,21 +1,56 @@
-import { Writable } from "node:stream";
-import { join } from "node:path";
-import type { Args } from "./args.js";
+import { join, isAbsolute } from "node:path";
 import { parsePackageJson } from "./packageJson.js";
+import { build } from "vite";
+import { writePackageJson } from "./writePackageJson.js";
+import { renameOutput } from "./rename-output.js";
+
+type Args = {
+  sourceDir?: string;
+  packagePath?: string;
+  outputDir?: string;
+};
+
+function myResolve(path1: string, path2: string) {
+  if (isAbsolute(path2)) {
+    return path2;
+  }
+
+  return join(path1, path2);
+}
 
 export async function run(args: Args) {
-  const sourceDir = join(process.cwd(), args.sourceDir ?? ".");
-  const packagePath = join(process.cwd(), args.packagePath ?? "./package.json");
-  const outputDir = join(process.cwd(), args.outputDir ?? "./dist");
+  const sourceDir = myResolve(process.cwd(), args.sourceDir ?? ".");
+  const packagePath = myResolve(
+    sourceDir,
+    args.packagePath ?? "./package.json",
+  );
+  const outDir = myResolve(process.cwd(), args.outputDir ?? "./dist");
 
   const packageJson = await parsePackageJson({ sourceDir, packagePath });
 
   if (Array.isArray(packageJson)) {
-    const errorStream = new Writable();
-    errorStream.write(`Error parsing package.json:\n`);
-    for (const error of packageJson) {
-      errorStream.write(`- ${error}\n`);
-    }
-    return { error: true, stream: errorStream };
+    return { error: true, errors: packageJson };
   }
+
+  const mainEntry = join(sourceDir, packageJson.exports);
+  await build({
+    publicDir: false,
+    build: {
+      outDir,
+      write: true,
+      minify: true,
+      emptyOutDir: true,
+      lib: {
+        entry: {
+          mainEntry,
+        },
+        formats: ["es"],
+        fileName: () => "bundle.mjs",
+      },
+    },
+  });
+  const filePath = "./bundle.mjs";
+  await writePackageJson(outDir, packageJson, { entryPointPath: filePath });
+
+  return { error: false };
 }

@@ -1,0 +1,8 @@
+{
+  "name": "simple-build",
+  "exports": {
+    ".": {
+      "default": "./bundle.mjs"
+    }
+  }
+}

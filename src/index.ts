@@ -2,7 +2,6 @@ import { join, isAbsolute } from "node:path";
 import { parsePackageJson } from "./packageJson.js";
 import { build } from "vite";
 import { writePackageJson } from "./writePackageJson.js";
-import { renameOutput } from "./rename-output.js";
 
 type Args = {
   sourceDir?: string;

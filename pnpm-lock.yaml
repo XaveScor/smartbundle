@@ -34,8 +34,8 @@ importers:
         specifier: ^2.0.4
         version: 2.0.4(@types/node@20.14.11)(terser@5.31.3)
       vitest-directory-snapshot:
-        specifier: ^0.2.1
-        version: 0.2.1(vitest@2.0.4(@types/node@20.14.11)(terser@5.31.3))
+        specifier: ^0.2.2
+        version: 0.2.2(vitest@2.0.4(@types/node@20.14.11)(terser@5.31.3))
 
 packages:
 
@@ -595,8 +595,8 @@ packages:
       terser:
         optional: true
 
-  vitest-directory-snapshot@0.2.1:
-    resolution: {integrity: sha512-ihD3xsVXLqAvyodK4VYBjt4tsHMg195FKpAlqykpvjCDMC1mdpqtyTNH4rzRlLv7yQHLku/BKIYh18NsG4Up0A==}
+  vitest-directory-snapshot@0.2.2:
+    resolution: {integrity: sha512-jsDlSNL4KyPFs991/zqniepw5gBdAzpfisrp/eQhgBiA2O698tk+LsuddJUKR1z/r6UxFxIHj+BPscEUU6Cx4w==}
     peerDependencies:
       vitest: ^2.0.0
 
@@ -1112,7 +1112,7 @@ snapshots:
       fsevents: 2.3.3
       terser: 5.31.3
 
-  vitest-directory-snapshot@0.2.1(vitest@2.0.4(@types/node@20.14.11)(terser@5.31.3)):
+  vitest-directory-snapshot@0.2.2(vitest@2.0.4(@types/node@20.14.11)(terser@5.31.3)):
     dependencies:
       vitest: 2.0.4(@types/node@20.14.11)(terser@5.31.3)
 

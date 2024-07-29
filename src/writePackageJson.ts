@@ -3,6 +3,7 @@ import { PackageJson } from "./packageJson.js";
 
 type BuildResult = {
   entryPointPath: string;
+  typesPath: string | false;
 };
 
 export async function writePackageJson(
@@ -16,6 +17,7 @@ export async function writePackageJson(
     exports: {
       ".": {
         default: buildResult.entryPointPath,
+        ...(buildResult.typesPath ? { types: buildResult.typesPath } : {}),
       },
     },
   };

@@ -1,7 +1,8 @@
-import { join, isAbsolute } from "node:path";
+import { join, isAbsolute, relative } from "node:path";
 import { parsePackageJson } from "./packageJson.js";
 import { build } from "vite";
 import { writePackageJson } from "./writePackageJson.js";
+import rollupts from "@rollup/plugin-typescript";
 
 type Args = {
   sourceDir?: string;
@@ -32,6 +33,19 @@ export async function run(args: Args) {
   }
 
   const mainEntry = join(sourceDir, packageJson.exports);
+  const splittedEntry = mainEntry.split(".");
+  const entryExt = splittedEntry.pop();
+  const entryPrefix = splittedEntry.join(".");
+  const typescript =
+    entryExt === "ts"
+      ? rollupts({
+          compilerOptions: {
+            declaration: true,
+            declarationDir: outDir,
+            rootDir: sourceDir,
+          },
+        })
+      : false;
   await build({
     publicDir: false,
     build: {
@@ -46,10 +60,18 @@ export async function run(args: Args) {
         formats: ["es"],
         fileName: () => "bundle.mjs",
       },
+      rollupOptions: {
+        plugins: [typescript],
+      },
     },
   });
   const filePath = "./bundle.mjs";
-  await writePackageJson(outDir, packageJson, { entryPointPath: filePath });
+  await writePackageJson(outDir, packageJson, {
+    entryPointPath: filePath,
+    typesPath: typescript
+      ? "./" + relative(sourceDir, `${entryPrefix}.d.ts`)
+      : false,
+  });
 
   return { error: false };
 }

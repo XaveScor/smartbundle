@@ -25,4 +25,15 @@ describe("build", () => {
     // @ts-expect-error
     expect(tmpDir).toMatchDirSnapshot();
   });
+
+  test("ts-import", async ({ tmpDir }: { tmpDir: string }) => {
+    const res = await run({
+      outputDir: tmpDir,
+      sourceDir: "./src/fixtures/ts-import",
+    });
+
+    expect(res.error).toBeFalsy();
+    // @ts-expect-error
+    expect(tmpDir).toMatchDirSnapshot();
+  });
 });

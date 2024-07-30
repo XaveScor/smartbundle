@@ -51,17 +51,25 @@ export async function run(args: Args) {
     build: {
       outDir,
       write: true,
-      minify: true,
+      minify: false,
       emptyOutDir: true,
+      assetsInlineLimit: 0,
+      terserOptions: {
+        compress: false,
+        mangle: false,
+      },
       lib: {
         entry: {
           mainEntry,
         },
         formats: ["es"],
-        fileName: () => "bundle.mjs",
+        fileName: (format, entryName) => `${entryName}.mjs`,
       },
       rollupOptions: {
         plugins: [typescript],
+        output: {
+          preserveModules: true,
+        },
       },
     },
   });

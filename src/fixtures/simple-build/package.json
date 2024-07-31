@@ -1,5 +1,6 @@
 {
   "name": "simple-build",
+  "private": true,
   "type": "module",
   "version": "1.0.0",
   "exports": "./entrypoint.js"

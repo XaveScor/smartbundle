@@ -27,6 +27,9 @@ function createPackageJsonSchema(sourceDir: string) {
         errors.nameStartsIllegalChars,
       ),
     version: z.string({ message: errors.versionRequired }),
+    private: z
+      .boolean({ message: errors.privateIsTrue })
+      .refine((value) => value, errors.privateIsTrue),
   });
 }
 type PackageJsonSchema = ReturnType<typeof createPackageJsonSchema>;
@@ -43,7 +46,8 @@ export async function parsePackageJson({
   sourceDir,
   packagePath,
 }: ParsePackageJsonArg): Promise<PackageJson | Errors> {
-  const rawJson = await import(packagePath, { with: { type: "json" } });
+  const rawJson = (await import(packagePath, { with: { type: "json" } }))
+    .default;
 
   const packageJsonSchema = createPackageJsonSchema(sourceDir);
   const packageJson = await packageJsonSchema.safeParseAsync(rawJson);

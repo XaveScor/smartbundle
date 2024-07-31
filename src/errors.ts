@@ -13,4 +13,6 @@ export const errors = {
     "Name cannot start with `_` or `.` if it is not a scoped package. More info: https://docs.npmjs.com/cli/v10/configuring-npm/package-json#name",
   versionRequired:
     "The `version` field is required string. Please, verify the value. More info: https://docs.npmjs.com/cli/v10/configuring-npm/package-json#version",
+  privateIsTrue:
+    "The `private` field must be `true` for avoiding accidental publish. More info: https://docs.npmjs.com/cli/v10/configuring-npm/package-json#private",
 };

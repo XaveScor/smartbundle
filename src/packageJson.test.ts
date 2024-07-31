@@ -137,4 +137,45 @@ describe("parse package.json", () => {
       expect(packageJson).toContain(errors.versionRequired);
     });
   });
+
+  describe("private", () => {
+    test("is required", async () => {
+      const sourceDir = join(
+        import.meta.dirname,
+        "fixtures",
+        "empty-package-json",
+      );
+      const packagePath = join(sourceDir, "empty.json");
+
+      const packageJson = await parsePackageJson({ sourceDir, packagePath });
+      expect(packageJson).toStrictEqual(expect.any(Array));
+      expect(packageJson).toContain(errors.privateIsTrue);
+    });
+
+    test("is boolean", async () => {
+      const sourceDir = join(
+        import.meta.dirname,
+        "fixtures",
+        "incorrect-private",
+      );
+      const packagePath = join(sourceDir, "not-boolean.json");
+
+      const packageJson = await parsePackageJson({ sourceDir, packagePath });
+      expect(packageJson).toStrictEqual(expect.any(Array));
+      expect(packageJson).toContain(errors.privateIsTrue);
+    });
+
+    test("is true", async () => {
+      const sourceDir = join(
+        import.meta.dirname,
+        "fixtures",
+        "incorrect-private",
+      );
+      const packagePath = join(sourceDir, "not-true.json");
+
+      const packageJson = await parsePackageJson({ sourceDir, packagePath });
+      expect(packageJson).toStrictEqual(expect.any(Array));
+      expect(packageJson).toContain(errors.privateIsTrue);
+    });
+  });
 });

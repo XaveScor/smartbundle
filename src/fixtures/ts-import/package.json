@@ -1,5 +1,6 @@
 {
   "name": "ts-import",
+  "private": true,
   "type": "module",
   "version": "1.0.0",
   "exports": "./entrypoint.ts"

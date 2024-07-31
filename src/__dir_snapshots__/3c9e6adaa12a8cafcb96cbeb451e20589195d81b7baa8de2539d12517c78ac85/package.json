@@ -1,0 +1,10 @@
+{
+  "name": "deep-structure",
+  "type": "module",
+  "exports": {
+    ".": {
+      "default": "./bundle.mjs",
+      "types": "./level1/level2/entrypoint1.d.ts"
+    }
+  }
+}

@@ -26,6 +26,7 @@ function createPackageJsonSchema(sourceDir: string) {
         (name) => ["_", "."].every((start) => !name.startsWith(start)),
         errors.nameStartsIllegalChars,
       ),
+    version: z.string({ message: errors.versionRequired }),
   });
 }
 type PackageJsonSchema = ReturnType<typeof createPackageJsonSchema>;

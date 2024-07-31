@@ -14,10 +14,11 @@ export async function writePackageJson(
   const res = {
     name: parsed.name,
     type: "module",
+    version: parsed.version,
     exports: {
       ".": {
-        default: buildResult.entryPointPath,
         ...(buildResult.typesPath ? { types: buildResult.typesPath } : {}),
+        default: buildResult.entryPointPath,
       },
     },
   };

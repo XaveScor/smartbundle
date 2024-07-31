@@ -1,10 +1,11 @@
 {
   "name": "deep-structure",
   "type": "module",
+  "version": "0.0.0",
   "exports": {
     ".": {
-      "default": "./bundle.mjs",
-      "types": "./level1/level2/entrypoint1.d.ts"
+      "types": "./level1/level2/entrypoint1.d.ts",
+      "default": "./bundle.mjs"
     }
   }
 }

@@ -1,5 +1,6 @@
 {
   "name": "deep-structure",
+  "version": "0.0.0",
   "type": "module",
   "exports": "./level1/level2/entrypoint1.ts"
 }

@@ -1,4 +1,5 @@
 {
   "exports": "./entrypoint.js",
-  "name": "correct-name"
+  "name": "correct-name",
+  "version": "0.0.0"
 }

@@ -122,4 +122,19 @@ describe("parse package.json", () => {
       expect(packageJson).toContain(errors.nameRequired);
     });
   });
+
+  describe("version", () => {
+    test("is required", async () => {
+      const sourceDir = join(
+        import.meta.dirname,
+        "fixtures",
+        "empty-package-json",
+      );
+      const packagePath = join(sourceDir, "empty.json");
+
+      const packageJson = await parsePackageJson({ sourceDir, packagePath });
+      expect(packageJson).toStrictEqual(expect.any(Array));
+      expect(packageJson).toContain(errors.versionRequired);
+    });
+  });
 });

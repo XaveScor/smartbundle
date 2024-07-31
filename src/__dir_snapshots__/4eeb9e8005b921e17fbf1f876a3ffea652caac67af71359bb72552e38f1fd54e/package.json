@@ -1,10 +1,11 @@
 {
   "name": "ts-import",
   "type": "module",
+  "version": "1.0.0",
   "exports": {
     ".": {
-      "default": "./bundle.mjs",
-      "types": "./entrypoint.d.ts"
+      "types": "./entrypoint.d.ts",
+      "default": "./bundle.mjs"
     }
   }
 }

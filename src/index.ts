@@ -1,4 +1,4 @@
-import { join, isAbsolute, relative } from "node:path";
+import { join, isAbsolute, relative, resolve } from "node:path";
 import { parsePackageJson } from "./packageJson.js";
 import { build } from "vite";
 import { writePackageJson } from "./writePackageJson.js";
@@ -40,10 +40,11 @@ export async function run(args: Args) {
     entryExt === "ts"
       ? rollupts({
           compilerOptions: {
-            declaration: true,
             declarationDir: outDir,
             rootDir: sourceDir,
           },
+          // https://github.com/rollup/plugins/issues/1572 we cannot have no tsconfig
+          tsconfig: resolve(import.meta.dirname, "buildTsconfig.json"),
         })
       : false;
   await build({

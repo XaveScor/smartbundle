@@ -15,4 +15,6 @@ export const errors = {
     "The `version` field is required string. Please, verify the value. More info: https://docs.npmjs.com/cli/v10/configuring-npm/package-json#version",
   privateIsTrue:
     "The `private` field must be `true` for avoiding accidental publish. More info: https://docs.npmjs.com/cli/v10/configuring-npm/package-json#private",
+  descriptionString:
+    "The `description` field must be a string. Please, verify the value. More info: https://docs.npmjs.com/cli/v10/configuring-npm/package-json#description",
 };

@@ -30,6 +30,7 @@ function createPackageJsonSchema(sourceDir: string) {
     private: z
       .boolean({ message: errors.privateIsTrue })
       .refine((value) => value, errors.privateIsTrue),
+    description: z.string({ message: errors.descriptionString }).optional(),
   });
 }
 type PackageJsonSchema = ReturnType<typeof createPackageJsonSchema>;

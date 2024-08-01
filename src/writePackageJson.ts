@@ -15,6 +15,7 @@ export async function writePackageJson(
     name: parsed.name,
     type: "module",
     version: parsed.version,
+    description: parsed.description ?? "",
     exports: {
       ".": {
         ...(buildResult.typesPath ? { types: buildResult.typesPath } : {}),

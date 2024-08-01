@@ -2,5 +2,6 @@
   "exports": "./entrypoint.js",
   "name": "correct-name",
   "version": "0.0.0",
+  "description": "test description",
   "private": true
 }

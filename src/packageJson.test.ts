@@ -178,4 +178,19 @@ describe("parse package.json", () => {
       expect(packageJson).toContain(errors.privateIsTrue);
     });
   });
+
+  describe("description", () => {
+    test("is string", async () => {
+      const sourceDir = join(
+        import.meta.dirname,
+        "fixtures",
+        "incorrect-description",
+      );
+      const packagePath = join(sourceDir, "not-string.json");
+
+      const packageJson = await parsePackageJson({ sourceDir, packagePath });
+      expect(packageJson).toStrictEqual(expect.any(Array));
+      expect(packageJson).toContain(errors.descriptionString);
+    });
+  });
 });

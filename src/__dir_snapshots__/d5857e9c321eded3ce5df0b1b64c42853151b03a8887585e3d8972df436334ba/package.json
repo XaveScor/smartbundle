@@ -2,6 +2,7 @@
   "name": "es-js-import",
   "type": "module",
   "version": "1.0.0",
+  "description": "",
   "exports": {
     ".": {
       "default": "./bundle.mjs"

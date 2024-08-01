@@ -22,6 +22,7 @@ export async function writePackageJson(
         default: buildResult.entryPointPath,
       },
     },
+    dependencies: parsed.dependencies ?? undefined,
   };
 
   await writeFile(`${outDir}/package.json`, JSON.stringify(res, null, 2));

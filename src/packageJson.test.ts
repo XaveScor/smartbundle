@@ -193,4 +193,44 @@ describe("parse package.json", () => {
       expect(packageJson).toContain(errors.descriptionString);
     });
   });
+
+  describe("dependencies", () => {
+    test("is object", async () => {
+      const sourceDir = join(
+        import.meta.dirname,
+        "fixtures",
+        "incorrect-dependencies",
+      );
+      const packagePath = join(sourceDir, "not-object.json");
+
+      const packageJson = await parsePackageJson({ sourceDir, packagePath });
+      expect(packageJson).toStrictEqual(expect.any(Array));
+      expect(packageJson).toContain(errors.dependenciesInvalid);
+    });
+
+    test("is optional", async () => {
+      const sourceDir = join(
+        import.meta.dirname,
+        "fixtures",
+        "empty-package-json",
+      );
+      const packagePath = join(sourceDir, "empty.json");
+
+      const packageJson = await parsePackageJson({ sourceDir, packagePath });
+      expect(packageJson).not.toContain(errors.dependenciesInvalid);
+    });
+
+    test("not Object<string, string>", async () => {
+      const sourceDir = join(
+        import.meta.dirname,
+        "fixtures",
+        "incorrect-dependencies",
+      );
+      const packagePath = join(sourceDir, "not-str-str.json");
+
+      const packageJson = await parsePackageJson({ sourceDir, packagePath });
+      expect(packageJson).toStrictEqual(expect.any(Array));
+      expect(packageJson).toContain(errors.dependenciesInvalid);
+    });
+  });
 });

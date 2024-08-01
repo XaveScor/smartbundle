@@ -12,6 +12,12 @@ async function fileExists(filePath: string) {
   }
 }
 
+function dependencies(errorText: string) {
+  return z
+    .record(z.string({ message: errorText }), { message: errorText })
+    .optional();
+}
+
 function createPackageJsonSchema(sourceDir: string) {
   return z.object({
     exports: z.string({ message: errors.exportsRequired }).refine((exports) => {
@@ -31,6 +37,7 @@ function createPackageJsonSchema(sourceDir: string) {
       .boolean({ message: errors.privateIsTrue })
       .refine((value) => value, errors.privateIsTrue),
     description: z.string({ message: errors.descriptionString }).optional(),
+    dependencies: dependencies(errors.dependenciesInvalid),
   });
 }
 type PackageJsonSchema = ReturnType<typeof createPackageJsonSchema>;

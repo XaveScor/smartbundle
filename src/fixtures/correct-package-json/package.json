@@ -3,5 +3,9 @@
   "name": "correct-name",
   "version": "0.0.0",
   "description": "test description",
-  "private": true
+  "private": true,
+  "dependencies": {
+    "dep1": "^1.0.0",
+    "dep2": "^2.0.0"
+  }
 }

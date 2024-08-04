@@ -131,7 +131,7 @@ export async function run(args: Args) {
         case "chunk":
           const noExtPath = el.facadeModuleId?.replace(/\.[^.]+$/, "");
           if (noExtPath == null) {
-            return;
+            continue;
           }
           const exportPath = reversedEntrypoints.get(noExtPath);
           if (!exportPath) {

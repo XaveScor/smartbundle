@@ -25,6 +25,8 @@ export async function writePackageJson(
   parsed: PackageJson,
   { exportsMap }: BuildResult,
 ) {
+  // we always want to have `exports` property in the target package.json
+  // If you want to export something, please, specify them
   const allExports: Record<string, ExportsPackageJsonObj> = {};
   for (const [key, value] of exportsMap) {
     const anExport: ExportsPackageJsonObj = {
@@ -49,8 +51,8 @@ export async function writePackageJson(
     name: parsed.name,
     type: "module",
     version: parsed.version,
-    types: allExports["."].types,
-    module: allExports["."].default,
+    types: allExports["."]?.types,
+    module: allExports["."]?.default,
     description: parsed.description ?? "",
     exports: allExports,
     dependencies: parsed.dependencies ?? undefined,

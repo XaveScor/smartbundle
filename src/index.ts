@@ -1,8 +1,9 @@
 import { join, isAbsolute, relative, resolve } from "node:path";
 import { parsePackageJson } from "./packageJson.js";
 import { build } from "vite";
-import { writePackageJson } from "./writePackageJson.js";
+import { ExportsObject, writePackageJson } from "./writePackageJson.js";
 import rollupts from "@rollup/plugin-typescript";
+import { errors } from "./errors.js";
 
 type Args = {
   sourceDir?: string;
@@ -16,6 +17,34 @@ function myResolve(path1: string, path2: string) {
   }
 
   return join(path1, path2);
+}
+
+function mapToObject(map: Map<string, string>) {
+  const obj: Record<string, string> = {};
+  for (const [key, value] of map) {
+    obj[key] = value;
+  }
+  return obj;
+}
+
+function reverseMap(map: Map<string, string>): Map<string, Array<string>> {
+  const reversed = new Map<string, Array<string>>();
+  for (const [key, value] of map) {
+    const noExtValue = value.replace(/\.[^.]+$/, "");
+    const arr = reversed.get(noExtValue) ?? [];
+    arr.push(key);
+    reversed.set(noExtValue, arr);
+  }
+  return reversed;
+}
+
+function setExports(
+  exportsMap: Map<string, ExportsObject>,
+  exportName: string,
+  mapFn: (entry: ExportsObject) => ExportsObject,
+) {
+  const entry = exportsMap.get(exportName) ?? ({} as ExportsObject);
+  exportsMap.set(exportName, mapFn(entry));
 }
 
 export async function run(args: Args) {
@@ -32,22 +61,29 @@ export async function run(args: Args) {
     return { error: true, errors: packageJson };
   }
 
+  const entrypoints = new Map<string, string>();
   const mainEntry = join(sourceDir, packageJson.exports);
-  const splittedEntry = mainEntry.split(".");
-  const entryExt = splittedEntry.pop();
-  const entryPrefix = splittedEntry.join(".");
-  const typescript =
-    entryExt === "ts"
-      ? rollupts({
-          compilerOptions: {
-            declarationDir: outDir,
-            rootDir: sourceDir,
-          },
-          // https://github.com/rollup/plugins/issues/1572 we cannot have no tsconfig
-          tsconfig: resolve(import.meta.dirname, "buildTsconfig.json"),
-        })
-      : false;
-  await build({
+  entrypoints.set(".", mainEntry);
+
+  if (packageJson.bin) {
+    const binEntry = join(sourceDir, packageJson.bin);
+    entrypoints.set("__bin__", binEntry);
+  }
+
+  const hasTs = [...entrypoints.values()].some((entry) =>
+    entry.endsWith(".ts"),
+  );
+  const typescript = hasTs
+    ? rollupts({
+        compilerOptions: {
+          declarationDir: outDir,
+          rootDir: sourceDir,
+        },
+        // https://github.com/rollup/plugins/issues/1572 we cannot have no tsconfig
+        tsconfig: resolve(import.meta.dirname, "buildTsconfig.json"),
+      })
+    : false;
+  const outputs = await build({
     publicDir: false,
     build: {
       outDir,
@@ -60,11 +96,21 @@ export async function run(args: Args) {
         mangle: false,
       },
       lib: {
-        entry: {
-          mainEntry,
-        },
+        entry: mapToObject(entrypoints),
         formats: ["es"],
-        fileName: (format, entryName) => `${entryName}.mjs`,
+        fileName: (format, entryName) => {
+          const entrypoint = entrypoints.get(entryName);
+          if (!entrypoint) {
+            const noExt = entryName.replace(/\.[^.]+$/, "");
+            return "__do_not_import_directly__/" + noExt + ".mjs";
+          }
+          const relativePath = relative(sourceDir, entrypoint);
+          const noExt = relativePath.replace(/\.[^.]+$/, "");
+          if (format === "es") {
+            return `${noExt}.mjs`;
+          }
+          return noExt;
+        },
       },
       rollupOptions: {
         plugins: [typescript],
@@ -74,12 +120,54 @@ export async function run(args: Args) {
       },
     },
   });
-  const filePath = "./bundle.mjs";
+  if (!Array.isArray(outputs)) {
+    return { error: true, errors: [errors.rollupError] };
+  }
+  const exportsMap = new Map<string, ExportsObject>();
+  const reversedEntrypoints = reverseMap(entrypoints);
+  for (const { output } of outputs) {
+    for (const el of output) {
+      switch (el.type) {
+        case "chunk":
+          const noExtPath = el.facadeModuleId?.replace(/\.[^.]+$/, "");
+          if (noExtPath == null) {
+            return;
+          }
+          const exportPath = reversedEntrypoints.get(noExtPath);
+          if (!exportPath) {
+            continue;
+          }
+          for (const path of exportPath) {
+            setExports(exportsMap, path, (entry) => {
+              entry.mjs = "./" + el.fileName;
+              return entry;
+            });
+          }
+          break;
+        case "asset":
+          if (el.fileName.endsWith(".d.ts")) {
+            const noExtPath = join(
+              sourceDir,
+              el.fileName.replace(/\.d\.ts$/, ""),
+            );
+            const exportPath = reversedEntrypoints.get(noExtPath);
+            if (!exportPath) {
+              continue;
+            }
+            for (const path of exportPath) {
+              setExports(exportsMap, path, (entry) => {
+                entry.mdts = "./" + el.fileName;
+                return entry;
+              });
+            }
+          }
+          break;
+      }
+    }
+  }
+
   await writePackageJson(outDir, packageJson, {
-    entryPointPath: filePath,
-    typesPath: typescript
-      ? "./" + relative(sourceDir, `${entryPrefix}.d.ts`)
-      : false,
+    exportsMap,
   });
 
   return { error: false };

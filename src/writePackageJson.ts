@@ -50,7 +50,7 @@ export async function writePackageJson(
     type: "module",
     version: parsed.version,
     types: allExports["."].types,
-    main: allExports["."].default,
+    module: allExports["."].default,
     description: parsed.description ?? "",
     exports: allExports,
     dependencies: parsed.dependencies ?? undefined,

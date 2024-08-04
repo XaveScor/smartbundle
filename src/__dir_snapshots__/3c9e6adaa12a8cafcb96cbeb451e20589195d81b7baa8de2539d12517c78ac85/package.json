@@ -3,7 +3,7 @@
   "type": "module",
   "version": "0.0.0",
   "types": "./level1/level2/entrypoint1.d.ts",
-  "main": "./level1/level2/entrypoint1.mjs",
+  "module": "./level1/level2/entrypoint1.mjs",
   "description": "",
   "exports": {
     ".": {

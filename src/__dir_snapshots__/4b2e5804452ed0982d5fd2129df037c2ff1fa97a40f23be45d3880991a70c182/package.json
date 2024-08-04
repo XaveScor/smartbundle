@@ -2,7 +2,7 @@
   "name": "simple-build",
   "type": "module",
   "version": "1.0.0",
-  "main": "./entrypoint.mjs",
+  "module": "./entrypoint.mjs",
   "description": "",
   "exports": {
     ".": {

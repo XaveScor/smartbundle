@@ -3,7 +3,7 @@
   "type": "module",
   "version": "1.0.0",
   "types": "./entrypoint.d.ts",
-  "main": "./entrypoint.mjs",
+  "module": "./entrypoint.mjs",
   "description": "test description",
   "exports": {
     ".": {

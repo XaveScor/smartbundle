@@ -47,4 +47,15 @@ describe("build", () => {
     // @ts-expect-error
     expect(tmpDir).toMatchDirSnapshot();
   });
+
+  test("simple-bin-build", async ({ tmpDir }: { tmpDir: string }) => {
+    const res = await run({
+      outputDir: tmpDir,
+      sourceDir: "./src/fixtures/simple-bin-build",
+    });
+
+    expect(res.error).toBeFalsy();
+    // @ts-expect-error
+    expect(tmpDir).toMatchDirSnapshot();
+  });
 });

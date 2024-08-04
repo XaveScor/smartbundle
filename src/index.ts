@@ -62,8 +62,10 @@ export async function run(args: Args) {
   }
 
   const entrypoints = new Map<string, string>();
-  const mainEntry = join(sourceDir, packageJson.exports);
-  entrypoints.set(".", mainEntry);
+  if (packageJson.exports) {
+    const mainEntry = join(sourceDir, packageJson.exports);
+    entrypoints.set(".", mainEntry);
+  }
 
   if (packageJson.bin) {
     const binEntry = join(sourceDir, packageJson.bin);

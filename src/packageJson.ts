@@ -20,10 +20,13 @@ function dependencies(errorText: string) {
 
 function createPackageJsonSchema(sourceDir: string) {
   return z.object({
-    exports: z.string({ message: errors.exportsRequired }).refine((exports) => {
-      const mainFinalPath = join(sourceDir, exports);
-      return fileExists(mainFinalPath);
-    }, errors.exportsInvalid),
+    exports: z
+      .string({ message: errors.exportsRequired })
+      .refine((exports) => {
+        const mainFinalPath = join(sourceDir, exports);
+        return fileExists(mainFinalPath);
+      }, errors.exportsInvalid)
+      .optional(),
     name: z
       .string({ message: errors.nameRequired })
       .min(1, errors.nameMinLength)
@@ -38,6 +41,7 @@ function createPackageJsonSchema(sourceDir: string) {
       .refine((value) => value, errors.privateIsTrue),
     description: z.string({ message: errors.descriptionString }).optional(),
     dependencies: dependencies(errors.dependenciesInvalid),
+    bin: z.string({ message: errors.binString }).optional(),
   });
 }
 type PackageJsonSchema = ReturnType<typeof createPackageJsonSchema>;

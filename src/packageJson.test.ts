@@ -20,7 +20,7 @@ describe("parse package.json", () => {
   });
 
   describe("exports", () => {
-    test("required", async () => {
+    test("is optional", async () => {
       const sourceDir = join(
         import.meta.dirname,
         "fixtures",
@@ -30,7 +30,7 @@ describe("parse package.json", () => {
 
       const packageJson = await parsePackageJson({ sourceDir, packagePath });
       expect(packageJson).toStrictEqual(expect.any(Array));
-      expect(packageJson).toContain(errors.exportsRequired);
+      expect(packageJson).not.toContain(errors.exportsRequired);
     });
 
     test("should be a string", async () => {
@@ -231,6 +231,29 @@ describe("parse package.json", () => {
       const packageJson = await parsePackageJson({ sourceDir, packagePath });
       expect(packageJson).toStrictEqual(expect.any(Array));
       expect(packageJson).toContain(errors.dependenciesInvalid);
+    });
+  });
+
+  describe("bin", () => {
+    test("is string", async () => {
+      const sourceDir = join(import.meta.dirname, "fixtures", "incorrect-bin");
+      const packagePath = join(sourceDir, "not-string.json");
+
+      const packageJson = await parsePackageJson({ sourceDir, packagePath });
+      expect(packageJson).toStrictEqual(expect.any(Array));
+      expect(packageJson).toContain(errors.binString);
+    });
+
+    test("is optional", async () => {
+      const sourceDir = join(
+        import.meta.dirname,
+        "fixtures",
+        "empty-package-json",
+      );
+      const packagePath = join(sourceDir, "empty.json");
+
+      const packageJson = await parsePackageJson({ sourceDir, packagePath });
+      expect(packageJson).not.toContain(errors.binString);
     });
   });
 });

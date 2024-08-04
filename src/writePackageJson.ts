@@ -29,6 +29,9 @@ export async function writePackageJson(
   // If you want to export something, please, specify them
   const allExports: Record<string, ExportsPackageJsonObj> = {};
   for (const [key, value] of exportsMap) {
+    if (key === "__bin__") {
+      continue;
+    }
     const anExport: ExportsPackageJsonObj = {
       types: value.mdts,
     };
@@ -51,6 +54,7 @@ export async function writePackageJson(
     name: parsed.name,
     type: "module",
     version: parsed.version,
+    bin: exportsMap.get("__bin__")?.mjs,
     types: allExports["."]?.types,
     module: allExports["."]?.default,
     description: parsed.description ?? "",

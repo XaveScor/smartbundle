@@ -1,0 +1,7 @@
+{
+  "name": "simple-bin-build",
+  "private": true,
+  "type": "module",
+  "version": "1.0.0",
+  "bin": "./bin.ts"
+}

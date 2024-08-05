@@ -1,0 +1,7 @@
+{
+  "name": "@external-deps/node",
+  "version": "0.0.0",
+  "type": "module",
+  "private": true,
+  "exports": "./node.mjs"
+}

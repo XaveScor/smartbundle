@@ -1,0 +1,10 @@
+{
+  "name": "@external-deps/dependencies",
+  "version": "0.0.0",
+  "type": "module",
+  "private": true,
+  "dependencies": {
+    "aaa": "^0.0.2"
+  },
+  "exports": "./index.mjs"
+}

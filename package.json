@@ -1,8 +1,9 @@
 {
-  "name": "bobrik",
-  "version": "1.0.0",
+  "name": "smartbundle",
+  "private": true,
+  "version": "0.0.1",
   "description": "",
-  "main": "index.js",
+  "bin": "./src/bin.ts",
   "type": "module",
   "scripts": {
     "test": "vitest",

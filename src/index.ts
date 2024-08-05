@@ -1,4 +1,5 @@
 import { join, isAbsolute, relative, resolve } from "node:path";
+import { mkdir, rm } from "node:fs/promises";
 import { parsePackageJson } from "./packageJson.js";
 import { build } from "vite";
 import { ExportsObject, writePackageJson } from "./writePackageJson.js";
@@ -54,10 +55,12 @@ export async function run(args: Args) {
     args.packagePath ?? "./package.json",
   );
   const outDir = myResolve(process.cwd(), args.outputDir ?? "./dist");
-
+  await rm(outDir, { recursive: true, force: true });
+  await mkdir(outDir, { recursive: true });
   const packageJson = await parsePackageJson({ sourceDir, packagePath });
 
   if (Array.isArray(packageJson)) {
+    console.log(packageJson);
     return { error: true, errors: packageJson };
   }
 
@@ -76,13 +79,12 @@ export async function run(args: Args) {
     entry.endsWith(".ts"),
   );
   const typescript = hasTs
-    ? rollupts({
+    ? // @ts-expect-error
+      rollupts({
         compilerOptions: {
+          declaration: true,
           declarationDir: outDir,
-          rootDir: sourceDir,
         },
-        // https://github.com/rollup/plugins/issues/1572 we cannot have no tsconfig
-        tsconfig: resolve(import.meta.dirname, "buildTsconfig.json"),
       })
     : false;
   const outputs = await build({
@@ -116,6 +118,15 @@ export async function run(args: Args) {
       },
       rollupOptions: {
         plugins: [typescript],
+        external: (id, parentId, isResolved) => {
+          if (id.startsWith("node:")) {
+            return true;
+          }
+          if (packageJson.dependencies) {
+            return id in packageJson.dependencies;
+          }
+          return false;
+        },
         output: {
           preserveModules: true,
         },

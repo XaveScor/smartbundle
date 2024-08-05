@@ -2,7 +2,7 @@
   "name": "simple-bin-build",
   "type": "module",
   "version": "1.0.0",
-  "bin": "./bin.mjs",
+  "bin": "bin.mjs",
   "description": "",
   "exports": {}
 }

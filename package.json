@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.1",
   "description": "",
-  "bin": "./src/bin.ts",
+  "bin": "src/bin.ts",
   "type": "module",
   "scripts": {
     "test": "vitest",

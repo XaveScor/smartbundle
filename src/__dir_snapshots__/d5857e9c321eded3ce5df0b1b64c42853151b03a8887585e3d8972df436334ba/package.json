@@ -2,14 +2,14 @@
   "name": "es-js-import",
   "type": "module",
   "version": "1.0.0",
-  "module": "./entrypoint.mjs",
+  "module": "entrypoint.mjs",
   "description": "",
   "exports": {
     ".": {
       "import": {
-        "default": "./entrypoint.mjs"
+        "default": "entrypoint.mjs"
       },
-      "default": "./entrypoint.mjs"
+      "default": "entrypoint.mjs"
     }
   }
 }

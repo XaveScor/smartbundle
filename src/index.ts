@@ -152,7 +152,7 @@ export async function run(args: Args) {
           }
           for (const path of exportPath) {
             setExports(exportsMap, path, (entry) => {
-              entry.mjs = "./" + el.fileName;
+              entry.mjs = el.fileName;
               return entry;
             });
           }
@@ -169,7 +169,7 @@ export async function run(args: Args) {
             }
             for (const path of exportPath) {
               setExports(exportsMap, path, (entry) => {
-                entry.mdts = "./" + el.fileName;
+                entry.mdts = el.fileName;
                 return entry;
               });
             }

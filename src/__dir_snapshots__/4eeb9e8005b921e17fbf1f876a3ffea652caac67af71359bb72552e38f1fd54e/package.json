@@ -2,17 +2,14 @@
   "name": "ts-import",
   "type": "module",
   "version": "1.0.0",
-  "types": "./entrypoint.d.ts",
-  "module": "./entrypoint.mjs",
+  "module": "entrypoint.mjs",
   "description": "test description",
   "exports": {
     ".": {
-      "types": "./entrypoint.d.ts",
       "import": {
-        "types": "./entrypoint.d.ts",
-        "default": "./entrypoint.mjs"
+        "default": "entrypoint.mjs"
       },
-      "default": "./entrypoint.mjs"
+      "default": "entrypoint.mjs"
     }
   }
 }

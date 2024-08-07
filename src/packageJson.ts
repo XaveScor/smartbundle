@@ -58,8 +58,8 @@ export async function parsePackageJson({
   sourceDir,
   packagePath,
 }: ParsePackageJsonArg): Promise<PackageJson | Errors> {
-  const rawJson = (await import(packagePath, { with: { type: "json" } }))
-    .default;
+  const packageString = await fs.readFile(packagePath, "utf-8");
+  const rawJson = JSON.parse(packageString);
 
   const packageJsonSchema = createPackageJsonSchema(sourceDir);
   const packageJson = await packageJsonSchema.safeParseAsync(rawJson);

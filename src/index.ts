@@ -119,6 +119,9 @@ export async function run(args: Args) {
       rollupOptions: {
         plugins: [typescript],
         external: (id, parentId, isResolved) => {
+          if (id === packageJson.name) {
+            return true;
+          }
           if (id.startsWith("node:")) {
             return true;
           }

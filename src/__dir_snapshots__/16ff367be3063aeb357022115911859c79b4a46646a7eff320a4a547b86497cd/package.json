@@ -2,14 +2,17 @@
   "name": "@external-deps/node",
   "type": "module",
   "version": "0.0.0",
-  "module": "node.mjs",
+  "module": "./node.js",
   "description": "",
   "exports": {
     ".": {
       "import": {
-        "default": "node.mjs"
+        "default": "./node.js"
       },
-      "default": "node.mjs"
+      "require": {
+        "default": "./node.cjs"
+      },
+      "default": "./node.js"
     }
   }
 }

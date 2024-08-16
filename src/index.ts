@@ -82,7 +82,9 @@ export async function run(args: Args) {
     ? // @ts-expect-error
       rollupts({
         compilerOptions: {
+          rootDir: sourceDir,
           declaration: true,
+          emitDeclarationOnly: true,
           declarationDir: outDir,
         },
       })
@@ -101,17 +103,24 @@ export async function run(args: Args) {
       },
       lib: {
         entry: mapToObject(entrypoints),
-        formats: ["es"],
+        formats: ["es", "cjs"],
         fileName: (format, entryName) => {
           const entrypoint = entrypoints.get(entryName);
           if (!entrypoint) {
             const noExt = entryName.replace(/\.[^.]+$/, "");
-            return "__do_not_import_directly__/" + noExt + ".mjs";
+            return (
+              "__do_not_import_directly__/" +
+              noExt +
+              (format === "es" ? ".js" : ".cjs")
+            );
           }
           const relativePath = relative(sourceDir, entrypoint);
           const noExt = relativePath.replace(/\.[^.]+$/, "");
           if (format === "es") {
-            return `${noExt}.mjs`;
+            return `${noExt}.js`;
+          }
+          if (format === "cjs") {
+            return `${noExt}.cjs`;
           }
           return noExt;
         },
@@ -155,7 +164,12 @@ export async function run(args: Args) {
           }
           for (const path of exportPath) {
             setExports(exportsMap, path, (entry) => {
-              entry.mjs = "./" + el.fileName;
+              const format = el.fileName.endsWith(".cjs") ? "cjs" : "es";
+              if (format === "es") {
+                entry.mjs = "./" + el.fileName;
+              } else if (format === "cjs") {
+                entry.cjs = "./" + el.fileName;
+              }
               return entry;
             });
           }

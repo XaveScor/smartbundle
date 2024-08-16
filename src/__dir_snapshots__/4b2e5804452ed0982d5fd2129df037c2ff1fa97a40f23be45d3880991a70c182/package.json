@@ -2,14 +2,17 @@
   "name": "simple-build",
   "type": "module",
   "version": "1.0.0",
-  "module": "entrypoint.mjs",
+  "module": "./entrypoint.js",
   "description": "",
   "exports": {
     ".": {
       "import": {
-        "default": "entrypoint.mjs"
+        "default": "./entrypoint.js"
       },
-      "default": "entrypoint.mjs"
+      "require": {
+        "default": "./entrypoint.cjs"
+      },
+      "default": "./entrypoint.js"
     }
   },
   "dependencies": {

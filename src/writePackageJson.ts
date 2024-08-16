@@ -4,6 +4,8 @@ import { PackageJson } from "./packageJson.js";
 export type ExportsObject = {
   mjs?: string;
   mdts?: string;
+  cjs?: string;
+  cdts?: string;
 };
 
 type BuildResult = {
@@ -16,6 +18,7 @@ function buildTypesPath(mainEntrypoint: string) {
 
 type ExportsPackageJsonObj = {
   import?: ExportsPackageJsonObj | string;
+  require?: ExportsPackageJsonObj | string;
   types?: string;
   default?: string;
 };
@@ -32,9 +35,7 @@ export async function writePackageJson(
     if (key === "__bin__") {
       continue;
     }
-    const anExport: ExportsPackageJsonObj = {
-      types: value.mdts,
-    };
+    const anExport: ExportsPackageJsonObj = {};
 
     if (value.mjs || value.mdts) {
       anExport.import = {
@@ -42,9 +43,16 @@ export async function writePackageJson(
         default: value.mjs,
       };
     }
+    if (value.cjs || value.cdts) {
+      anExport.require = {
+        types: value.cdts,
+        default: value.cjs,
+      };
+    }
 
-    // because we need to have default key on the end
+    // because we need to have default and types key on the end
     // JSON.stringify will put it on the end if we put value at the last step
+    anExport.types = value.mdts;
     anExport.default = value.mjs;
 
     allExports[key] = anExport;

@@ -2,14 +2,17 @@
   "name": "@external-deps/dependencies",
   "type": "module",
   "version": "0.0.0",
-  "module": "index.mjs",
+  "module": "./index.js",
   "description": "",
   "exports": {
     ".": {
       "import": {
-        "default": "index.mjs"
+        "default": "./index.js"
       },
-      "default": "index.mjs"
+      "require": {
+        "default": "./index.cjs"
+      },
+      "default": "./index.js"
     }
   },
   "dependencies": {

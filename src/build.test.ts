@@ -84,4 +84,15 @@ describe("build", () => {
       expect(tmpDir).toMatchDirSnapshot();
     });
   });
+
+  test("export-default", async ({ tmpDir }: { tmpDir: string }) => {
+    const res = await run({
+      outputDir: tmpDir,
+      sourceDir: "./src/fixtures/export-default",
+    });
+
+    expect(res.error).toBeFalsy();
+    // @ts-expect-error
+    expect(tmpDir).toMatchDirSnapshot();
+  });
 });

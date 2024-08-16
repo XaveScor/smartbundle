@@ -1,17 +1,20 @@
 {
-  "name": "es-js-import",
+  "name": "export-default",
   "type": "module",
   "version": "1.0.0",
+  "types": "./entrypoint.d.ts",
   "module": "./entrypoint.js",
   "description": "",
   "exports": {
     ".": {
       "import": {
+        "types": "./entrypoint.d.ts",
         "default": "./entrypoint.js"
       },
       "require": {
         "default": "./entrypoint.cjs"
       },
+      "types": "./entrypoint.d.ts",
       "default": "./entrypoint.js"
     }
   }

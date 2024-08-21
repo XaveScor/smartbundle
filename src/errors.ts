@@ -23,4 +23,8 @@ export const errors = {
     "The `bin` field must be a string. Please, verify the value. More info: https://docs.npmjs.com/cli/v10/configuring-npm/package-json#bin",
   rollupError:
     "An error occurred while building the package. Please, report it to the issues on GitHub",
+  typescriptNotFound:
+    "The package.json contains typescript entrypoints, but the typescript package is not found. Please, install typescript@^5.0.0",
+  optionalDependenciesInvalid:
+    "The `optionalDependencies` field must be an Object<string, string>. Please, verify the value. More info: https://docs.npmjs.com/cli/v10/configuring-npm/package-json#optionaldependencies",
 };

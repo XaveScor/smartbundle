@@ -1,10 +1,10 @@
 import { join, isAbsolute, relative, resolve } from "node:path";
 import { mkdir, rm } from "node:fs/promises";
 import { parsePackageJson } from "./packageJson.js";
-import { build } from "vite";
 import { ExportsObject, writePackageJson } from "./writePackageJson.js";
-import rollupts from "@rollup/plugin-typescript";
 import { errors } from "./errors.js";
+import { buildTypes } from "./buildTypes.js";
+import { buildVite } from "./buildVite.js";
 
 type Args = {
   sourceDir?: string;
@@ -20,21 +20,12 @@ function myResolve(path1: string, path2: string) {
   return join(path1, path2);
 }
 
-function mapToObject(map: Map<string, string>) {
-  const obj: Record<string, string> = {};
-  for (const [key, value] of map) {
-    obj[key] = value;
-  }
-  return obj;
-}
-
 function reverseMap(map: Map<string, string>): Map<string, Array<string>> {
   const reversed = new Map<string, Array<string>>();
   for (const [key, value] of map) {
-    const noExtValue = value.replace(/\.[^.]+$/, "");
-    const arr = reversed.get(noExtValue) ?? [];
+    const arr = reversed.get(value) ?? [];
     arr.push(key);
-    reversed.set(noExtValue, arr);
+    reversed.set(value, arr);
   }
   return reversed;
 }
@@ -75,124 +66,63 @@ export async function run(args: Args) {
     entrypoints.set("__bin__", binEntry);
   }
 
-  const hasTs = [...entrypoints.values()].some((entry) =>
-    entry.endsWith(".ts"),
-  );
-  const typescript = hasTs
-    ? // @ts-expect-error
-      rollupts({
-        compilerOptions: {
-          rootDir: sourceDir,
-          declaration: true,
-          emitDeclarationOnly: true,
-          declarationDir: outDir,
-        },
-      })
-    : false;
-  const outputs = await build({
-    publicDir: false,
-    build: {
-      outDir,
-      write: true,
-      minify: false,
-      emptyOutDir: true,
-      assetsInlineLimit: 0,
-      terserOptions: {
-        compress: false,
-        mangle: false,
-      },
-      lib: {
-        entry: mapToObject(entrypoints),
-        formats: ["es", "cjs"],
-        fileName: (format, entryName) => {
-          const entrypoint = entrypoints.get(entryName);
-          if (!entrypoint) {
-            const noExt = entryName.replace(/\.[^.]+$/, "");
-            return (
-              "__do_not_import_directly__/" +
-              noExt +
-              (format === "es" ? ".js" : ".cjs")
-            );
-          }
-          const relativePath = relative(sourceDir, entrypoint);
-          const noExt = relativePath.replace(/\.[^.]+$/, "");
-          if (format === "es") {
-            return `${noExt}.js`;
-          }
-          if (format === "cjs") {
-            return `${noExt}.cjs`;
-          }
-          return noExt;
-        },
-      },
-      rollupOptions: {
-        plugins: [typescript],
-        external: (id, parentId, isResolved) => {
-          if (id === packageJson.name) {
-            return true;
-          }
-          if (id.startsWith("node:")) {
-            return true;
-          }
-          if (packageJson.dependencies) {
-            return id in packageJson.dependencies;
-          }
-          return false;
-        },
-        output: {
-          preserveModules: true,
-        },
-      },
-    },
+  const outputs = await buildVite({
+    entrypoints,
+    packageJson,
+    sourceDir,
+    outDir,
   });
-  if (!Array.isArray(outputs)) {
-    return { error: true, errors: [errors.rollupError] };
+  if (outputs.error) {
+    return { error: true, errors: outputs.errors };
   }
+  const viteOutput = outputs.output;
+
   const exportsMap = new Map<string, ExportsObject>();
   const reversedEntrypoints = reverseMap(entrypoints);
-  for (const { output } of outputs) {
-    for (const el of output) {
-      switch (el.type) {
-        case "chunk":
-          const noExtPath = el.facadeModuleId?.replace(/\.[^.]+$/, "");
-          if (noExtPath == null) {
-            continue;
-          }
-          const exportPath = reversedEntrypoints.get(noExtPath);
-          if (!exportPath) {
-            continue;
-          }
-          for (const path of exportPath) {
-            setExports(exportsMap, path, (entry) => {
-              const format = el.fileName.endsWith(".cjs") ? "cjs" : "es";
-              if (format === "es") {
-                entry.mjs = "./" + el.fileName;
-              } else if (format === "cjs") {
-                entry.cjs = "./" + el.fileName;
-              }
-              return entry;
-            });
-          }
-          break;
-        case "asset":
-          if (el.fileName.endsWith(".d.ts")) {
-            const noExtPath = join(
-              sourceDir,
-              el.fileName.replace(/\.d\.ts$/, ""),
-            );
-            const exportPath = reversedEntrypoints.get(noExtPath);
-            if (!exportPath) {
-              continue;
-            }
-            for (const path of exportPath) {
-              setExports(exportsMap, path, (entry) => {
-                entry.mdts = "./" + el.fileName;
-                return entry;
-              });
-            }
-          }
-          break;
+  const tsEntrypoints = [...entrypoints.values()].filter((entry) =>
+    entry.endsWith(".ts"),
+  );
+  if (tsEntrypoints.length > 0) {
+    try {
+      await import("typescript");
+    } catch {
+      return { error: true, errors: [errors.typescriptNotFound] };
+    }
+    const files = viteOutput.map((el) => el.facadeModuleId ?? "");
+    const dtsMap = await buildTypes({ sourceDir, files, outDir });
+
+    for (const [source, dts] of dtsMap) {
+      const exportPath = reversedEntrypoints.get(source);
+      if (!exportPath) {
+        continue;
       }
+      for (const path of exportPath) {
+        setExports(exportsMap, path, (entry) => {
+          entry.mdts = "./" + relative(outDir, dts);
+          return entry;
+        });
+      }
+    }
+  }
+
+  for (const el of viteOutput) {
+    if (el.facadeModuleId == null) {
+      continue;
+    }
+    const exportPath = reversedEntrypoints.get(el.facadeModuleId);
+    if (!exportPath) {
+      continue;
+    }
+    for (const path of exportPath) {
+      setExports(exportsMap, path, (entry) => {
+        const format = el.fileName.endsWith(".cjs") ? "cjs" : "es";
+        if (format === "es") {
+          entry.mjs = "./" + el.fileName;
+        } else if (format === "cjs") {
+          entry.cjs = "./" + el.fileName;
+        }
+        return entry;
+      });
     }
   }
 

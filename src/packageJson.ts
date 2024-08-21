@@ -41,6 +41,7 @@ function createPackageJsonSchema(sourceDir: string) {
       .refine((value) => value, errors.privateIsTrue),
     description: z.string({ message: errors.descriptionString }).optional(),
     dependencies: dependencies(errors.dependenciesInvalid),
+    optionalDependencies: dependencies(errors.optionalDependenciesInvalid),
     bin: z.string({ message: errors.binString }).optional(),
   });
 }

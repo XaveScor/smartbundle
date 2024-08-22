@@ -98,7 +98,7 @@ export async function run(args: Args) {
       }
       for (const path of exportPath) {
         setExports(exportsMap, path, (entry) => {
-          entry.mdts = "./" + relative(outDir, dts);
+          entry.dts = "./" + relative(outDir, dts);
           return entry;
         });
       }

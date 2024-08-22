@@ -7,14 +7,9 @@
   "description": "",
   "exports": {
     ".": {
-      "import": {
-        "types": "./entrypoint.d.ts",
-        "default": "./entrypoint.js"
-      },
-      "require": {
-        "default": "./entrypoint.cjs"
-      },
       "types": "./entrypoint.d.ts",
+      "import": "./entrypoint.js",
+      "require": "./entrypoint.cjs",
       "default": "./entrypoint.js"
     }
   }

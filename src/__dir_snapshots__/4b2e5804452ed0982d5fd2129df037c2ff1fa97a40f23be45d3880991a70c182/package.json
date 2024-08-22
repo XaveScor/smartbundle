@@ -6,12 +6,8 @@
   "description": "",
   "exports": {
     ".": {
-      "import": {
-        "default": "./entrypoint.js"
-      },
-      "require": {
-        "default": "./entrypoint.cjs"
-      },
+      "import": "./entrypoint.js",
+      "require": "./entrypoint.cjs",
       "default": "./entrypoint.js"
     }
   },

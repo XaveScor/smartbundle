@@ -89,6 +89,7 @@ export async function buildVite({
           return false;
         },
         output: {
+          exports: "named",
           preserveModules: true,
         },
       },

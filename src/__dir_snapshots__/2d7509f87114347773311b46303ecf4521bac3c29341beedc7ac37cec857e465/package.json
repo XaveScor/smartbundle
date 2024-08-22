@@ -6,12 +6,8 @@
   "description": "",
   "exports": {
     ".": {
-      "import": {
-        "default": "./index.js"
-      },
-      "require": {
-        "default": "./index.cjs"
-      },
+      "import": "./index.js",
+      "require": "./index.cjs",
       "default": "./index.js"
     }
   },

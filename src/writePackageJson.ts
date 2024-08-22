@@ -36,10 +36,18 @@ export async function writePackageJson(
       anExport.types = value.dts;
     }
     if (value.mjs) {
-      anExport.import = value.mjs;
+      anExport.import = {};
+      if (value.dts) {
+        anExport.import.types = value.dts;
+      }
+      anExport.import.default = value.mjs;
     }
     if (value.cjs) {
-      anExport.require = value.cjs;
+      anExport.require = {};
+      if (value.dts) {
+        anExport.require.types = value.dts;
+      }
+      anExport.require.default = value.cjs;
     }
 
     // because we need to have default and types key on the end

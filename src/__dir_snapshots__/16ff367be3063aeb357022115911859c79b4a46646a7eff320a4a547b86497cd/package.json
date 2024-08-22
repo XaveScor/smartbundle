@@ -6,8 +6,12 @@
   "description": "",
   "exports": {
     ".": {
-      "import": "./node.js",
-      "require": "./node.cjs",
+      "import": {
+        "default": "./node.js"
+      },
+      "require": {
+        "default": "./node.cjs"
+      },
       "default": "./node.js"
     }
   }

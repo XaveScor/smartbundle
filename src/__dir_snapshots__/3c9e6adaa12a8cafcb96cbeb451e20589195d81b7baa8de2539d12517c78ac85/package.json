@@ -8,8 +8,14 @@
   "exports": {
     ".": {
       "types": "./level1/level2/entrypoint1.d.ts",
-      "import": "./level1/level2/entrypoint1.js",
-      "require": "./level1/level2/entrypoint1.cjs",
+      "import": {
+        "types": "./level1/level2/entrypoint1.d.ts",
+        "default": "./level1/level2/entrypoint1.js"
+      },
+      "require": {
+        "types": "./level1/level2/entrypoint1.d.ts",
+        "default": "./level1/level2/entrypoint1.cjs"
+      },
       "default": "./level1/level2/entrypoint1.js"
     }
   }

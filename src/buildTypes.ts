@@ -1,5 +1,4 @@
 import * as path from "node:path";
-import * as process from "node:process";
 import * as fs from "node:fs";
 
 type BuildTypesOptions = {
@@ -15,7 +14,10 @@ export async function buildTypes({
 }: BuildTypesOptions) {
   const ts = await import("typescript");
   const configPath = path.join(sourceDir, "tsconfig.json");
-  const configFile = ts.readConfigFile(configPath, ts.sys.readFile);
+  const configFile = ts.readConfigFile(configPath, (path) =>
+    // https://github.com/XaveScor/bobrik/issues/22
+    fs.readFileSync(path, "utf-8"),
+  );
 
   const parsedCommandLine = ts.parseJsonConfigFileContent(
     configFile.config,

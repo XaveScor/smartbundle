@@ -1,7 +1,7 @@
 {
   "name": "smartbundle",
   "private": true,
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "zero-config bundler for npm packages",
   "bin": "./src/bin.ts",
   "type": "module",
@@ -9,7 +9,15 @@
     "test": "vitest",
     "test:update-snapshots": "vitest -u"
   },
-  "keywords": ["smartbundle", "bundler", "npm", "package", "typescript", "esm", "cjs"],
+  "keywords": [
+    "smartbundle",
+    "bundler",
+    "npm",
+    "package",
+    "typescript",
+    "esm",
+    "cjs"
+  ],
   "author": {
     "name": "Andrey Vassilyev",
     "email": "xavescor@xavescor.dev"

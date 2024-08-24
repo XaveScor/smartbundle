@@ -68,6 +68,18 @@ export async function writePackageJson(
     exports: allExports,
     dependencies: parsed.dependencies ?? undefined,
     optionalDependencies: parsed.optionalDependencies ?? undefined,
+    repository: parsed.repository,
+    keywords: parsed.keywords,
+    author: parsed.author,
+    contributors: parsed.contributors,
+    license: parsed.license,
+    devDependencies: parsed.devDependencies,
+    peerDependencies: parsed.peerDependencies,
+    engines: parsed.engines,
+    browser: parsed.browser,
+    funding: parsed.funding,
+    os: parsed.os,
+    cpu: parsed.cpu,
   };
 
   await writeFile(`${outDir}/package.json`, JSON.stringify(res, null, 2));

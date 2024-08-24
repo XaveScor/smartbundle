@@ -32,6 +32,8 @@ export async function buildTypes({
       strictPropertyInitialization: false,
       skipLibCheck: true,
       skipDefaultLibCheck: true,
+      // https://github.com/XaveScor/bobrik/issues/22#issuecomment-2308552352
+      noEmit: false,
     },
     configPath,
   );

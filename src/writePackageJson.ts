@@ -33,10 +33,6 @@ export async function writePackageJson(
     if (key === "__bin__") {
       continue;
     }
-    if (value.raw) {
-      allExports[key] = value.raw;
-      continue;
-    }
 
     const anExport: ExportsPackageJsonObj = {};
 
@@ -64,6 +60,7 @@ export async function writePackageJson(
 
     allExports[key] = anExport;
   }
+  allExports["./package.json"] = "./package.json";
 
   const rootExport =
     typeof allExports["."] === "object" ? allExports["."] : undefined;

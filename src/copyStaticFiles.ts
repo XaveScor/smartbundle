@@ -11,9 +11,7 @@ export async function copyStaticFiles({
   sourceDir,
   outDir,
   relativeFiles,
-}: CopyStaticFilesOptions): Promise<string[]> {
-  const copiedFiles = new Array<string>();
-
+}: CopyStaticFilesOptions) {
   const dirFiles = new Map(
     (await readdir(sourceDir, { recursive: true })).map(
       (f) => [f.toLowerCase(), f] as const,
@@ -28,10 +26,7 @@ export async function copyStaticFiles({
         const outFilePath = join(outDir, matchingFile);
         const filePath = join(sourceDir, matchingFile);
         await copyFile(filePath, outFilePath);
-        copiedFiles.push(matchingFile);
       }
     } catch {}
   }
-
-  return copiedFiles;
 }

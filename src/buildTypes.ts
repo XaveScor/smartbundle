@@ -12,7 +12,9 @@ export async function buildTypes({
   files,
   outDir,
 }: BuildTypesOptions) {
-  const ts = await import("typescript");
+  const importedTs = await import("typescript");
+  // because ts have cjs and esm exports
+  const ts = importedTs.default ?? importedTs;
   const configPath = path.join(sourceDir, "tsconfig.json");
   const configFile = ts.readConfigFile(configPath, (path) =>
     // https://github.com/XaveScor/bobrik/issues/22

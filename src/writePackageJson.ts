@@ -5,18 +5,21 @@ export type ExportsObject = {
   mjs?: string;
   dts?: string;
   cjs?: string;
+  raw?: string;
 };
 
 type BuildResult = {
   exportsMap: Map<string, ExportsObject>;
 };
 
-type ExportsPackageJsonObj = {
-  import?: ExportsPackageJsonObj | string;
-  require?: ExportsPackageJsonObj | string;
-  types?: string;
-  default?: string;
-};
+type ExportsPackageJsonObj =
+  | {
+      import?: ExportsPackageJsonObj;
+      require?: ExportsPackageJsonObj;
+      types?: string;
+      default?: string;
+    }
+  | string;
 
 export async function writePackageJson(
   outDir: string,
@@ -30,6 +33,11 @@ export async function writePackageJson(
     if (key === "__bin__") {
       continue;
     }
+    if (value.raw) {
+      allExports[key] = value.raw;
+      continue;
+    }
+
     const anExport: ExportsPackageJsonObj = {};
 
     if (value.dts) {
@@ -57,13 +65,15 @@ export async function writePackageJson(
     allExports[key] = anExport;
   }
 
+  const rootExport =
+    typeof allExports["."] === "object" ? allExports["."] : undefined;
   const res = {
     name: parsed.name,
     type: "module",
     version: parsed.version,
     bin: exportsMap.get("__bin__")?.mjs,
-    types: allExports["."]?.types,
-    module: allExports["."]?.default,
+    types: rootExport?.types,
+    module: rootExport?.default,
     description: parsed.description ?? "",
     exports: allExports,
     dependencies: parsed.dependencies ?? undefined,

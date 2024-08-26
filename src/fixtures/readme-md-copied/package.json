@@ -1,0 +1,11 @@
+{
+  "name": "readme-md-copied",
+  "private": true,
+  "type": "module",
+  "version": "1.0.0",
+  "exports": "./entrypoint.js",
+  "dependencies": {
+    "dep1": "^1.0.0",
+    "dep2": "^2.0.0"
+  }
+}

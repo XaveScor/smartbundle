@@ -4,5 +4,7 @@
   "version": "1.0.0",
   "bin": "./bin.js",
   "description": "",
-  "exports": {}
+  "exports": {
+    "./package.json": "./package.json"
+  }
 }

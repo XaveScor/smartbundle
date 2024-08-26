@@ -17,6 +17,7 @@
         "default": "./level1/level2/entrypoint1.cjs"
       },
       "default": "./level1/level2/entrypoint1.js"
-    }
+    },
+    "./package.json": "./package.json"
   }
 }

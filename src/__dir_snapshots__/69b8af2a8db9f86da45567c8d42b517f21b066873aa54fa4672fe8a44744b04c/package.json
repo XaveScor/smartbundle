@@ -1,5 +1,5 @@
 {
-  "name": "simple-build",
+  "name": "readme-md-copied",
   "type": "module",
   "version": "1.0.0",
   "module": "./entrypoint.js",
@@ -14,6 +14,7 @@
       },
       "default": "./entrypoint.js"
     },
+    "./README.md": "./README.md",
     "./package.json": "./package.json"
   },
   "dependencies": {

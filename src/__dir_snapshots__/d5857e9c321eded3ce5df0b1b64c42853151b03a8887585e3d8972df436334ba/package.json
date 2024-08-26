@@ -13,6 +13,7 @@
         "default": "./entrypoint.cjs"
       },
       "default": "./entrypoint.js"
-    }
+    },
+    "./package.json": "./package.json"
   }
 }

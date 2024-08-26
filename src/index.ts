@@ -1,10 +1,11 @@
-import { join, isAbsolute, relative, resolve } from "node:path";
+import { join, isAbsolute, relative } from "node:path";
 import { mkdir, rm } from "node:fs/promises";
 import { parsePackageJson } from "./packageJson.js";
 import { ExportsObject, writePackageJson } from "./writePackageJson.js";
 import { errors } from "./errors.js";
 import { buildTypes } from "./buildTypes.js";
 import { buildVite } from "./buildVite.js";
+import { copyStaticFiles } from "./copyStaticFiles.js";
 
 type Args = {
   sourceDir?: string;
@@ -125,7 +126,17 @@ export async function run(args: Args) {
       });
     }
   }
-
+  const copiedFiles = await copyStaticFiles({
+    relativeFiles: new Set(["readme.md", "package.json"]),
+    sourceDir,
+    outDir,
+  });
+  for (const copiedFile of copiedFiles) {
+    setExports(exportsMap, "./" + copiedFile, (entry) => {
+      entry.raw = "./" + copiedFile;
+      return entry;
+    });
+  }
   await writePackageJson(outDir, packageJson, {
     exportsMap,
   });

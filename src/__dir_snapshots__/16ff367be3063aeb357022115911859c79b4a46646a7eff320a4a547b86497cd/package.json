@@ -13,6 +13,7 @@
         "default": "./node.cjs"
       },
       "default": "./node.js"
-    }
+    },
+    "./package.json": "./package.json"
   }
 }

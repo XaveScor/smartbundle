@@ -14,7 +14,6 @@
       },
       "default": "./entrypoint.js"
     },
-    "./README.md": "./README.md",
     "./package.json": "./package.json"
   },
   "dependencies": {

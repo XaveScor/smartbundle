@@ -126,17 +126,11 @@ export async function run(args: Args) {
       });
     }
   }
-  const copiedFiles = await copyStaticFiles({
-    relativeFiles: new Set(["readme.md", "package.json"]),
+  await copyStaticFiles({
+    relativeFiles: new Set(["readme.md"]),
     sourceDir,
     outDir,
   });
-  for (const copiedFile of copiedFiles) {
-    setExports(exportsMap, "./" + copiedFile, (entry) => {
-      entry.raw = "./" + copiedFile;
-      return entry;
-    });
-  }
   await writePackageJson(outDir, packageJson, {
     exportsMap,
   });

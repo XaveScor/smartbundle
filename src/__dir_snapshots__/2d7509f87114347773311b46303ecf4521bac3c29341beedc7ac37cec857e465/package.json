@@ -13,7 +13,8 @@
         "default": "./index.cjs"
       },
       "default": "./index.js"
-    }
+    },
+    "./package.json": "./package.json"
   },
   "dependencies": {
     "aaa": "^0.0.2"

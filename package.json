@@ -1,7 +1,7 @@
 {
   "name": "smartbundle",
   "private": true,
-  "version": "0.3.2",
+  "version": "0.4.0-alpha.0",
   "description": "zero-config bundler for npm packages",
   "bin": "./src/bin.ts",
   "type": "module",

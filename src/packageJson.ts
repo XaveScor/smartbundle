@@ -25,15 +25,10 @@ const allPackageJsonFields = [
   "browser",
   "funding",
   "os",
-  "cpu"
+  "cpu",
 ];
 
-const requiredFields = [
-  "exports",
-  "name",
-  "version",
-  "private"
-];
+const requiredFields = ["exports", "name", "version", "private"];
 
 const optionalFields = [
   "description",
@@ -51,8 +46,8 @@ const optionalFields = [
   "browser",
   "funding",
   "os",
-  "cpu"
-]
+  "cpu",
+];
 // </region>
 
 async function fileExists(filePath: string) {
@@ -95,39 +90,21 @@ function createPackageJsonSchema(sourceDir: string) {
     dependencies: dependencies(errors.dependenciesInvalid),
     optionalDependencies: dependencies(errors.optionalDependenciesInvalid),
     bin: z.string({ message: errors.binString }).optional(),
-    repository: z
-      .union([
-        z.string({ message: errors.repositoryInvalid }),
-        z.object({
-          type: z.string(),
-          url: z.string(),
-        }, { message: errors.repositoryInvalid }),
-      ])
-      .optional(),
+    repository: z.any().optional(),
     keywords: z
       .array(z.string(), { message: errors.keywordsInvalid })
       .optional(),
-    author: z
-      .union([
-        z.string({ message: errors.authorInvalid }),
-        z.object({
-          name: z.string({ message: errors.authorInvalid }).optional(),
-          email: z.string({ message: errors.authorInvalid }).optional(),
-          url: z.string({ message: errors.authorInvalid }).optional(),
-        }, { message: errors.authorInvalid })
-      ])
-      .optional(),
+    author: z.any().optional(),
+    maintainers: z.any().optional(),
     contributors: z
       .array(
         z.union([
           z.string({ message: errors.contributorsInvalid }),
-          z.object({}, { message: errors.contributorsInvalid })
-        ])
+          z.object({}, { message: errors.contributorsInvalid }),
+        ]),
       )
       .optional(),
-    license: z
-      .string({ message: errors.licenseInvalid })
-      .optional(),
+    license: z.any().optional(),
     devDependencies: dependencies(errors.devDependenciesInvalid),
     peerDependencies: dependencies(errors.peerDependenciesInvalid),
     engines: z
@@ -136,21 +113,21 @@ function createPackageJsonSchema(sourceDir: string) {
     browser: z
       .union([
         z.string({ message: errors.browserInvalid }),
-        z.record(z.string(), { message: errors.browserInvalid })
+        z.record(z.string(), { message: errors.browserInvalid }),
       ])
       .optional(),
+    bugs: z.any().optional(),
     funding: z
       .union([
         z.string({ message: errors.fundingInvalid }),
-        z.object({}, { message: errors.fundingInvalid })
+        z.object({}, { message: errors.fundingInvalid }),
       ])
       .optional(),
-    os: z
-      .array(z.string(), { message: errors.osInvalid })
-      .optional(),
-    cpu: z
-      .array(z.string(), { message: errors.cpuInvalid })
-      .optional(),
+    os: z.array(z.string(), { message: errors.osInvalid }).optional(),
+    cpu: z.array(z.string(), { message: errors.cpuInvalid }).optional(),
+    sideEffects: z.any().optional(),
+    unpkg: z.any().optional(),
+    homepage: z.any().optional(),
   });
 }
 type PackageJsonSchema = ReturnType<typeof createPackageJsonSchema>;

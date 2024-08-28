@@ -87,6 +87,11 @@ export async function writePackageJson(
     funding: parsed.funding,
     os: parsed.os,
     cpu: parsed.cpu,
+    maintainers: parsed.maintainers,
+    bugs: parsed.bugs,
+    sideEffects: parsed.sideEffects,
+    unpkg: parsed.unpkg,
+    homepage: parsed.homepage,
   };
 
   await writeFile(`${outDir}/package.json`, JSON.stringify(res, null, 2));

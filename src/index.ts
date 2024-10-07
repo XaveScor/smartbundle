@@ -1,4 +1,4 @@
-import { join, isAbsolute, relative } from "node:path";
+import { relative } from "node:path";
 import { mkdir, rm } from "node:fs/promises";
 import { parsePackageJson } from "./packageJson.js";
 import { ExportsObject, writePackageJson } from "./writePackageJson.js";
@@ -6,20 +6,8 @@ import { errors } from "./errors.js";
 import { buildTypes } from "./buildTypes.js";
 import { buildVite } from "./buildVite.js";
 import { copyStaticFiles } from "./copyStaticFiles.js";
-
-type Args = {
-  sourceDir?: string;
-  packagePath?: string;
-  outputDir?: string;
-};
-
-function myResolve(path1: string, path2: string) {
-  if (isAbsolute(path2)) {
-    return path2;
-  }
-
-  return join(path1, path2);
-}
+import { type Args, resolveDirs } from "./resolveDirs.js";
+import { createViteConfig } from "./createViteConfig.js";
 
 function reverseMap(map: Map<string, string>): Map<string, Array<string>> {
   const reversed = new Map<string, Array<string>>();
@@ -40,13 +28,28 @@ function setExports(
   exportsMap.set(exportName, mapFn(entry));
 }
 
+export async function defineViteConfig(args: Args = {}) {
+  const dirs = resolveDirs(args);
+  const { sourceDir, outDir, packagePath } = dirs;
+
+  await rm(outDir, { recursive: true, force: true });
+  await mkdir(outDir, { recursive: true });
+  const packageJson = await parsePackageJson({ sourceDir, packagePath });
+
+  if (Array.isArray(packageJson)) {
+    console.error(packageJson);
+    throw new Error("Failed to parse package.json");
+  }
+
+  const { viteConfig } = createViteConfig({ dirs, packageJson });
+
+  return viteConfig;
+}
+
 export async function run(args: Args) {
-  const sourceDir = myResolve(process.cwd(), args.sourceDir ?? ".");
-  const packagePath = myResolve(
-    sourceDir,
-    args.packagePath ?? "./package.json",
-  );
-  const outDir = myResolve(process.cwd(), args.outputDir ?? "./dist");
+  const dirs = resolveDirs(args);
+  const { sourceDir, outDir, packagePath } = dirs;
+
   await rm(outDir, { recursive: true, force: true });
   await mkdir(outDir, { recursive: true });
   const packageJson = await parsePackageJson({ sourceDir, packagePath });
@@ -56,23 +59,9 @@ export async function run(args: Args) {
     return { error: true, errors: packageJson };
   }
 
-  const entrypoints = new Map<string, string>();
-  if (packageJson.exports) {
-    const mainEntry = join(sourceDir, packageJson.exports);
-    entrypoints.set(".", mainEntry);
-  }
+  const { viteConfig, entrypoints } = createViteConfig({ dirs, packageJson });
 
-  if (packageJson.bin) {
-    const binEntry = join(sourceDir, packageJson.bin);
-    entrypoints.set("__bin__", binEntry);
-  }
-
-  const outputs = await buildVite({
-    entrypoints,
-    packageJson,
-    sourceDir,
-    outDir,
-  });
+  const outputs = await buildVite({ viteConfig });
   if (outputs.error) {
     return { error: true, errors: outputs.errors };
   }

@@ -96,3 +96,16 @@ describe("build", () => {
     expect(tmpDir).toMatchDirSnapshot();
   });
 });
+
+describe("bugs", () => {
+  test("34-deep-structure", async ({ tmpDir }: { tmpDir: string }) => {
+    const res = await run({
+      outputDir: tmpDir,
+      sourceDir: "./src/fixtures/34-deep-structure",
+    });
+
+    expect(res.error).toBeFalsy();
+    // @ts-expect-error
+    expect(tmpDir).toMatchDirSnapshot();
+  });
+});

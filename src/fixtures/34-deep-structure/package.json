@@ -1,0 +1,7 @@
+{
+  "name": "34-deep-structure",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "exports": "./level1/entrypoint.ts"
+}

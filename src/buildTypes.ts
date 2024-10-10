@@ -49,6 +49,7 @@ export async function buildTypes({
     const finalPath = path.join(outDir, relativePath);
     const sourceFileName = fileName.replace(/\.d\.ts$/, ".ts"); // Assuming source files have .ts extension
     sourceToDtsMap.set(sourceFileName, finalPath);
+    fs.mkdirSync(path.dirname(finalPath), { recursive: true });
     fs.writeFileSync(finalPath, data);
   });
 

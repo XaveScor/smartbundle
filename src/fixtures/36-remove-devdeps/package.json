@@ -1,0 +1,10 @@
+{
+  "name": "36-devdeps",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "exports": "./entrypoint.ts",
+  "devDependencies": {
+    "test": "0.6.0"
+  }
+}

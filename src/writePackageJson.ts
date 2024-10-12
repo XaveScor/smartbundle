@@ -80,7 +80,6 @@ export async function writePackageJson(
     author: parsed.author,
     contributors: parsed.contributors,
     license: parsed.license,
-    devDependencies: parsed.devDependencies,
     peerDependencies: parsed.peerDependencies,
     engines: parsed.engines,
     browser: parsed.browser,

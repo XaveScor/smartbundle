@@ -1,0 +1,28 @@
+{
+  "name": "37-ignore-deps",
+  "type": "module",
+  "version": "0.0.0",
+  "module": "./entrypoint.js",
+  "description": "",
+  "exports": {
+    ".": {
+      "import": {
+        "default": "./entrypoint.js"
+      },
+      "require": {
+        "default": "./entrypoint.cjs"
+      },
+      "default": "./entrypoint.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "dependencies": {
+    "dep": "0.0.0"
+  },
+  "optionalDependencies": {
+    "optionaldep": "0.0.0"
+  },
+  "peerDependencies": {
+    "peerdep": "0.0.0"
+  }
+}

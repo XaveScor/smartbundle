@@ -1,0 +1,16 @@
+{
+  "name": "37-ignore-deps",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "exports": "./entrypoint.js",
+  "dependencies": {
+    "dep": "0.0.0"
+  },
+  "optionalDependencies": {
+    "optionaldep": "0.0.0"
+  },
+  "peerDependencies": {
+    "peerdep": "0.0.0"
+  }
+}

@@ -80,6 +80,9 @@ export function createViteConfig({ dirs, packageJson }: CreateViteConfigParam) {
           if (id in (packageJson.optionalDependencies ?? {})) {
             return true;
           }
+          if (id in (packageJson.peerDependencies ?? {})) {
+            return true;
+          }
           return false;
         },
         output: {

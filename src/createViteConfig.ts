@@ -16,6 +16,37 @@ function mapToObject(map: Map<string, string>) {
   return obj;
 }
 
+function createExternalDepValidator(packageJson: PackageJson) {
+  const allExternalPackages = new Set();
+  for (const key of [
+    "dependencies",
+    "optionalDependencies",
+    "peerDependencies",
+  ] as const) {
+    for (const dep of Object.keys(packageJson[key] ?? {})) {
+      allExternalPackages.add(dep);
+    }
+  }
+  allExternalPackages.add(packageJson.name);
+
+  return (id: string) => {
+    if (id.startsWith("node:")) {
+      return true;
+    }
+    const segments = id.split("/");
+    let current = "";
+    for (const segment of segments) {
+      current += segment;
+      // import {} from "a/b/c/d"; case
+      if (allExternalPackages.has(current)) {
+        return true;
+      }
+      current += "/";
+    }
+    return false;
+  };
+}
+
 export function createViteConfig({ dirs, packageJson }: CreateViteConfigParam) {
   const { sourceDir, outDir } = dirs;
 
@@ -29,6 +60,8 @@ export function createViteConfig({ dirs, packageJson }: CreateViteConfigParam) {
     const binEntry = join(sourceDir, packageJson.bin);
     entrypoints.set("__bin__", binEntry);
   }
+
+  const depsValidator = createExternalDepValidator(packageJson);
 
   const viteConfig = defineConfig({
     publicDir: false,
@@ -67,24 +100,7 @@ export function createViteConfig({ dirs, packageJson }: CreateViteConfigParam) {
         },
       },
       rollupOptions: {
-        external: (id, parentId, isResolved) => {
-          if (id === packageJson.name) {
-            return true;
-          }
-          if (id.startsWith("node:")) {
-            return true;
-          }
-          if (id in (packageJson.dependencies ?? {})) {
-            return true;
-          }
-          if (id in (packageJson.optionalDependencies ?? {})) {
-            return true;
-          }
-          if (id in (packageJson.peerDependencies ?? {})) {
-            return true;
-          }
-          return false;
-        },
+        external: depsValidator,
         output: {
           exports: "named",
           preserveModules: true,

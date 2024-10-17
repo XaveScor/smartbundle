@@ -65,13 +65,36 @@ function dependencies(errorText: string) {
     .optional();
 }
 
+function createPathValidator(sourceDir: string) {
+  return (path: string) => {
+    const finalPath = join(sourceDir, path);
+    return fileExists(finalPath);
+  };
+}
+
 function createPackageJsonSchema(sourceDir: string) {
+  const pathValidator = createPathValidator(sourceDir);
+
   return z.object({
     exports: z
-      .string({ message: errors.exportsRequired })
-      .refine((exports) => {
-        const mainFinalPath = join(sourceDir, exports);
-        return fileExists(mainFinalPath);
+      .union(
+        [
+          z.string().transform((path) => new Map([[".", path]])),
+          z.record(z.string()).transform((obj) => new Map(Object.entries(obj))),
+        ],
+        {
+          errorMap() {
+            return { message: errors.exportsRequired };
+          },
+        },
+      )
+      .refine(async (obj) => {
+        for (const [key, value] of obj.entries()) {
+          if (!(await pathValidator(value))) {
+            return false;
+          }
+        }
+        return true;
       }, errors.exportsInvalid)
       .optional(),
     name: z

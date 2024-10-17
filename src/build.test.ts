@@ -95,6 +95,17 @@ describe("build", () => {
     // @ts-expect-error
     expect(tmpDir).toMatchDirSnapshot();
   });
+
+  test("3-exports-object", async ({ tmpDir }: { tmpDir: string }) => {
+    const res = await run({
+      outputDir: tmpDir,
+      sourceDir: "./src/fixtures/3-exports-object",
+    });
+
+    expect(res.error).toBeFalsy();
+    // @ts-expect-error
+    expect(tmpDir).toMatchDirSnapshot();
+  });
 });
 
 describe("bugs", () => {

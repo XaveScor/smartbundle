@@ -1,0 +1,27 @@
+{
+  "name": "correct-name",
+  "type": "module",
+  "version": "0.0.0",
+  "description": "test description",
+  "exports": {
+    "./first": {
+      "import": {
+        "default": "./first.js"
+      },
+      "require": {
+        "default": "./first.cjs"
+      },
+      "default": "./first.js"
+    },
+    "./second": {
+      "import": {
+        "default": "./second.js"
+      },
+      "require": {
+        "default": "./second.cjs"
+      },
+      "default": "./second.js"
+    },
+    "./package.json": "./package.json"
+  }
+}

@@ -52,8 +52,10 @@ export function createViteConfig({ dirs, packageJson }: CreateViteConfigParam) {
 
   const entrypoints = new Map<string, string>();
   if (packageJson.exports) {
-    const mainEntry = join(sourceDir, packageJson.exports);
-    entrypoints.set(".", mainEntry);
+    for (const [key, value] of packageJson.exports.entries()) {
+      const entry = join(sourceDir, value);
+      entrypoints.set(key, entry);
+    }
   }
 
   if (packageJson.bin) {

@@ -1,13 +1,21 @@
 import { join } from "node:path";
 import { copyFile, readdir } from "node:fs/promises";
 
+export async function copyStaticFilesTask(sourceDir: string, outDir: string) {
+  return copyStaticFiles({
+    relativeFiles: new Set(["readme.md"]),
+    sourceDir,
+    outDir,
+  });
+}
+
 type CopyStaticFilesOptions = {
   relativeFiles: Set<string>;
   sourceDir: string;
   outDir: string;
 };
 
-export async function copyStaticFiles({
+async function copyStaticFiles({
   sourceDir,
   outDir,
   relativeFiles,

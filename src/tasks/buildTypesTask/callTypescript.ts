@@ -2,19 +2,18 @@ import * as path from "node:path";
 import * as fs from "node:fs";
 
 type BuildTypesOptions = {
+  ts: typeof import("typescript");
   sourceDir: string;
   files: string[];
   outDir: string;
 };
 
-export async function buildTypes({
+export async function callTypescript({
+  ts,
   sourceDir,
   files,
   outDir,
 }: BuildTypesOptions) {
-  const importedTs = await import("typescript");
-  // because ts have cjs and esm exports
-  const ts = importedTs.default ?? importedTs;
   const configPath = path.join(sourceDir, "tsconfig.json");
   const configFile = ts.readConfigFile(configPath, (path) =>
     // https://github.com/XaveScor/bobrik/issues/22

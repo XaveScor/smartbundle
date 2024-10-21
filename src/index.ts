@@ -1,23 +1,14 @@
 import { relative } from "node:path";
 import { mkdir, rm } from "node:fs/promises";
 import { parsePackageJson } from "./packageJson.js";
-import { ExportsObject, writePackageJson } from "./writePackageJson.js";
-import { errors } from "./errors.js";
-import { buildTypes } from "./buildTypes.js";
+import { type ExportsObject, writePackageJson } from "./writePackageJson.js";
 import { buildVite } from "./buildVite.js";
-import { copyStaticFiles } from "./copyStaticFiles.js";
 import { type Args, resolveDirs } from "./resolveDirs.js";
 import { createViteConfig } from "./createViteConfig.js";
-
-function reverseMap(map: Map<string, string>): Map<string, Array<string>> {
-  const reversed = new Map<string, Array<string>>();
-  for (const [key, value] of map) {
-    const arr = reversed.get(value) ?? [];
-    arr.push(key);
-    reversed.set(value, arr);
-  }
-  return reversed;
-}
+import { copyStaticFilesTask } from "./tasks/copyStaticFilesTask.js";
+import { buildTypesTask } from "./tasks/buildTypesTask/buildTypesTask.js";
+import { BuildError } from "./error.js";
+import { jsFilesTask } from "./tasks/jsFilesTask.js";
 
 function setExports(
   exportsMap: Map<string, ExportsObject>,
@@ -68,58 +59,46 @@ export async function run(args: Args) {
   const viteOutput = outputs.output;
 
   const exportsMap = new Map<string, ExportsObject>();
-  const reversedEntrypoints = reverseMap(entrypoints);
-  const tsEntrypoints = [...entrypoints.values()].filter((entry) =>
-    entry.endsWith(".ts"),
-  );
-  if (tsEntrypoints.length > 0) {
-    try {
-      await import("typescript");
-    } catch {
-      return { error: true, errors: [errors.typescriptNotFound] };
-    }
-    const files = viteOutput.map((el) => el.facadeModuleId ?? "");
-    const dtsMap = await buildTypes({ sourceDir, files, outDir });
-
-    for (const [source, dts] of dtsMap) {
-      const exportPath = reversedEntrypoints.get(source);
-      if (!exportPath) {
-        continue;
-      }
-      for (const path of exportPath) {
-        setExports(exportsMap, path, (entry) => {
-          entry.dts = "./" + relative(outDir, dts);
+  const tasksRes = await Promise.allSettled([
+    copyStaticFilesTask(sourceDir, outDir),
+    buildTypesTask({
+      sourceDir,
+      outDir,
+      entrypoints,
+      buildOutput: viteOutput,
+    }).then((res) => {
+      for (const [value, key] of res) {
+        setExports(exportsMap, key, (entry) => {
+          entry.dts = "./" + relative(outDir, value);
           return entry;
         });
       }
-    }
+    }),
+    jsFilesTask({ buildOutput: viteOutput, entrypoints }).then((res) => {
+      for (const [value, key] of res) {
+        setExports(exportsMap, key, (entry) => {
+          const format = value.endsWith(".cjs") ? "cjs" : "es";
+          if (format === "es") {
+            entry.mjs = "./" + value;
+          } else if (format === "cjs") {
+            entry.cjs = "./" + value;
+          }
+          return entry;
+        });
+      }
+    }),
+  ]);
+
+  const errors = tasksRes
+    .filter((res) => res.status === "rejected")
+    .map((res) => res.reason)
+    .filter((res): res is BuildError => res instanceof BuildError)
+    .map((res) => res.error);
+
+  if (errors.length > 0) {
+    return { error: true, errors };
   }
 
-  for (const el of viteOutput) {
-    if (el.facadeModuleId == null) {
-      continue;
-    }
-    const exportPath = reversedEntrypoints.get(el.facadeModuleId);
-    if (!exportPath) {
-      continue;
-    }
-    for (const path of exportPath) {
-      setExports(exportsMap, path, (entry) => {
-        const format = el.fileName.endsWith(".cjs") ? "cjs" : "es";
-        if (format === "es") {
-          entry.mjs = "./" + el.fileName;
-        } else if (format === "cjs") {
-          entry.cjs = "./" + el.fileName;
-        }
-        return entry;
-      });
-    }
-  }
-  await copyStaticFiles({
-    relativeFiles: new Set(["readme.md"]),
-    sourceDir,
-    outDir,
-  });
   await writePackageJson(outDir, packageJson, {
     exportsMap,
   });

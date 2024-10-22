@@ -1,0 +1,46 @@
+import * as path from "node:path";
+import * as fs from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { describe, test, expect, beforeAll, afterAll } from "vitest";
+import { $ } from "zx";
+import { run } from "../src/index.js";
+
+$.quote = (x) => x;
+
+describe.concurrent("e2e", () => {
+  let testLibDir = "";
+  beforeAll(async () => {
+    testLibDir = await fs.mkdtemp(path.join(tmpdir(), "smartbundle-test-lib"));
+    await run({
+      sourceDir: path.resolve(import.meta.dirname, "test-lib"),
+      outputDir: testLibDir,
+    });
+  });
+  afterAll(async () => {
+    await fs.rm(testLibDir, { recursive: true, force: true });
+  });
+
+  test("bun", async () => {
+    const testDirPath = path.resolve(import.meta.dirname, "bun");
+    const dockerHash =
+      $.sync`docker build -q ${testDirPath} | sed 's/^.*://'`.text();
+
+    expect(
+      $.sync`docker run -it -v ${testLibDir}:/test-lib ${dockerHash}`.text(),
+    ).toMatchInlineSnapshot(`
+      "cjs root default import: root/default
+      cjs root named import: root/named
+      cjs subroute default import: subroute/default
+      cjs subroute named import: subroute/named
+      esm root default import: root/default
+      esm root named import: root/named
+      esm root dynamic default import: root/default
+      esm root dynamic named import: root/named
+      esm subroute default import: subroute/default
+      esm subroute named import: subroute/named
+      esm subroute dynamic default import: subroute/default
+      esm subroute dynamic named import: subroute/named
+      "
+    `);
+  });
+});

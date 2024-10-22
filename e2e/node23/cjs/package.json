@@ -1,0 +1,9 @@
+{
+  "name": "cjs",
+  "version": "1.0.0",
+  "type": "commonjs",
+  "private": true,
+  "dependencies": {
+    "test-lib": "file:/test-lib"
+  }
+}

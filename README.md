@@ -19,6 +19,9 @@ npx smartbundle
 ```
 3) Go to the `dist` folder and publish your package to the npm registry. The total package.json will be generated automatically.
 
+## Supported targets:
+- Bun 1+
+
 ## Features
 - generate the most compatible package.json for any bundlers(webpack, rollup, esbuild, vite, etc) or runtimes(node, bun, deno, etc)
 - validate package.json for common errors

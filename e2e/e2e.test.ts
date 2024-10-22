@@ -116,5 +116,33 @@ describe.concurrent("e2e", () => {
         "
       `);
     });
+
+    test("v23", async () => {
+      const testDirPath = path.resolve(import.meta.dirname, "node23");
+      const dockerHash =
+        $.sync`docker build -q ${testDirPath} | sed 's/^.*://'`.text();
+
+      expect(
+        $.sync`docker run -it -v ${testLibDir}:/test-lib ${dockerHash}`.text(),
+      ).toMatchInlineSnapshot(`
+        "(node:8) ExperimentalWarning: Support for loading ES Module in require() is an experimental feature and might change at any time
+        (Use \`node --trace-warnings ...\` to show where the warning was created)
+        cjs root default import: root/default
+        cjs root named import: root/named
+        cjs subroute default import: subroute/default
+        cjs subroute named import: subroute/named
+        (node:27) ExperimentalWarning: Support for loading ES Module in require() is an experimental feature and might change at any time
+        (Use \`node --trace-warnings ...\` to show where the warning was created)
+        esm root default import: root/default
+        esm root named import: root/named
+        esm root dynamic default import: root/default
+        esm root dynamic named import: root/named
+        esm subroute default import: subroute/default
+        esm subroute named import: subroute/named
+        esm subroute dynamic default import: subroute/default
+        esm subroute dynamic named import: subroute/named
+        "
+      `);
+    });
   });
 });

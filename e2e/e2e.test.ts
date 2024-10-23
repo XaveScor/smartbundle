@@ -180,5 +180,37 @@ describe.concurrent("e2e", () => {
         "
       `);
     });
+
+    test("v5", async () => {
+      const testDirPath = path.resolve(import.meta.dirname, "webpack5");
+      const dockerHash =
+        $.sync`docker build -q ${testDirPath} | sed 's/^.*://'`.text();
+
+      expect(
+        $.sync`docker run -it -v ${testLibDir}:/test-lib ${dockerHash}`.text(),
+      ).toMatchInlineSnapshot(`
+        "
+        > cjs@1.0.0 build
+        > webpack
+
+        [1G[0K[1G[0K\\[1G[0Kcjs root default import: root/default
+        cjs root named import: root/named
+        cjs subroute default import: subroute/default
+        cjs subroute named import: subroute/named
+
+        > esm@1.0.0 build
+        > webpack
+
+        [1G[0K[1G[0K\\[1G[0Kesm root default import: root/default
+        esm root named import: root/named
+        esm root dynamic default import: root/default
+        esm root dynamic named import: root/named
+        esm subroute default import: subroute/default
+        esm subroute named import: subroute/named
+        esm subroute dynamic default import: subroute/default
+        esm subroute dynamic named import: subroute/named
+        "
+      `);
+    });
   });
 });

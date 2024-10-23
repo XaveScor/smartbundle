@@ -23,6 +23,7 @@ npx smartbundle
 - Bun 1+
 - Node ^18.0.0, ^20.0.0, ^22.0.0, ^23.0.0
 - Webpack ^4.47.0, ^5.95.0
+- Rspack ^1.0.0
 
 ## Features
 - generate the most compatible package.json for any bundlers(webpack, rollup, esbuild, vite, etc) or runtimes(node, bun, deno, etc)

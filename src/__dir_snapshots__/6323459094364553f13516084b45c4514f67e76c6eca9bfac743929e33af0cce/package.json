@@ -2,7 +2,9 @@
   "name": "simple-bin-build",
   "type": "module",
   "version": "1.0.0",
-  "bin": "./bin.js",
+  "bin": {
+    "simple-bin-build": "__smartbundle__internals__/simple-bin-build"
+  },
   "description": "",
   "exports": {
     "./package.json": "./package.json"

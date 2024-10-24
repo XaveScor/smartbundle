@@ -19,8 +19,8 @@ export const errors = {
     "The `description` field must be a string. Please, verify the value. More info: https://docs.npmjs.com/cli/v10/configuring-npm/package-json#description",
   dependenciesInvalid:
     "The `dependencies` field must be an Object<string, string>. Please, verify the value. More info: https://docs.npmjs.com/cli/v10/configuring-npm/package-json#dependencies",
-  binString:
-    "The `bin` field must be a string. Please, verify the value. More info: https://docs.npmjs.com/cli/v10/configuring-npm/package-json#bin",
+  binFiled:
+    "The `bin` field must be a path or Record<string, FilePath>. Please, verify the value. More info: https://docs.npmjs.com/cli/v10/configuring-npm/package-json#bin",
   rollupError:
     "An error occurred while building the package. Please, report it to the issues on GitHub",
   typescriptNotFound:

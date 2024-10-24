@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.6.0",
   "description": "zero-config bundler for npm packages",
-  "bin": "./src/bin.ts",
+  "bin": "./src/run.ts",
   "type": "module",
   "scripts": {
     "test": "vitest",
@@ -48,5 +48,5 @@
   "optionalDependencies": {
     "typescript": "^5.0.0"
   },
-  "exports": "./src/run.ts"
+  "exports": "./src/index.ts"
 }

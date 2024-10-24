@@ -8,9 +8,12 @@ type CreateViteConfigParam = {
   packageJson: PackageJson;
 };
 
-function mapToObject(map: Map<string, string>) {
+function mapToObject(map: Map<string, string>, bins: Map<string, string>) {
   const obj: Record<string, string> = {};
   for (const [key, value] of map) {
+    obj[key] = value;
+  }
+  for (const [key, value] of bins) {
     obj[key] = value;
   }
   return obj;
@@ -52,15 +55,17 @@ export function createViteConfig({ dirs, packageJson }: CreateViteConfigParam) {
 
   const entrypoints = new Map<string, string>();
   if (packageJson.exports) {
-    for (const [key, value] of packageJson.exports.entries()) {
+    for (const [key, value] of packageJson.exports) {
       const entry = join(sourceDir, value);
       entrypoints.set(key, entry);
     }
   }
 
+  const bins = new Map<string, string>();
   if (packageJson.bin) {
-    const binEntry = join(sourceDir, packageJson.bin);
-    entrypoints.set("__bin__", binEntry);
+    for (const [key, value] of packageJson.bin) {
+      bins.set(key, join(sourceDir, value));
+    }
   }
 
   const depsValidator = createExternalDepValidator(packageJson);
@@ -71,14 +76,14 @@ export function createViteConfig({ dirs, packageJson }: CreateViteConfigParam) {
       outDir,
       write: true,
       minify: false,
-      emptyOutDir: true,
+      emptyOutDir: false,
       assetsInlineLimit: 0,
       terserOptions: {
         compress: false,
         mangle: false,
       },
       lib: {
-        entry: mapToObject(entrypoints),
+        entry: mapToObject(entrypoints, bins),
         formats: ["es", "cjs"],
         fileName: (format, entryName) => {
           const entrypoint = entrypoints.get(entryName);
@@ -111,5 +116,5 @@ export function createViteConfig({ dirs, packageJson }: CreateViteConfigParam) {
     },
   });
 
-  return { viteConfig, entrypoints };
+  return { viteConfig, entrypoints, bins };
 }

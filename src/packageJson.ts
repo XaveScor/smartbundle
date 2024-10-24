@@ -72,6 +72,17 @@ function createPathValidator(sourceDir: string) {
   };
 }
 
+const PackageJsonNameField: string = "___NAME___";
+function fillPackageJson(packageJson: PackageJson) {
+  if (packageJson.bin) {
+    const binName = packageJson.bin.get(PackageJsonNameField);
+    if (binName) {
+      packageJson.bin.set(packageJson.name, binName);
+      packageJson.bin.delete(PackageJsonNameField);
+    }
+  }
+}
+
 function createPackageJsonSchema(sourceDir: string) {
   const pathValidator = createPathValidator(sourceDir);
 
@@ -112,7 +123,34 @@ function createPackageJsonSchema(sourceDir: string) {
     description: z.string({ message: errors.descriptionString }).optional(),
     dependencies: dependencies(errors.dependenciesInvalid),
     optionalDependencies: dependencies(errors.optionalDependenciesInvalid),
-    bin: z.string({ message: errors.binString }).optional(),
+    bin: z
+      .union(
+        [
+          z
+            .string()
+            .transform((value) => new Map([[PackageJsonNameField, value]])),
+          z
+            .record(z.string())
+            .transform((record) => new Map(Object.entries(record))),
+        ],
+        {
+          errorMap() {
+            return { message: errors.binFiled };
+          },
+        },
+      )
+      .refine(
+        async (map) => {
+          for (const [key, value] of map.entries()) {
+            if (!(await pathValidator(value))) {
+              return false;
+            }
+          }
+          return true;
+        },
+        { message: errors.binFiled },
+      )
+      .optional(),
     repository: z.any().optional(),
     keywords: z
       .array(z.string(), { message: errors.keywordsInvalid })
@@ -176,5 +214,6 @@ export async function parsePackageJson({
     return packageJson.error.errors.map((error) => error.message);
   }
 
+  fillPackageJson(packageJson.data);
   return packageJson.data;
 }

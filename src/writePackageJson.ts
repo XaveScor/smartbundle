@@ -1,5 +1,5 @@
 import { writeFile } from "node:fs/promises";
-import { PackageJson } from "./packageJson.js";
+import { type PackageJson } from "./packageJson.js";
 
 export type ExportsObject = {
   mjs?: string;
@@ -10,6 +10,7 @@ export type ExportsObject = {
 
 type BuildResult = {
   exportsMap: Map<string, ExportsObject>;
+  binsMap: Map<string, string>;
 };
 
 type ExportsPackageJsonObj =
@@ -24,16 +25,12 @@ type ExportsPackageJsonObj =
 export async function writePackageJson(
   outDir: string,
   parsed: PackageJson,
-  { exportsMap }: BuildResult,
+  { exportsMap, binsMap }: BuildResult,
 ) {
   // we always want to have `exports` property in the target package.json
   // If you want to export something, please, specify them
   const allExports: Record<string, ExportsPackageJsonObj> = {};
   for (const [key, value] of exportsMap) {
-    if (key === "__bin__") {
-      continue;
-    }
-
     const anExport: ExportsPackageJsonObj = {};
 
     if (value.dts) {
@@ -62,13 +59,15 @@ export async function writePackageJson(
   }
   allExports["./package.json"] = "./package.json";
 
+  const bin = binsMap.size > 0 ? Object.fromEntries(binsMap) : undefined;
+
   const rootExport =
     typeof allExports["."] === "object" ? allExports["."] : undefined;
   const res = {
     name: parsed.name,
     type: "module",
     version: parsed.version,
-    bin: exportsMap.get("__bin__")?.mjs,
+    bin,
     types: rootExport?.types,
     module: rootExport?.default,
     description: parsed.description ?? "",

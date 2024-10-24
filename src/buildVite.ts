@@ -1,4 +1,4 @@
-import { build, UserConfig } from "vite";
+import { build, type UserConfig } from "vite";
 import { errors } from "./errors.js";
 import { Rollup } from "vite";
 

@@ -254,7 +254,7 @@ describe("parse package.json", () => {
 
       const packageJson = await parsePackageJson({ sourceDir, packagePath });
       expect(packageJson).toStrictEqual(expect.any(Array));
-      expect(packageJson).toContain(errors.binString);
+      expect(packageJson).toContain(errors.binFiled);
     });
 
     test("is optional", async () => {
@@ -266,7 +266,7 @@ describe("parse package.json", () => {
       const packagePath = join(sourceDir, "empty.json");
 
       const packageJson = await parsePackageJson({ sourceDir, packagePath });
-      expect(packageJson).not.toContain(errors.binString);
+      expect(packageJson).not.toContain(errors.binFiled);
     });
   });
 });

@@ -9,6 +9,7 @@ import { copyStaticFilesTask } from "./tasks/copyStaticFilesTask.js";
 import { buildTypesTask } from "./tasks/buildTypesTask/buildTypesTask.js";
 import { BuildError } from "./error.js";
 import { jsFilesTask } from "./tasks/jsFilesTask.js";
+import { binsTask } from "./tasks/binsTask.js";
 
 function setExports(
   exportsMap: Map<string, ExportsObject>,
@@ -21,10 +22,11 @@ function setExports(
 
 export async function defineViteConfig(args: Args = {}) {
   const dirs = resolveDirs(args);
-  const { sourceDir, outDir, packagePath } = dirs;
+  const { sourceDir, outDir, packagePath, outInternalsDir } = dirs;
 
   await rm(outDir, { recursive: true, force: true });
   await mkdir(outDir, { recursive: true });
+  await mkdir(outInternalsDir, { recursive: true });
   const packageJson = await parsePackageJson({ sourceDir, packagePath });
 
   if (Array.isArray(packageJson)) {
@@ -39,7 +41,7 @@ export async function defineViteConfig(args: Args = {}) {
 
 export async function run(args: Args) {
   const dirs = resolveDirs(args);
-  const { sourceDir, outDir, packagePath } = dirs;
+  const { sourceDir, outDir, packagePath, outInternalsDir } = dirs;
 
   await rm(outDir, { recursive: true, force: true });
   await mkdir(outDir, { recursive: true });
@@ -50,15 +52,20 @@ export async function run(args: Args) {
     return { error: true, errors: packageJson };
   }
 
-  const { viteConfig, entrypoints } = createViteConfig({ dirs, packageJson });
+  const { viteConfig, entrypoints, bins } = createViteConfig({
+    dirs,
+    packageJson,
+  });
 
   const outputs = await buildVite({ viteConfig });
   if (outputs.error) {
     return { error: true, errors: outputs.errors };
   }
+  await mkdir(outInternalsDir, { recursive: true });
   const viteOutput = outputs.output;
 
   const exportsMap = new Map<string, ExportsObject>();
+  const binsMap = new Map<string, string>();
   const tasksRes = await Promise.allSettled([
     copyStaticFilesTask(sourceDir, outDir),
     buildTypesTask({
@@ -87,6 +94,13 @@ export async function run(args: Args) {
         });
       }
     }),
+    binsTask({ outInternalsDir, bins, buildOutput: viteOutput, outDir }).then(
+      (res) => {
+        for (const [value, key] of res) {
+          binsMap.set(key, value);
+        }
+      },
+    ),
   ]);
 
   const errors = tasksRes
@@ -101,6 +115,7 @@ export async function run(args: Args) {
 
   await writePackageJson(outDir, packageJson, {
     exportsMap,
+    binsMap,
   });
 
   return { error: false };

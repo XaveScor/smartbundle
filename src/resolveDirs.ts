@@ -21,8 +21,9 @@ export function resolveDirs(args: Args) {
     args.packagePath ?? "./package.json",
   );
   const outDir = myResolve(process.cwd(), args.outputDir ?? "./dist");
+  const outInternalsDir = myResolve(outDir, "__smartbundle__internals__");
 
-  return { sourceDir, packagePath, outDir };
+  return { sourceDir, packagePath, outDir, outInternalsDir };
 }
 
 export type Dirs = ReturnType<typeof resolveDirs>;

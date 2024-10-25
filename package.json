@@ -6,8 +6,10 @@
   "bin": "./src/run.ts",
   "type": "module",
   "scripts": {
-    "test": "vitest",
-    "test:update-snapshots": "vitest -u"
+    "test": "vitest src",
+    "test:update-snapshots": "pnpm test -- -u",
+    "test:e2e": "vitest e2e",
+    "test:e2e-update-snapshots": "pnpm test:e2e -- -u"
   },
   "keywords": [
     "smartbundle",

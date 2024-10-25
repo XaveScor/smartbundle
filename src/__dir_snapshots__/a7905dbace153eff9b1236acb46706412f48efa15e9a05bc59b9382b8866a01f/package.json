@@ -1,0 +1,26 @@
+{
+  "name": "43-devdeps",
+  "type": "module",
+  "version": "0.0.0",
+  "types": "./entrypoint.d.ts",
+  "module": "./entrypoint.js",
+  "description": "",
+  "exports": {
+    ".": {
+      "types": "./entrypoint.d.ts",
+      "import": {
+        "types": "./entrypoint.d.ts",
+        "default": "./entrypoint.js"
+      },
+      "require": {
+        "types": "./entrypoint.d.ts",
+        "default": "./entrypoint.cjs"
+      },
+      "default": "./entrypoint.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "devDependencies": {
+    "test": "0.6.0"
+  }
+}

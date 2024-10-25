@@ -119,10 +119,10 @@ describe("bugs", () => {
     // @ts-expect-error
     expect(tmpDir).toMatchDirSnapshot();
   });
-  test("36-remove-devdeps", async ({ tmpDir }: { tmpDir: string }) => {
+  test("43-save-devdeps", async ({ tmpDir }: { tmpDir: string }) => {
     const res = await run({
       outputDir: tmpDir,
-      sourceDir: "./src/fixtures/36-remove-devdeps",
+      sourceDir: "./src/fixtures/43-save-devdeps",
     });
 
     expect(res.error).toBeFalsy();

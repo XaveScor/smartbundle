@@ -29,20 +29,20 @@ export async function binsTask({
     if (el.fileName.endsWith(".cjs")) {
       continue;
     }
-    const binsPath = reversedEntrypoints.get(el.facadeModuleId);
-    if (!binsPath) {
+    const binsNames = reversedEntrypoints.get(el.facadeModuleId);
+    if (!binsNames) {
       continue;
     }
-    for (const path of binsPath) {
+    for (const binName of binsNames) {
       const totalPath = relative(outBinsDir, join(outDir, el.fileName));
-      const execPath = join(outBinsDir, path);
+      const execPath = join(outBinsDir, `${binName}.js`);
       await writeFile(
         execPath,
         `#!/usr/bin/env node
 import("${totalPath}");
 `,
       );
-      res.set(relative(outDir, execPath), path);
+      res.set(relative(outDir, execPath), binName);
     }
   }
 

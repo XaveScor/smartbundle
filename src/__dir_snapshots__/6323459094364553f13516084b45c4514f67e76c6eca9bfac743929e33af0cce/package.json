@@ -3,7 +3,7 @@
   "type": "module",
   "version": "1.0.0",
   "bin": {
-    "simple-bin-build": "__bin__/simple-bin-build"
+    "simple-bin-build": "__bin__/simple-bin-build.js"
   },
   "description": "",
   "exports": {

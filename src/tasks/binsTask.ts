@@ -1,4 +1,4 @@
-import { writeFile } from "node:fs/promises";
+import { mkdir, writeFile } from "node:fs/promises";
 import { join, relative } from "node:path";
 import { type Rollup } from "vite";
 import { reverseMap } from "./utils.js";
@@ -6,16 +6,20 @@ import { reverseMap } from "./utils.js";
 type BinsTaskOption = {
   buildOutput: Rollup.OutputChunk[];
   bins: Map<string, string>;
-  outInternalsDir: string;
+  outBinsDir: string;
   outDir: string;
 };
 
 export async function binsTask({
   buildOutput,
   bins,
-  outInternalsDir,
+  outBinsDir,
   outDir,
 }: BinsTaskOption) {
+  if (bins.size === 0) {
+    return new Map<string, string>();
+  }
+  await mkdir(outBinsDir, { recursive: true });
   const reversedEntrypoints = reverseMap(bins);
   const res = new Map<string, string>();
   for (const el of buildOutput) {
@@ -30,8 +34,8 @@ export async function binsTask({
       continue;
     }
     for (const path of binsPath) {
-      const totalPath = relative(outInternalsDir, join(outDir, el.fileName));
-      const execPath = join(outInternalsDir, path);
+      const totalPath = relative(outBinsDir, join(outDir, el.fileName));
+      const execPath = join(outBinsDir, path);
       await writeFile(
         execPath,
         `#!/usr/bin/env node

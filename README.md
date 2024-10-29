@@ -49,6 +49,7 @@ The built files will appear in the `./dist` folder, including an auto-generated 
 | Esbuild ^0.24.0           | ✔         | not yet |
 | Metro ^0.81.0             | ✔         | not yet |
 | Next.js/Turbopack ^13.0.0 | ✔         | not yet |
+
 We aim to support as many bundlers and runtimes as possible. If the bundled package doesn't work with your bundler, please let us know.
 
 ## `package.json` limitations

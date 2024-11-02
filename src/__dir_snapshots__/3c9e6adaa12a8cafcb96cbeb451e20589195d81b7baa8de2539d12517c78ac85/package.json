@@ -1,21 +1,22 @@
 {
   "name": "deep-structure",
-  "type": "module",
+  "type": "commonjs",
   "version": "0.0.0",
   "types": "./level1/level2/entrypoint1.d.ts",
-  "module": "./level1/level2/entrypoint1.js",
+  "module": "./level1/level2/entrypoint1.mjs",
+  "main": "./level1/level2/entrypoint1.js",
   "description": "",
   "exports": {
     ".": {
-      "types": "./level1/level2/entrypoint1.d.ts",
       "import": {
-        "types": "./level1/level2/entrypoint1.d.ts",
-        "default": "./level1/level2/entrypoint1.js"
+        "types": "./level1/level2/entrypoint1.d.mts",
+        "default": "./level1/level2/entrypoint1.mjs"
       },
       "require": {
         "types": "./level1/level2/entrypoint1.d.ts",
-        "default": "./level1/level2/entrypoint1.cjs"
+        "default": "./level1/level2/entrypoint1.js"
       },
+      "types": "./level1/level2/entrypoint1.d.ts",
       "default": "./level1/level2/entrypoint1.js"
     },
     "./package.json": "./package.json"

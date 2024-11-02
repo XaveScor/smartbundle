@@ -1,4 +1,5 @@
-import { a } from "dep";
-import { a as a$1 } from "optionaldep";
-import { a as a$2 } from "peerdep";
-console.log(a, a$1, a$2);
+"use strict";
+const dep = require("dep");
+const optionaldep = require("optionaldep");
+const peerdep = require("peerdep");
+console.log(dep.a, optionaldep.a, peerdep.a);

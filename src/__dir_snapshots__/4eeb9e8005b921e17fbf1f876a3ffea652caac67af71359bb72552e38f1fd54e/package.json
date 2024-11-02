@@ -1,21 +1,22 @@
 {
   "name": "ts-import",
-  "type": "module",
+  "type": "commonjs",
   "version": "1.0.0",
   "types": "./entrypoint.d.ts",
-  "module": "./entrypoint.js",
+  "module": "./entrypoint.mjs",
+  "main": "./entrypoint.js",
   "description": "test description",
   "exports": {
     ".": {
-      "types": "./entrypoint.d.ts",
       "import": {
-        "types": "./entrypoint.d.ts",
-        "default": "./entrypoint.js"
+        "types": "./entrypoint.d.mts",
+        "default": "./entrypoint.mjs"
       },
       "require": {
         "types": "./entrypoint.d.ts",
-        "default": "./entrypoint.cjs"
+        "default": "./entrypoint.js"
       },
+      "types": "./entrypoint.d.ts",
       "default": "./entrypoint.js"
     },
     "./package.json": "./package.json"

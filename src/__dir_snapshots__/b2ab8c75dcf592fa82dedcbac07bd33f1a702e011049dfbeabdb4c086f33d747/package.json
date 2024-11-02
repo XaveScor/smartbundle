@@ -1,24 +1,24 @@
 {
   "name": "correct-name",
-  "type": "module",
+  "type": "commonjs",
   "version": "0.0.0",
   "description": "test description",
   "exports": {
     "./first": {
       "import": {
-        "default": "./first.js"
+        "default": "./first.mjs"
       },
       "require": {
-        "default": "./first.cjs"
+        "default": "./first.js"
       },
       "default": "./first.js"
     },
     "./second": {
       "import": {
-        "default": "./second.js"
+        "default": "./second.mjs"
       },
       "require": {
-        "default": "./second.cjs"
+        "default": "./second.js"
       },
       "default": "./second.js"
     },

@@ -1,4 +1,4 @@
+"use strict";
+Object.defineProperties(exports, { __esModule: { value: true }, [Symbol.toStringTag]: { value: "Module" } });
 const entrypoint = 1;
-export {
-  entrypoint as default
-};
+exports.default = entrypoint;

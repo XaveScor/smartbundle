@@ -1,16 +1,17 @@
 {
   "name": "@external-deps/node",
-  "type": "module",
+  "type": "commonjs",
   "version": "0.0.0",
-  "module": "./node.js",
+  "module": "./node.mjs",
+  "main": "./node.js",
   "description": "",
   "exports": {
     ".": {
       "import": {
-        "default": "./node.js"
+        "default": "./node.mjs"
       },
       "require": {
-        "default": "./node.cjs"
+        "default": "./node.js"
       },
       "default": "./node.js"
     },

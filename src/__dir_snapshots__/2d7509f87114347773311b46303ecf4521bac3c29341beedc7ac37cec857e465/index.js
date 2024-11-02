@@ -1,2 +1,3 @@
-import { test } from "aaa";
-console.log(test);
+"use strict";
+const aaa = require("aaa");
+console.log(aaa.test);

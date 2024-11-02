@@ -1,0 +1,13 @@
+{
+  "name": "cjs",
+  "version": "1.0.0",
+  "type": "commonjs",
+  "private": true,
+  "dependencies": {
+    "metro": "^0.81.0",
+    "metro-runtime": "0.81.0"
+  },
+  "scripts": {
+    "build": "metro build ./test.js --out ./test.bundle.js --platform node"
+  }
+}

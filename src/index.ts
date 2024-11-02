@@ -82,7 +82,7 @@ export async function run(args: Args) {
     jsFilesTask({ buildOutput: viteOutput, entrypoints }).then((res) => {
       for (const [value, key] of res) {
         setExports(exportsMap, key, (entry) => {
-          const format = value.endsWith(".cjs") ? "cjs" : "es";
+          const format = value.endsWith(".js") ? "cjs" : "es";
           if (format === "es") {
             entry.mjs = "./" + value;
           } else if (format === "cjs") {

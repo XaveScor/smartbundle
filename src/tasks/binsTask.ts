@@ -34,7 +34,10 @@ export async function binsTask({
       continue;
     }
     for (const binName of binsNames) {
-      const totalPath = relative(outBinsDir, join(outDir, el.fileName));
+      const totalPath = relative(
+        outBinsDir,
+        join(outDir, el.fileName.replace(/js$/, "mjs")),
+      );
       const execPath = join(outBinsDir, `${binName}.js`);
       await writeFile(
         execPath,

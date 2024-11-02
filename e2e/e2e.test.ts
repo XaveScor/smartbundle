@@ -245,4 +245,30 @@ describe.concurrent("e2e", () => {
       "
     `);
   });
+
+  describe("metro", () => {
+    test("v0.81", async () => {
+      const testDirPath = path.resolve(import.meta.dirname, "metro0_81");
+      const dockerHash =
+        $.sync`docker build -q ${testDirPath} | sed 's/^.*://'`.text();
+
+      expect(
+        $.sync`docker run -it -v ${testLibDir}:/test-lib ${dockerHash}`.text(),
+      ).toMatchInlineSnapshot(`
+        "
+        > cjs@1.0.0 build
+        > metro build ./test.js --out ./test.bundle.js --platform node
+
+        [1G[0K[32m[7m[1m BUNDLE [22m[27m[39m[0m[2m ./[22m[0m[1mtest.js[22m 
+
+        Writing bundle output to: ./test.bundle.js
+        Done writing bundle output
+        [1G[0K\\[1G[0Kcjs root default import: root/default
+        cjs root named import: root/named
+        cjs subroute default import: subroute/default
+        cjs subroute named import: subroute/named
+        "
+      `);
+    });
+  });
 });

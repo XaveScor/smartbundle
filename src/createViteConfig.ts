@@ -92,16 +92,16 @@ export function createViteConfig({ dirs, packageJson }: CreateViteConfigParam) {
             return (
               "__do_not_import_directly__/" +
               noExt +
-              (format === "es" ? ".js" : ".cjs")
+              (format === "es" ? ".mjs" : ".js")
             );
           }
           const relativePath = relative(sourceDir, entrypoint);
           const noExt = relativePath.replace(/\.[^.]+$/, "");
           if (format === "es") {
-            return `${noExt}.js`;
+            return `${noExt}.mjs`;
           }
           if (format === "cjs") {
-            return `${noExt}.cjs`;
+            return `${noExt}.js`;
           }
           return noExt;
         },

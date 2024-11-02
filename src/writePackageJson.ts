@@ -22,6 +22,16 @@ type ExportsPackageJsonObj =
     }
   | string;
 
+function extractValue(value?: ExportsPackageJsonObj) {
+  if (!value) {
+    return undefined;
+  }
+  if (typeof value === "string") {
+    return value;
+  }
+  return value.default;
+}
+
 export async function writePackageJson(
   outDir: string,
   parsed: PackageJson,
@@ -53,7 +63,7 @@ export async function writePackageJson(
 
     // because we need to have default and types key on the end
     // JSON.stringify will put it on the end if we put value at the last step
-    anExport.default = value.mjs;
+    anExport.default = value.cjs;
 
     allExports[key] = anExport;
   }
@@ -65,11 +75,12 @@ export async function writePackageJson(
     typeof allExports["."] === "object" ? allExports["."] : undefined;
   const res = {
     name: parsed.name,
-    type: "module",
+    type: "commonjs",
     version: parsed.version,
     bin,
     types: rootExport?.types,
-    module: rootExport?.default,
+    module: extractValue(rootExport?.import),
+    main: extractValue(rootExport?.require),
     description: parsed.description ?? "",
     exports: allExports,
     dependencies: parsed.dependencies ?? undefined,

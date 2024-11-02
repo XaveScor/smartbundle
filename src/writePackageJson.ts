@@ -3,8 +3,8 @@ import { type PackageJson } from "./packageJson.js";
 
 export type ExportsObject = {
   mjs?: string;
-  dts?: string;
-  cdts?: string;
+  dmts?: string;
+  dcts?: string;
   cjs?: string;
   raw?: string;
 };
@@ -46,21 +46,21 @@ export async function writePackageJson(
 
     if (value.mjs) {
       anExport.import = {};
-      if (value.dts) {
-        anExport.import.types = value.dts;
+      if (value.dmts) {
+        anExport.import.types = value.dmts;
       }
       anExport.import.default = value.mjs;
     }
     if (value.cjs) {
       anExport.require = {};
-      if (value.cdts) {
-        anExport.require.types = value.cdts;
+      if (value.dcts) {
+        anExport.require.types = value.dcts;
       }
       anExport.require.default = value.cjs;
     }
 
     // should be first for correct resolving
-    anExport.types = value.cdts ?? value.dts;
+    anExport.types = value.dcts ?? value.dmts;
     // because we need to have default and types key on the end
     // JSON.stringify will put it on the end if we put value at the last step
     anExport.default = value.cjs;

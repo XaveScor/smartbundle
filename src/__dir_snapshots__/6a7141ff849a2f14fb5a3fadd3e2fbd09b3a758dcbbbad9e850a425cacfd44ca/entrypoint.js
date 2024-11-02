@@ -1,2 +1,3 @@
-import { a } from "dep/a";
-console.log(a);
+"use strict";
+const a = require("dep/a");
+console.log(a.a);

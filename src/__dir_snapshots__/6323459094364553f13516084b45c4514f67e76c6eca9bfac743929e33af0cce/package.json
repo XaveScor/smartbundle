@@ -1,6 +1,6 @@
 {
   "name": "simple-bin-build",
-  "type": "module",
+  "type": "commonjs",
   "version": "1.0.0",
   "bin": {
     "simple-bin-build": "__bin__/simple-bin-build.js"

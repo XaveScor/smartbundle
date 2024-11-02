@@ -1,4 +1,4 @@
+"use strict";
+Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" });
 const a = "second";
-export {
-  a
-};
+exports.a = a;

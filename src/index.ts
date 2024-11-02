@@ -75,10 +75,10 @@ export async function run(args: Args) {
       for (const [types, source] of res) {
         setExports(exportsMap, source, (entry) => {
           if (types.endsWith(".d.ts")) {
-            entry.dts = "./" + relative(outDir, types);
+            entry.dcts = "./" + relative(outDir, types);
           }
-          if (types.endsWith(".d.cts")) {
-            entry.cdts = "./" + relative(outDir, types);
+          if (types.endsWith(".d.mts")) {
+            entry.dmts = "./" + relative(outDir, types);
           }
           return entry;
         });

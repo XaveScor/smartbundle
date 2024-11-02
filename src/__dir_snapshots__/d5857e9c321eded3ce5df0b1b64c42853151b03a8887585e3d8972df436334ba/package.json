@@ -1,16 +1,17 @@
 {
   "name": "es-js-import",
-  "type": "module",
+  "type": "commonjs",
   "version": "1.0.0",
-  "module": "./entrypoint.js",
+  "module": "./entrypoint.mjs",
+  "main": "./entrypoint.js",
   "description": "",
   "exports": {
     ".": {
       "import": {
-        "default": "./entrypoint.js"
+        "default": "./entrypoint.mjs"
       },
       "require": {
-        "default": "./entrypoint.cjs"
+        "default": "./entrypoint.js"
       },
       "default": "./entrypoint.js"
     },

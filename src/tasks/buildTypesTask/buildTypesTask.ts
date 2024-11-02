@@ -35,13 +35,13 @@ export async function buildTypesTask({
   const dtsMap = await callTypescript({ ts, sourceDir, files, outDir });
 
   const result = new Map<string, string>();
-  for (const [source, dts] of dtsMap) {
+  for (const [types, source] of dtsMap) {
     const exportPath = reversedEntrypoints.get(source);
     if (!exportPath) {
       continue;
     }
     for (const path of exportPath) {
-      result.set(dts, path);
+      result.set(types, path);
     }
   }
 

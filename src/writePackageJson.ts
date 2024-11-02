@@ -43,8 +43,6 @@ export async function writePackageJson(
   const allExports: Record<string, ExportsPackageJsonObj> = {};
   for (const [key, value] of exportsMap) {
     const anExport: ExportsPackageJsonObj = {};
-    // should be first for correct resolving
-    anExport.types = value.cdts ?? value.dts;
 
     if (value.mjs) {
       anExport.import = {};
@@ -61,6 +59,8 @@ export async function writePackageJson(
       anExport.require.default = value.cjs;
     }
 
+    // should be first for correct resolving
+    anExport.types = value.cdts ?? value.dts;
     // because we need to have default and types key on the end
     // JSON.stringify will put it on the end if we put value at the last step
     anExport.default = value.cjs;

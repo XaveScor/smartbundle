@@ -4,6 +4,7 @@ import { type PackageJson } from "./packageJson.js";
 export type ExportsObject = {
   mjs?: string;
   dts?: string;
+  cdts?: string;
   cjs?: string;
   raw?: string;
 };
@@ -42,10 +43,9 @@ export async function writePackageJson(
   const allExports: Record<string, ExportsPackageJsonObj> = {};
   for (const [key, value] of exportsMap) {
     const anExport: ExportsPackageJsonObj = {};
+    // should be first for correct resolving
+    anExport.types = value.cdts ?? value.dts;
 
-    if (value.dts) {
-      anExport.types = value.dts;
-    }
     if (value.mjs) {
       anExport.import = {};
       if (value.dts) {
@@ -55,8 +55,8 @@ export async function writePackageJson(
     }
     if (value.cjs) {
       anExport.require = {};
-      if (value.dts) {
-        anExport.require.types = value.dts;
+      if (value.cdts) {
+        anExport.require.types = value.cdts;
       }
       anExport.require.default = value.cjs;
     }

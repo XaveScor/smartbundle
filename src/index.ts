@@ -72,9 +72,14 @@ export async function run(args: Args) {
       entrypoints,
       buildOutput: viteOutput,
     }).then((res) => {
-      for (const [value, key] of res) {
-        setExports(exportsMap, key, (entry) => {
-          entry.dts = "./" + relative(outDir, value);
+      for (const [types, source] of res) {
+        setExports(exportsMap, source, (entry) => {
+          if (types.endsWith(".d.ts")) {
+            entry.dts = "./" + relative(outDir, types);
+          }
+          if (types.endsWith(".d.cts")) {
+            entry.cdts = "./" + relative(outDir, types);
+          }
           return entry;
         });
       }

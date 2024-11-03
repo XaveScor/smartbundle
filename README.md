@@ -28,6 +28,7 @@ We've also optimized several aspects to ensure the resulting package is as smoot
 npx smartbundle@latest
 ```
 The built files will appear in the `./dist` folder, including an auto-generated `package.json` file.
+
 3) Navigate to the `./dist` folder and publish your package to the npm registry.
 
 ## Supported targets
@@ -73,9 +74,9 @@ Only ESM/TS entry points are currently supported in exports. While [conditional 
 #### `bin`
 Currently, we support all `bin` [specifications](https://docs.npmjs.com/cli/v10/configuring-npm/package-json#bin) except for `sh` files. Also, we guarantee that the bin files will execute as expected.
 
-### FAQ
-#### Why don't you minify the output?
+## FAQ
+### Why don't you minify the output?
 Minification is typically needed only for production. During development, readable, unminified output helps with debugging.
 
-#### Why do you require third-party tools for building?
+### Why do you require third-party tools for building?
 We prioritize keeping the `node_modules` size manageable and avoid unnecessary dependencies. If your package does not require TypeScript, for instance, you don’t need to install those specific tools.

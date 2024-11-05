@@ -20,7 +20,7 @@ importers:
     optionalDependencies:
       typescript:
         specifier: ^5.0.0
-        version: 5.5.3
+        version: 5.6.3
     devDependencies:
       '@types/node':
         specifier: ^20.14.11
@@ -513,8 +513,8 @@ packages:
     resolution: {integrity: sha512-q5nmENpTHgiPVd1cJDDc9cVoYN5x4vCvwT3FMilvKPKneCBZAxn2YWQjDF0UMcE9k0Cay1gBiDfTMU0g+mPMQA==}
     engines: {node: '>=14.0.0'}
 
-  typescript@5.5.3:
-    resolution: {integrity: sha512-/hreyEujaB0w76zKo6717l3L0o/qEUtRgdvUBvlkhoWeOVMjMuHNHk0BRBzikzuGDqNmPQbg5ifMEqsHLiIUcQ==}
+  typescript@5.6.3:
+    resolution: {integrity: sha512-hjcS1mhfuyi4WW8IWtjP7brDrG2cuDZukyrYrSauoXGNgx0S7zceP07adYkJycEr56BOUTNPzbInooiN3fn1qw==}
     engines: {node: '>=14.17'}
     hasBin: true
 
@@ -1010,7 +1010,7 @@ snapshots:
 
   tinyspy@3.0.0: {}
 
-  typescript@5.5.3:
+  typescript@5.6.3:
     optional: true
 
   undici-types@5.26.5: {}

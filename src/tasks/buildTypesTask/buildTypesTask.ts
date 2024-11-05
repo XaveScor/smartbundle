@@ -26,8 +26,9 @@ export async function buildTypesTask({
 
   let ts: typeof import("typescript");
   try {
-    ts = await import("typescript");
-  } catch {
+    // ts <=4.3 has no named exports. The all methods is located in the default export
+    ts = (await import("typescript")).default;
+  } catch (e) {
     throw errors.typescriptNotFound;
   }
 

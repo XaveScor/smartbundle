@@ -1,13 +1,36 @@
 import * as path from "node:path";
 import * as fs from "node:fs/promises";
+import * as fss from "node:fs";
 import { tmpdir } from "node:os";
 import { describe, test, expect, beforeAll } from "vitest";
 import { $ } from "zx";
 import { run } from "../src/index.js";
+import { existsSync } from "node:fs";
 
 function buildBaseImage(path: string) {
   const dockerOutput = $.sync`docker build -q ${path} | sed 's/^.*://'`.text();
   return dockerOutput.trim();
+}
+
+// We need to copy the files only if they don't exist in the destination directory
+function copyDirectory(srcDir: string, destDir: string) {
+  fss.mkdirSync(destDir, { recursive: true });
+
+  for (const file of fss.readdirSync(srcDir)) {
+    const srcFile = path.join(srcDir, file);
+    const destFile = path.join(destDir, file);
+
+    if (fss.statSync(srcFile).isDirectory()) {
+      copyDirectory(srcFile, destFile);
+    } else if (!existsSync(destFile)) {
+      fss.copyFileSync(srcFile, destFile);
+    }
+  }
+}
+
+async function prepareTestDir(testDirPath: string) {
+  $.sync`git checkout -- ${testDirPath}`;
+  await copyDirectory(path.resolve(import.meta.dirname, "common"), testDirPath);
 }
 
 describe.concurrent("e2e", () => {
@@ -22,6 +45,7 @@ describe.concurrent("e2e", () => {
 
   test("bun", async () => {
     const testDirPath = path.resolve(import.meta.dirname, "bun");
+    await prepareTestDir(testDirPath);
     const dockerHash = buildBaseImage(testDirPath);
 
     expect(
@@ -52,6 +76,7 @@ describe.concurrent("e2e", () => {
   describe("node", () => {
     test("v18", async () => {
       const testDirPath = path.resolve(import.meta.dirname, "node18");
+      await prepareTestDir(testDirPath);
       const dockerHash = buildBaseImage(testDirPath);
 
       expect(
@@ -81,6 +106,7 @@ describe.concurrent("e2e", () => {
 
     test("v20", async () => {
       const testDirPath = path.resolve(import.meta.dirname, "node20");
+      await prepareTestDir(testDirPath);
       const dockerHash = buildBaseImage(testDirPath);
 
       expect(
@@ -110,6 +136,7 @@ describe.concurrent("e2e", () => {
 
     test("v22", async () => {
       const testDirPath = path.resolve(import.meta.dirname, "node22");
+      await prepareTestDir(testDirPath);
       const dockerHash = buildBaseImage(testDirPath);
 
       expect(
@@ -139,6 +166,7 @@ describe.concurrent("e2e", () => {
 
     test("v23", async () => {
       const testDirPath = path.resolve(import.meta.dirname, "node23");
+      await prepareTestDir(testDirPath);
       const dockerHash = buildBaseImage(testDirPath);
 
       expect(
@@ -176,6 +204,7 @@ describe.concurrent("e2e", () => {
   describe("webpack", () => {
     test("v4", async () => {
       const testDirPath = path.resolve(import.meta.dirname, "webpack4");
+      await prepareTestDir(testDirPath);
       const dockerHash = buildBaseImage(testDirPath);
 
       expect(
@@ -215,6 +244,7 @@ describe.concurrent("e2e", () => {
 
     test("v5", async () => {
       const testDirPath = path.resolve(import.meta.dirname, "webpack5");
+      await prepareTestDir(testDirPath);
       const dockerHash = buildBaseImage(testDirPath);
 
       expect(
@@ -253,6 +283,7 @@ describe.concurrent("e2e", () => {
 
   test("rspack", async () => {
     const testDirPath = path.resolve(import.meta.dirname, "rspack");
+    await prepareTestDir(testDirPath);
     const dockerHash = buildBaseImage(testDirPath);
 
     expect(
@@ -291,6 +322,7 @@ describe.concurrent("e2e", () => {
   describe("metro", () => {
     test("v0.81", async () => {
       const testDirPath = path.resolve(import.meta.dirname, "metro0_81");
+      await prepareTestDir(testDirPath);
       const dockerHash = buildBaseImage(testDirPath);
 
       expect(

@@ -1,0 +1,3 @@
+!common
+**/esm/**/test.js
+**/cjs/**/test.js

@@ -15,3 +15,11 @@ const {
 } = require("test-lib/innerFolder/renamed1");
 console.log("cjs renamed default import:", RenamedDefaultImport);
 console.log("cjs renamed named import:", renamedNamed);
+
+const { default: OnlyDefault } = require("test-lib/onlyDefault");
+console.log("cjs only default import:", OnlyDefault);
+
+const { named: OnlyNamed } = require("test-lib/onlyNamed");
+console.log("cjs only named import:", OnlyNamed);
+
+require("test-lib/onlySideEffect");

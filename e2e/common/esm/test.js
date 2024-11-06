@@ -28,3 +28,28 @@ const { default: dynamicRenamedDefault, named: dynamicRenamedNamed } =
   await import("test-lib/innerFolder/renamed1");
 console.log("esm renamed dynamic default import:", dynamicRenamedDefault);
 console.log("esm renamed dynamic named import:", dynamicRenamedNamed);
+
+/**
+ *
+ * const { default: OnlyDefault } = require("test-lib/onlyDefault");
+ * console.log("cjs only default import:", OnlyDefault);
+ *
+ * const { named: OnlyNamed } = require("test-lib/onlyNamed");
+ * console.log("cjs only named import:", OnlyNamed);
+ *
+ * require("test-lib/onlySideEffect");
+ */
+import OnlyDefault from "test-lib/onlyDefault";
+console.log("esm only default import:", OnlyDefault);
+const { default: dynamicOnlyDefault } = await import("test-lib/onlyDefault");
+console.log("esm only dynamic default import:", dynamicOnlyDefault);
+
+import { named as OnlyNamed } from "test-lib/onlyNamed";
+console.log("esm only named import:", OnlyNamed);
+const { named: dynamicOnlyNamed } = await import("test-lib/onlyNamed");
+console.log("esm only dynamic named import:", dynamicOnlyNamed);
+
+import "test-lib/onlySideEffect";
+console.log("esm only side effect import");
+await import("test-lib/onlySideEffect");
+console.log("esm only dynamic side effect import");

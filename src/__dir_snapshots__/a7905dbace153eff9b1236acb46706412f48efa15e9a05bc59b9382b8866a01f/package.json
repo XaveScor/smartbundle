@@ -2,22 +2,22 @@
   "name": "43-devdeps",
   "type": "commonjs",
   "version": "0.0.0",
-  "types": "./entrypoint.d.ts",
-  "module": "./entrypoint.mjs",
-  "main": "./entrypoint.js",
+  "types": "./__compiled__/cjs/entrypoint.d.ts",
+  "module": "./index.mjs",
+  "main": "./index.js",
   "description": "",
   "exports": {
     ".": {
       "import": {
-        "types": "./entrypoint.d.mts",
-        "default": "./entrypoint.mjs"
+        "types": "./__compiled__/esm/entrypoint.d.mts",
+        "default": "./index.mjs"
       },
       "require": {
-        "types": "./entrypoint.d.ts",
-        "default": "./entrypoint.js"
+        "types": "./__compiled__/cjs/entrypoint.d.ts",
+        "default": "./index.js"
       },
-      "types": "./entrypoint.d.ts",
-      "default": "./entrypoint.js"
+      "types": "./__compiled__/cjs/entrypoint.d.ts",
+      "default": "./index.js"
     },
     "./package.json": "./package.json"
   },

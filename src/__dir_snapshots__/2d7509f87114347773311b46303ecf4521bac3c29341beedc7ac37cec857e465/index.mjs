@@ -1,2 +1,1 @@
-import { test } from "aaa";
-console.log(test);
+export * from "./__compiled__/esm/index.mjs";

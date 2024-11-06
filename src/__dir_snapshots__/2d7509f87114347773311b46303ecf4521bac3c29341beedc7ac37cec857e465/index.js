@@ -1,3 +1,1 @@
-"use strict";
-const aaa = require("aaa");
-console.log(aaa.test);
+module.exports = require("./__compiled__/cjs/index.js");

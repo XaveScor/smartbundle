@@ -17,3 +17,14 @@ const { default: dynamicSubDefault, named: dynamicSubNamed } = await import(
 );
 console.log("esm subroute dynamic default import:", dynamicSubDefault);
 console.log("esm subroute dynamic named import:", dynamicSubNamed);
+
+import RenamedDefaultImport, {
+  named as renamedNamed,
+} from "test-lib/innerFolder/renamed1";
+console.log("esm renamed default import:", RenamedDefaultImport);
+console.log("esm renamed named import:", renamedNamed);
+
+const { default: dynamicRenamedDefault, named: dynamicRenamedNamed } =
+  await import("test-lib/innerFolder/renamed1");
+console.log("esm renamed dynamic default import:", dynamicRenamedDefault);
+console.log("esm renamed dynamic named import:", dynamicRenamedNamed);

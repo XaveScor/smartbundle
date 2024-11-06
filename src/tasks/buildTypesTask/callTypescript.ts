@@ -47,15 +47,16 @@ export async function callTypescript({
     // .d.ts for cjs because "type": "commonjs" in package.json
     // .d.mts for esm
     const relativePath = path.relative(sourceDir, fileName);
-    const finalPath = path.join(outDir, relativePath);
-    const esmFinalPath = finalPath.replace(/\.d\.ts$/, ".d.mts");
     const sourceFileName = fileName.replace(/\.d\.ts$/, ".ts"); // Assuming source files have .ts extension
 
+    const finalEsmPath = path.join(outDir, "__compiled__", "esm", relativePath);
+    const esmFinalPath = finalEsmPath.replace(/\.d\.ts$/, ".d.mts");
     sourceToDtsMap.set(esmFinalPath, sourceFileName);
     fs.mkdirSync(path.dirname(esmFinalPath), { recursive: true });
     fs.writeFileSync(esmFinalPath, data);
 
-    const cjsFinalPath = finalPath.replace(/\.d\.ts$/, ".d.ts");
+    const finalCjsPath = path.join(outDir, "__compiled__", "cjs", relativePath);
+    const cjsFinalPath = finalCjsPath.replace(/\.d\.ts$/, ".d.ts");
     fs.writeFileSync(cjsFinalPath, data);
     sourceToDtsMap.set(cjsFinalPath, sourceFileName);
   });

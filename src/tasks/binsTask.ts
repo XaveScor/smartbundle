@@ -26,7 +26,7 @@ export async function binsTask({
     if (el.facadeModuleId == null) {
       continue;
     }
-    if (el.fileName.endsWith(".cjs")) {
+    if (el.fileName.endsWith(".js")) {
       continue;
     }
     const binsNames = reversedEntrypoints.get(el.facadeModuleId);
@@ -34,10 +34,7 @@ export async function binsTask({
       continue;
     }
     for (const binName of binsNames) {
-      const totalPath = relative(
-        outBinsDir,
-        join(outDir, el.fileName.replace(/js$/, "mjs")),
-      );
+      const totalPath = relative(outBinsDir, join(outDir, el.fileName));
       const execPath = join(outBinsDir, `${binName}.js`);
       await writeFile(
         execPath,

@@ -2,18 +2,18 @@
   "name": "@external-deps/node",
   "type": "commonjs",
   "version": "0.0.0",
-  "module": "./node.mjs",
-  "main": "./node.js",
+  "module": "./index.mjs",
+  "main": "./index.js",
   "description": "",
   "exports": {
     ".": {
       "import": {
-        "default": "./node.mjs"
+        "default": "./index.mjs"
       },
       "require": {
-        "default": "./node.js"
+        "default": "./index.js"
       },
-      "default": "./node.js"
+      "default": "./index.js"
     },
     "./package.json": "./package.json"
   }

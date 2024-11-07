@@ -5,6 +5,10 @@
   "type": "module",
   "exports": {
     ".": "./index.ts",
-    "./subroute": "./subroute.ts"
+    "./subroute": "./subroute.ts",
+    "./innerFolder/renamed1": "./renamed.ts",
+    "./onlyDefault": "./onlyDefault.ts",
+    "./onlyNamed": "./onlyNamed.ts",
+    "./onlySideEffect": "./onlySideEffect.ts"
   }
 }

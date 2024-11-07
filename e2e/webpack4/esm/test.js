@@ -23,3 +23,17 @@ console.log("esm subroute named import:", subNamed);
   console.log("esm subroute dynamic default import:", dynamicSubDefault);
   console.log("esm subroute dynamic named import:", dynamicSubNamed);
 })();
+
+import RenamedDefaultImport, {
+  named as renamedNamed,
+} from "test-lib/innerFolder/renamed1";
+console.log("esm renamed default import:", RenamedDefaultImport);
+console.log("esm renamed named import:", renamedNamed);
+
+// !! TOP-LEVEL-AWAIT is not supported in webpack4
+(async () => {
+  const { default: dynamicRenamedDefault, named: dynamicRenamedNamed } =
+    await import("test-lib/innerFolder/renamed1");
+  console.log("esm renamed dynamic default import:", dynamicRenamedDefault);
+  console.log("esm renamed dynamic named import:", dynamicRenamedNamed);
+})();

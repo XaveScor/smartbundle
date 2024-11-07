@@ -8,12 +8,9 @@ type CreateViteConfigParam = {
   packageJson: PackageJson;
 };
 
-function mapToObject(map: Map<string, string>, bins: Map<string, string>) {
+function mapToObject(map: Map<string, string>) {
   const obj: Record<string, string> = {};
   for (const [key, value] of map) {
-    obj[key] = value;
-  }
-  for (const [key, value] of bins) {
     obj[key] = value;
   }
   return obj;
@@ -68,10 +65,13 @@ export function createViteConfig({ dirs, packageJson }: CreateViteConfigParam) {
     }
   }
 
+  const mergedEntries = new Map([...entrypoints, ...bins]);
+
   const depsValidator = createExternalDepValidator(packageJson);
 
   const viteConfig = defineConfig({
     publicDir: false,
+    root: sourceDir,
     build: {
       outDir,
       write: true,
@@ -83,32 +83,38 @@ export function createViteConfig({ dirs, packageJson }: CreateViteConfigParam) {
         mangle: false,
       },
       lib: {
-        entry: mapToObject(entrypoints, bins),
+        entry: mapToObject(mergedEntries),
         formats: ["es", "cjs"],
         fileName: (format, entryName) => {
-          const entrypoint = entrypoints.get(entryName);
+          const entrypoint = mergedEntries.get(entryName);
           if (!entrypoint) {
             const noExt = entryName.replace(/\.[^.]+$/, "");
-            return (
-              "__do_not_import_directly__/" +
-              noExt +
-              (format === "es" ? ".mjs" : ".js")
+            if (format === "es") {
+              return join("__compiled__", "esm", `${noExt}.mjs`);
+            } else {
+              return join("__compiled__", "cjs", `${noExt}.js`);
+            }
+          }
+
+          if (format === "es") {
+            return join(
+              "__compiled__",
+              "esm",
+              relative(sourceDir, entrypoint).replace(/\.[^.]+$/, "") + ".mjs",
+            );
+          } else {
+            return join(
+              "__compiled__",
+              "cjs",
+              relative(sourceDir, entrypoint).replace(/\.[^.]+$/, "") + ".js",
             );
           }
-          const relativePath = relative(sourceDir, entrypoint);
-          const noExt = relativePath.replace(/\.[^.]+$/, "");
-          if (format === "es") {
-            return `${noExt}.mjs`;
-          }
-          if (format === "cjs") {
-            return `${noExt}.js`;
-          }
-          return noExt;
         },
       },
       rollupOptions: {
         external: depsValidator,
         output: {
+          preserveModulesRoot: sourceDir,
           exports: "named",
           preserveModules: true,
         },

@@ -50,14 +50,14 @@ export async function jsFilesTask({
       esmContent += `import Default from "./${esmPath}";\nexport default Default;\n`;
     }
     await writeFile(esmName, esmContent);
-    res.set(relative(outDir, esmName), name);
+    res.set(relative(outDir, join(dirname(esmName), esmPath)), name);
     const cjsName = join(totalName, "index.js");
     const cjsCompiled = findCompiledPath(buildOutput, filePath, "js");
     const cjsPath = relative(totalName, join(outDir, cjsCompiled.path));
     await mkdir(dirname(esmName), { recursive: true });
     const cjsContent = `module.exports = require("./${cjsPath}");\n`;
     await writeFile(cjsName, cjsContent);
-    res.set(relative(outDir, cjsName), name);
+    res.set(relative(outDir, join(dirname(cjsName), cjsPath)), name);
   }
 
   return res;

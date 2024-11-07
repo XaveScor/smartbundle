@@ -57,6 +57,10 @@ describe.concurrent("e2e", () => {
       cjs subroute named import: subroute/named
       cjs renamed default import: root/renamed
       cjs renamed named import: root/renamed
+      cjs only default import: onlyDefault/default
+      cjs only named import: onlyNamed/named
+      onlySideEffect
+      onlySideEffect
       esm root default import: root/default
       esm root named import: root/named
       esm root dynamic default import: root/default
@@ -69,6 +73,12 @@ describe.concurrent("e2e", () => {
       esm renamed named import: root/renamed
       esm renamed dynamic default import: root/renamed
       esm renamed dynamic named import: root/renamed
+      esm only default import: onlyDefault/default
+      esm only dynamic default import: onlyDefault/default
+      esm only named import: onlyNamed/named
+      esm only dynamic named import: onlyNamed/named
+      esm only side effect import
+      esm only dynamic side effect import
       "
     `);
   });
@@ -88,6 +98,10 @@ describe.concurrent("e2e", () => {
         cjs subroute named import: subroute/named
         cjs renamed default import: root/renamed
         cjs renamed named import: root/renamed
+        cjs only default import: onlyDefault/default
+        cjs only named import: onlyNamed/named
+        onlySideEffect
+        onlySideEffect
         esm root default import: root/default
         esm root named import: root/named
         esm root dynamic default import: root/default
@@ -100,6 +114,12 @@ describe.concurrent("e2e", () => {
         esm renamed named import: root/renamed
         esm renamed dynamic default import: root/renamed
         esm renamed dynamic named import: root/renamed
+        esm only default import: onlyDefault/default
+        esm only dynamic default import: onlyDefault/default
+        esm only named import: onlyNamed/named
+        esm only dynamic named import: onlyNamed/named
+        esm only side effect import
+        esm only dynamic side effect import
         "
       `);
     });
@@ -118,6 +138,10 @@ describe.concurrent("e2e", () => {
         cjs subroute named import: subroute/named
         cjs renamed default import: root/renamed
         cjs renamed named import: root/renamed
+        cjs only default import: onlyDefault/default
+        cjs only named import: onlyNamed/named
+        onlySideEffect
+        onlySideEffect
         esm root default import: root/default
         esm root named import: root/named
         esm root dynamic default import: root/default
@@ -130,6 +154,12 @@ describe.concurrent("e2e", () => {
         esm renamed named import: root/renamed
         esm renamed dynamic default import: root/renamed
         esm renamed dynamic named import: root/renamed
+        esm only default import: onlyDefault/default
+        esm only dynamic default import: onlyDefault/default
+        esm only named import: onlyNamed/named
+        esm only dynamic named import: onlyNamed/named
+        esm only side effect import
+        esm only dynamic side effect import
         "
       `);
     });
@@ -148,6 +178,10 @@ describe.concurrent("e2e", () => {
         cjs subroute named import: subroute/named
         cjs renamed default import: root/renamed
         cjs renamed named import: root/renamed
+        cjs only default import: onlyDefault/default
+        cjs only named import: onlyNamed/named
+        onlySideEffect
+        onlySideEffect
         esm root default import: root/default
         esm root named import: root/named
         esm root dynamic default import: root/default
@@ -160,6 +194,12 @@ describe.concurrent("e2e", () => {
         esm renamed named import: root/renamed
         esm renamed dynamic default import: root/renamed
         esm renamed dynamic named import: root/renamed
+        esm only default import: onlyDefault/default
+        esm only dynamic default import: onlyDefault/default
+        esm only named import: onlyNamed/named
+        esm only dynamic named import: onlyNamed/named
+        esm only side effect import
+        esm only dynamic side effect import
         "
       `);
     });
@@ -181,9 +221,13 @@ describe.concurrent("e2e", () => {
         cjs subroute named import: subroute/named
         cjs renamed default import: root/renamed
         cjs renamed named import: root/renamed
+        cjs only default import: onlyDefault/default
+        cjs only named import: onlyNamed/named
+        onlySideEffect
         (node:27) ExperimentalWarning: CommonJS module /usr/local/lib/node_modules/npm/node_modules/debug/src/node.js is loading ES Module /usr/local/lib/node_modules/npm/node_modules/supports-color/index.js using require().
         Support for loading ES Module in require() is an experimental feature and might change at any time
         (Use \`node --trace-warnings ...\` to show where the warning was created)
+        onlySideEffect
         esm root default import: root/default
         esm root named import: root/named
         esm root dynamic default import: root/default
@@ -196,6 +240,12 @@ describe.concurrent("e2e", () => {
         esm renamed named import: root/renamed
         esm renamed dynamic default import: root/renamed
         esm renamed dynamic named import: root/renamed
+        esm only default import: onlyDefault/default
+        esm only dynamic default import: onlyDefault/default
+        esm only named import: onlyNamed/named
+        esm only dynamic named import: onlyNamed/named
+        esm only side effect import
+        esm only dynamic side effect import
         "
       `);
     });
@@ -214,13 +264,16 @@ describe.concurrent("e2e", () => {
         > cjs@1.0.0 build
         > webpack
 
-        [1G[0K   6 modules
+        [1G[0K   12 modules
         [1G[0K\\[1G[0Kcjs root default import: root/default
         cjs root named import: root/named
         cjs subroute default import: subroute/default
         cjs subroute named import: subroute/named
         cjs renamed default import: root/renamed
         cjs renamed named import: root/renamed
+        cjs only default import: onlyDefault/default
+        cjs only named import: onlyNamed/named
+        onlySideEffect
 
         > esm@1.0.0 build
         > webpack
@@ -260,11 +313,15 @@ describe.concurrent("e2e", () => {
         cjs subroute named import: subroute/named
         cjs renamed default import: root/renamed
         cjs renamed named import: root/renamed
+        cjs only default import: onlyDefault/default
+        cjs only named import: onlyNamed/named
+        onlySideEffect
 
         > esm@1.0.0 build
         > webpack
 
-        [1G[0K[1G[0K\\[1G[0Kesm root default import: root/default
+        [1G[0K[1G[0K\\[1G[0KonlySideEffect
+        esm root default import: root/default
         esm root named import: root/named
         esm root dynamic default import: root/default
         esm root dynamic named import: root/named
@@ -276,6 +333,12 @@ describe.concurrent("e2e", () => {
         esm renamed named import: root/renamed
         esm renamed dynamic default import: root/renamed
         esm renamed dynamic named import: root/renamed
+        esm only default import: onlyDefault/default
+        esm only dynamic default import: onlyDefault/default
+        esm only named import: onlyNamed/named
+        esm only dynamic named import: onlyNamed/named
+        esm only side effect import
+        esm only dynamic side effect import
         "
       `);
     });
@@ -299,11 +362,15 @@ describe.concurrent("e2e", () => {
       cjs subroute named import: subroute/named
       cjs renamed default import: root/renamed
       cjs renamed named import: root/renamed
+      cjs only default import: onlyDefault/default
+      cjs only named import: onlyNamed/named
+      onlySideEffect
 
       > esm@1.0.0 build
       > rspack build
 
-      [1G[0K[1G[0K\\[1G[0Kesm root default import: root/default
+      [1G[0K[1G[0K\\[1G[0KonlySideEffect
+      esm root default import: root/default
       esm root named import: root/named
       esm root dynamic default import: root/default
       esm root dynamic named import: root/named
@@ -315,6 +382,12 @@ describe.concurrent("e2e", () => {
       esm renamed named import: root/renamed
       esm renamed dynamic default import: root/renamed
       esm renamed dynamic named import: root/renamed
+      esm only default import: onlyDefault/default
+      esm only dynamic default import: onlyDefault/default
+      esm only named import: onlyNamed/named
+      esm only dynamic named import: onlyNamed/named
+      esm only side effect import
+      esm only dynamic side effect import
       "
     `);
   });
@@ -342,6 +415,9 @@ describe.concurrent("e2e", () => {
         cjs subroute named import: subroute/named
         cjs renamed default import: root/renamed
         cjs renamed named import: root/renamed
+        cjs only default import: onlyDefault/default
+        cjs only named import: onlyNamed/named
+        onlySideEffect
         "
       `);
     });

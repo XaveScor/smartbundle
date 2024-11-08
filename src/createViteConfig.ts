@@ -77,6 +77,7 @@ export function createViteConfig({ dirs, packageJson }: CreateViteConfigParam) {
       write: true,
       minify: false,
       emptyOutDir: false,
+      sourcemap: true,
       assetsInlineLimit: 0,
       terserOptions: {
         compress: false,

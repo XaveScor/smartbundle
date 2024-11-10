@@ -9,6 +9,7 @@
     "./innerFolder/renamed1": "./renamed.ts",
     "./onlyDefault": "./onlyDefault.ts",
     "./onlyNamed": "./onlyNamed.ts",
-    "./onlySideEffect": "./onlySideEffect.ts"
+    "./onlySideEffect": "./onlySideEffect.ts",
+    "./reexport": "./reexport.ts"
   }
 }

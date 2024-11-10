@@ -2,18 +2,18 @@
   "name": "es-js-import",
   "type": "commonjs",
   "version": "1.0.0",
-  "module": "./index.mjs",
-  "main": "./index.js",
+  "module": "./__compiled__/esm/entrypoint.mjs",
+  "main": "./__compiled__/cjs/entrypoint.js",
   "description": "",
   "exports": {
     ".": {
       "import": {
-        "default": "./index.mjs"
+        "default": "./__compiled__/esm/entrypoint.mjs"
       },
       "require": {
-        "default": "./index.js"
+        "default": "./__compiled__/cjs/entrypoint.js"
       },
-      "default": "./index.js"
+      "default": "./__compiled__/cjs/entrypoint.js"
     },
     "./package.json": "./package.json"
   }

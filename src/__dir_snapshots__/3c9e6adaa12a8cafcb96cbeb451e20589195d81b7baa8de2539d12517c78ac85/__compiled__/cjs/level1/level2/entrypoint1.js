@@ -5,3 +5,4 @@ function foo() {
   console.log(dep1.a);
 }
 exports.foo = foo;
+//# sourceMappingURL=entrypoint1.js.map

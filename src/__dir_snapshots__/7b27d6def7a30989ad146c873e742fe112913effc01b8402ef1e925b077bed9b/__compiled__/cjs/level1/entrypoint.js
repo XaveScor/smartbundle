@@ -5,3 +5,4 @@ const entrypoint = () => {
   console.log(a.a);
 };
 exports.default = entrypoint;
+//# sourceMappingURL=entrypoint.js.map

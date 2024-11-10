@@ -1,0 +1,1 @@
+{"version":3,"file":"index.mjs","sources":["../../../../../../../../Users/xavescor/projects/bobrik/src/fixtures/external-deps/index.mjs"],"sourcesContent":["import { test } from \"aaa\";\n\nconsole.log(test);\n"],"names":[],"mappings":";AAEA,QAAQ,IAAI,IAAI;"}

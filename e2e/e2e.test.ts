@@ -33,7 +33,7 @@ async function prepareTestDir(testDirPath: string) {
   await copyDirectory(path.resolve(import.meta.dirname, "common"), testDirPath);
 }
 
-describe.concurrent("e2e", () => {
+describe("e2e", () => {
   let testLibDir = "";
   beforeAll(async () => {
     testLibDir = await fs.mkdtemp(path.join(tmpdir(), "smartbundle-test-lib"));
@@ -420,6 +420,66 @@ describe.concurrent("e2e", () => {
         onlySideEffect
         "
       `);
+    });
+  });
+
+  describe("typescript", () => {
+    function linkTestLib(testDirPath: string, testLibPath: string) {
+      $.sync`pnpm link --silent --dir ${testDirPath} ${testLibPath}`;
+    }
+
+    function runTsCheck(testDirPath: string) {
+      return $.sync`pnpm run --silent --dir ${testDirPath} test-types`.text();
+    }
+
+    describe("moduleResolution", () => {
+      test("node10", () => {
+        const testDirPath = path.resolve(
+          import.meta.dirname,
+          "typescript",
+          "node10",
+        );
+
+        linkTestLib(testDirPath, testLibDir);
+
+        expect(runTsCheck(testDirPath)).toMatchInlineSnapshot(`""`);
+      });
+
+      test("bundler", () => {
+        const testDirPath = path.resolve(
+          import.meta.dirname,
+          "typescript",
+          "bundler",
+        );
+
+        linkTestLib(testDirPath, testLibDir);
+
+        expect(runTsCheck(testDirPath)).toMatchInlineSnapshot(`""`);
+      });
+
+      test("node16cjs", () => {
+        const testDirPath = path.resolve(
+          import.meta.dirname,
+          "typescript",
+          "node16cjs",
+        );
+
+        linkTestLib(testDirPath, testLibDir);
+
+        expect(runTsCheck(testDirPath)).toMatchInlineSnapshot(`""`);
+      });
+
+      test("node16es", () => {
+        const testDirPath = path.resolve(
+          import.meta.dirname,
+          "typescript",
+          "node16es",
+        );
+
+        linkTestLib(testDirPath, testLibDir);
+
+        expect(runTsCheck(testDirPath)).toMatchInlineSnapshot(`""`);
+      });
     });
   });
 });

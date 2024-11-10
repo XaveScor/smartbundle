@@ -3,21 +3,21 @@
   "type": "commonjs",
   "version": "1.0.0",
   "types": "./__compiled__/cjs/entrypoint.d.ts",
-  "module": "./index.mjs",
-  "main": "./index.js",
+  "module": "./__compiled__/esm/entrypoint.mjs",
+  "main": "./__compiled__/cjs/entrypoint.js",
   "description": "test description",
   "exports": {
     ".": {
       "import": {
         "types": "./__compiled__/esm/entrypoint.d.mts",
-        "default": "./index.mjs"
+        "default": "./__compiled__/esm/entrypoint.mjs"
       },
       "require": {
         "types": "./__compiled__/cjs/entrypoint.d.ts",
-        "default": "./index.js"
+        "default": "./__compiled__/cjs/entrypoint.js"
       },
       "types": "./__compiled__/cjs/entrypoint.d.ts",
-      "default": "./index.js"
+      "default": "./__compiled__/cjs/entrypoint.js"
     },
     "./package.json": "./package.json"
   }

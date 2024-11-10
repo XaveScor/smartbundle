@@ -6,3 +6,4 @@ function helloWorld() {
 }
 exports.a = a.a;
 exports.helloWorld = helloWorld;
+//# sourceMappingURL=entrypoint.js.map

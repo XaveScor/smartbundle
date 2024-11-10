@@ -32,24 +32,28 @@ The built files will appear in the `./dist` folder, including an auto-generated 
 3) Navigate to the `./dist` folder and publish your package to the npm registry.
 
 ## Supported targets
-| Target                    | Supported | Tested  |
-|---------------------------|-----------|---------|
-| Bun ^1.0.0                | ✔         | ✔       |
-| Node ^18.0.0              | ✔         | ✔       |
-| Node ^20.0.0              | ✔         | ✔       |
-| Node ^22.0.0              | ✔         | ✔       |
-| Node ^23.0.0              | ✔         | ✔       |
-| Webpack ^4.47.0           | ✔         | ✔       |
-| Webpack ^5.95.0           | ✔         | ✔       |
-| Rspack ^1.0.0             | ✔         | ✔       |
-| Vite ^5.0.0               | ✔         | not yet |
-| Rollup ^4.0.0             | ✔         | not yet |
-| Deno ^2.0.0               | ✔         | not yet |
-| Parcel ^2.0.0             | ✔         | not yet |
-| Browserify ^17.0.0        | ✔         | not yet |
-| Esbuild ^0.24.0           | ✔         | not yet |
-| Metro ^0.81.0             | ✔         | ✔       |
-| Next.js/Turbopack ^13.0.0 | ✔         | not yet |
+| Target                         | Supported | Covered by e2e tests |
+|--------------------------------|-----------|----------------------|
+| Bun ^1.0.0                     | ✔         | ✔                    |
+| Node ^18.0.0                   | ✔         | ✔                    |
+| Node ^20.0.0                   | ✔         | ✔                    |
+| Node ^22.0.0                   | ✔         | ✔                    |
+| Node ^23.0.0                   | ✔         | ✔                    |
+| Webpack ^4.47.0                | ✔         | ✔                    |
+| Webpack ^5.95.0                | ✔         | ✔                    |
+| Rspack ^1.0.0                  | ✔         | ✔                    |
+| Vite ^5.0.0                    | ✔         | not yet              |
+| Rollup ^4.0.0                  | ✔         | not yet              |
+| Deno ^2.0.0                    | ✔         | not yet              |
+| Parcel ^2.0.0                  | ✔         | not yet              |
+| Browserify ^17.0.0             | ✔         | not yet              |
+| Esbuild ^0.24.0                | ✔         | not yet              |
+| Metro ^0.81.0                  | ✔         | ✔                    |
+| Next.js/Turbopack ^13.0.0      | ✔         | not yet              |
+| TS/ModuleResolution: bundler   | ✔         | ✔                    |
+| TS/ModuleResolution: node10    | ✔         | ✔                    |
+| TS/ModuleResolution: node16es  | ✔         | ✔                    |
+| TS/ModuleResolution: node16cjs | ✔         | ✔                    |
 
 We aim to support as many bundlers and runtimes as possible. If the bundled package doesn't work with your bundler, please let us know.
 

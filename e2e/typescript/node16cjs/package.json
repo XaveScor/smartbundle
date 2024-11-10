@@ -1,0 +1,14 @@
+{
+  "name": "node16cjs",
+  "version": "1.0.0",
+  "description": "",
+  "type": "commonjs",
+  "main": "index.ts",
+  "scripts": {
+    "test-types": "tsc"
+  },
+  "dependencies": {
+    "typescript": "^5.6.3"
+  },
+  "private": true
+}

@@ -5,3 +5,4 @@ function foo() {
 export {
   foo
 };
+//# sourceMappingURL=entrypoint1.mjs.map

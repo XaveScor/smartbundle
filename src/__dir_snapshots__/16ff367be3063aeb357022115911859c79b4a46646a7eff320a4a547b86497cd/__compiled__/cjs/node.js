@@ -18,3 +18,4 @@ function _interopNamespaceDefault(e) {
 }
 const all__namespace = /* @__PURE__ */ _interopNamespaceDefault(all);
 console.log(all__namespace);
+//# sourceMappingURL=node.js.map

@@ -58,6 +58,10 @@ export async function jsFilesTask({
     const cjsContent = `module.exports = require("./${cjsPath}");\n`;
     await writeFile(cjsName, cjsContent);
     res.set(relative(outDir, join(dirname(cjsName), cjsPath)), name);
+
+    // moduleResolution: "node10" in tsconfig.json
+    const cdtsPath = cjsName.replace(/\.js$/, ".d.ts");
+    await writeFile(cdtsPath, `export * from "./${cjsPath}";\n`);
   }
 
   return res;

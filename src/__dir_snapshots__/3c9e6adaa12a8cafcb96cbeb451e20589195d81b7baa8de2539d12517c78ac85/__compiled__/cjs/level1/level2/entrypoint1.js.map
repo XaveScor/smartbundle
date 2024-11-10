@@ -1,0 +1,1 @@
+{"version":3,"file":"entrypoint1.js","sources":["../../../../../../../../../../Users/xavescor/projects/bobrik/src/fixtures/deep-structure/level1/level2/entrypoint1.ts"],"sourcesContent":["import { a } from \"../dep1.js\";\n\nexport function foo() {\n  console.log(a);\n}\n"],"names":["a"],"mappings":";;;AAEO,SAAS,MAAM;AACpB,UAAQ,IAAIA,KAAAA,CAAC;AACf;;"}

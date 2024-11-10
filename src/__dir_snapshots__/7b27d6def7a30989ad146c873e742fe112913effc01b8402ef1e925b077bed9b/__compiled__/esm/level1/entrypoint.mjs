@@ -5,3 +5,4 @@ const entrypoint = () => {
 export {
   entrypoint as default
 };
+//# sourceMappingURL=entrypoint.mjs.map

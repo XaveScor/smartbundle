@@ -6,21 +6,21 @@
   "exports": {
     "./first": {
       "import": {
-        "default": "./first/index.mjs"
+        "default": "./__compiled__/esm/first.mjs"
       },
       "require": {
-        "default": "./first/index.js"
+        "default": "./__compiled__/cjs/first.js"
       },
-      "default": "./first/index.js"
+      "default": "./__compiled__/cjs/first.js"
     },
     "./second": {
       "import": {
-        "default": "./second/index.mjs"
+        "default": "./__compiled__/esm/second.mjs"
       },
       "require": {
-        "default": "./second/index.js"
+        "default": "./__compiled__/cjs/second.js"
       },
-      "default": "./second/index.js"
+      "default": "./__compiled__/cjs/second.js"
     },
     "./package.json": "./package.json"
   }

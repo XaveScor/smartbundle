@@ -149,4 +149,15 @@ describe("bugs", () => {
     // @ts-expect-error
     expect(tmpDir).toMatchDirSnapshot();
   });
+
+  test("84-vscode-typings-resolve", async ({ tmpDir }: { tmpDir: string }) => {
+    const res = await run({
+      outputDir: tmpDir,
+      sourceDir: "./src/fixtures/84-vscode-typings-resolve",
+    });
+
+    expect(res.error).toBeFalsy();
+    // @ts-expect-error
+    expect(tmpDir).toMatchDirSnapshot();
+  });
 });

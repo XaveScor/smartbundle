@@ -207,55 +207,55 @@ describe("inlineExtensionsCjs", () => {
   describe("changed", () => {
     test("reexport all without extension", () => {
       const input = `export * from "./resolveDirs";`;
-      const expected = `export * from "./resolveDirs.cjs";`;
+      const expected = `export * from "./resolveDirs.js";`;
       expect(inlineExtensionsCjs(input)).toBe(expected);
     });
 
     test("reexport named without extension", () => {
       const input = `export { resolveDirs } from "./resolveDirs";`;
-      const expected = `export { resolveDirs } from "./resolveDirs.cjs";`;
+      const expected = `export { resolveDirs } from "./resolveDirs.js";`;
       expect(inlineExtensionsCjs(input)).toBe(expected);
     });
 
     test("reexport named with alias without extension", () => {
       const input = `export { resolveDirs as dirs } from "./resolveDirs";`;
-      const expected = `export { resolveDirs as dirs } from "./resolveDirs.cjs";`;
+      const expected = `export { resolveDirs as dirs } from "./resolveDirs.js";`;
       expect(inlineExtensionsCjs(input)).toBe(expected);
     });
 
     test("import default without extension", () => {
       const input = `import resolveDirs from "./resolveDirs";`;
-      const expected = `import resolveDirs from "./resolveDirs.cjs";`;
+      const expected = `import resolveDirs from "./resolveDirs.js";`;
       expect(inlineExtensionsCjs(input)).toBe(expected);
     });
 
     test("import named without extension", () => {
       const input = `import { resolveDirs } from "./resolveDirs";`;
-      const expected = `import { resolveDirs } from "./resolveDirs.cjs";`;
+      const expected = `import { resolveDirs } from "./resolveDirs.js";`;
       expect(inlineExtensionsCjs(input)).toBe(expected);
     });
 
     test("import named with alias without extension", () => {
       const input = `import { resolveDirs as dirs } from "./resolveDirs";`;
-      const expected = `import { resolveDirs as dirs } from "./resolveDirs.cjs";`;
+      const expected = `import { resolveDirs as dirs } from "./resolveDirs.js";`;
       expect(inlineExtensionsCjs(input)).toBe(expected);
     });
 
     test("import type without extension", () => {
       const input = `import type { Dirs } from "./resolveDirs";`;
-      const expected = `import type { Dirs } from "./resolveDirs.cjs";`;
+      const expected = `import type { Dirs } from "./resolveDirs.js";`;
       expect(inlineExtensionsCjs(input)).toBe(expected);
     });
 
     test("import type with alias without extension", () => {
       const input = `import type { Dirs as Directories } from "./resolveDirs";`;
-      const expected = `import type { Dirs as Directories } from "./resolveDirs.cjs";`;
+      const expected = `import type { Dirs as Directories } from "./resolveDirs.js";`;
       expect(inlineExtensionsCjs(input)).toBe(expected);
     });
 
     test("dynamic import without extension", () => {
       const input = `await import("./resolveDirs");`;
-      const expected = `await import("./resolveDirs.cjs");`;
+      const expected = `await import("./resolveDirs.js");`;
       expect(inlineExtensionsCjs(input)).toBe(expected);
     });
   });

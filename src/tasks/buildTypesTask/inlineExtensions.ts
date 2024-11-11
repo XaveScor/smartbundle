@@ -1,6 +1,7 @@
 // It needs for VSCode. It cannot resolve the import/export if it has no extension
 
-const importExportRegex = /(?:import|export)\s*(?:type\s*)?(?:(?:{\s*.+?\s*}|\*|[^{}\s]+)\s*from\s*)?["'](.+)["']/g;
+const importExportRegex =
+  /(?:import|export)\s*(?:type\s*)?(?:(?:{\s*.+?\s*}|\*|[^{}\s]+)\s*from\s*)?["'](.+)["']/g;
 const dynamicImportRegex = /import\(["'](.+)["']\)/g;
 
 function addExtension(content: string, regex: RegExp, ext: string) {
@@ -22,7 +23,7 @@ export function inlineExtensionsMjs(content: string) {
 }
 
 export function inlineExtensionsCjs(content: string) {
-  content = addExtension(content, importExportRegex, ".cjs");
-  content = addExtension(content, dynamicImportRegex, ".cjs");
+  content = addExtension(content, importExportRegex, ".js");
+  content = addExtension(content, dynamicImportRegex, ".js");
   return content;
 }

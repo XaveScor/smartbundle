@@ -1,5 +1,6 @@
 import * as path from "node:path";
 import * as fs from "node:fs";
+import { inlineExtensionsMjs, inlineExtensionsCjs } from "./inlineExtensions.js";
 
 type BuildTypesOptions = {
   ts: typeof import("typescript");
@@ -7,6 +8,10 @@ type BuildTypesOptions = {
   files: string[];
   outDir: string;
 };
+
+// It needs for vscode. It cannot resolve the import/export if it has no extension
+const reexportRegex = /export { (.+?) } from "(.+)"/g;
+function inlineExtensionMjs(content: string) {}
 
 export async function callTypescript({
   ts,
@@ -53,11 +58,11 @@ export async function callTypescript({
     const esmFinalPath = finalEsmPath.replace(/\.d\.ts$/, ".d.mts");
     sourceToDtsMap.set(esmFinalPath, sourceFileName);
     fs.mkdirSync(path.dirname(esmFinalPath), { recursive: true });
-    fs.writeFileSync(esmFinalPath, data);
+    fs.writeFileSync(esmFinalPath, inlineExtensionsMjs(data));
 
     const finalCjsPath = path.join(outDir, "__compiled__", "cjs", relativePath);
     const cjsFinalPath = finalCjsPath.replace(/\.d\.ts$/, ".d.ts");
-    fs.writeFileSync(cjsFinalPath, data);
+    fs.writeFileSync(cjsFinalPath, inlineExtensionsCjs(data));
     sourceToDtsMap.set(cjsFinalPath, sourceFileName);
   });
 

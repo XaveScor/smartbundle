@@ -57,6 +57,13 @@ The built files will appear in the `./dist` folder, including an auto-generated 
 
 We aim to support as many bundlers and runtimes as possible. If the bundled package doesn't work with your bundler, please let us know.
 
+## Third party tools support
+### Typescript
+Just install `typescript@^5.0.0` as a dev dependency and start creating ts files.
+
+### Babel
+Just install `@babel/core@^7.0.0` as a dev dependency and create a Babel configuration file in the project root.
+
 ## `package.json` limitations
 To reduce potential errors and ensure smooth package generation, we follow a stricter configuration for `package.json`.
 

@@ -1,0 +1,10 @@
+{
+  "exports": "./entrypoint.ts",
+  "name": "4-babel-support",
+  "version": "0.0.0",
+  "type": "module",
+  "private": true,
+  "devDependencies": {
+    "@babel/core": "^7.26.0"
+  }
+}

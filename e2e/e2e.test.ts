@@ -48,9 +48,8 @@ describe("e2e", () => {
     await prepareTestDir(testDirPath);
     const dockerHash = buildBaseImage(testDirPath);
 
-    expect(
-      $.sync`docker run -it -v ${testLibDir}:/test-lib ${dockerHash}`.text(),
-    ).toMatchInlineSnapshot(`
+    expect($.sync`docker run -v ${testLibDir}:/test-lib ${dockerHash}`.text())
+      .toMatchInlineSnapshot(`
       "cjs root default import: root/default
       cjs root named import: root/named
       cjs subroute default import: subroute/default
@@ -89,9 +88,8 @@ describe("e2e", () => {
       await prepareTestDir(testDirPath);
       const dockerHash = buildBaseImage(testDirPath);
 
-      expect(
-        $.sync`docker run -it -v ${testLibDir}:/test-lib ${dockerHash}`.text(),
-      ).toMatchInlineSnapshot(`
+      expect($.sync`docker run -v ${testLibDir}:/test-lib ${dockerHash}`.text())
+        .toMatchInlineSnapshot(`
         "cjs root default import: root/default
         cjs root named import: root/named
         cjs subroute default import: subroute/default
@@ -129,9 +127,8 @@ describe("e2e", () => {
       await prepareTestDir(testDirPath);
       const dockerHash = buildBaseImage(testDirPath);
 
-      expect(
-        $.sync`docker run -it -v ${testLibDir}:/test-lib ${dockerHash}`.text(),
-      ).toMatchInlineSnapshot(`
+      expect($.sync`docker run -v ${testLibDir}:/test-lib ${dockerHash}`.text())
+        .toMatchInlineSnapshot(`
         "cjs root default import: root/default
         cjs root named import: root/named
         cjs subroute default import: subroute/default
@@ -169,9 +166,8 @@ describe("e2e", () => {
       await prepareTestDir(testDirPath);
       const dockerHash = buildBaseImage(testDirPath);
 
-      expect(
-        $.sync`docker run -it -v ${testLibDir}:/test-lib ${dockerHash}`.text(),
-      ).toMatchInlineSnapshot(`
+      expect($.sync`docker run -v ${testLibDir}:/test-lib ${dockerHash}`.text())
+        .toMatchInlineSnapshot(`
         "cjs root default import: root/default
         cjs root named import: root/named
         cjs subroute default import: subroute/default
@@ -209,45 +205,44 @@ describe("e2e", () => {
       await prepareTestDir(testDirPath);
       const dockerHash = buildBaseImage(testDirPath);
 
-      expect(
-        $.sync`docker run -it -v ${testLibDir}:/test-lib ${dockerHash}`.text(),
-      ).toMatchInlineSnapshot(`
-        "(node:8) ExperimentalWarning: CommonJS module /usr/local/lib/node_modules/npm/node_modules/debug/src/node.js is loading ES Module /usr/local/lib/node_modules/npm/node_modules/supports-color/index.js using require().
-        Support for loading ES Module in require() is an experimental feature and might change at any time
-        (Use \`node --trace-warnings ...\` to show where the warning was created)
-        cjs root default import: root/default
-        cjs root named import: root/named
-        cjs subroute default import: subroute/default
-        cjs subroute named import: subroute/named
-        cjs renamed default import: root/renamed
-        cjs renamed named import: root/renamed
-        cjs only default import: onlyDefault/default
-        cjs only named import: onlyNamed/named
-        onlySideEffect
-        (node:27) ExperimentalWarning: CommonJS module /usr/local/lib/node_modules/npm/node_modules/debug/src/node.js is loading ES Module /usr/local/lib/node_modules/npm/node_modules/supports-color/index.js using require().
-        Support for loading ES Module in require() is an experimental feature and might change at any time
-        (Use \`node --trace-warnings ...\` to show where the warning was created)
-        onlySideEffect
-        esm root default import: root/default
-        esm root named import: root/named
-        esm root dynamic default import: root/default
-        esm root dynamic named import: root/named
-        esm subroute default import: subroute/default
-        esm subroute named import: subroute/named
-        esm subroute dynamic default import: subroute/default
-        esm subroute dynamic named import: subroute/named
-        esm renamed default import: root/renamed
-        esm renamed named import: root/renamed
-        esm renamed dynamic default import: root/renamed
-        esm renamed dynamic named import: root/renamed
-        esm only default import: onlyDefault/default
-        esm only dynamic default import: onlyDefault/default
-        esm only named import: onlyNamed/named
-        esm only dynamic named import: onlyNamed/named
-        esm only side effect import
-        esm only dynamic side effect import
-        "
-      `);
+      expect($.sync`docker run -v ${testLibDir}:/test-lib ${dockerHash}`.text())
+        .toMatchInlineSnapshot(`
+          "cjs root default import: root/default
+          cjs root named import: root/named
+          cjs subroute default import: subroute/default
+          cjs subroute named import: subroute/named
+          cjs renamed default import: root/renamed
+          cjs renamed named import: root/renamed
+          cjs only default import: onlyDefault/default
+          cjs only named import: onlyNamed/named
+          onlySideEffect
+          onlySideEffect
+          esm root default import: root/default
+          esm root named import: root/named
+          esm root dynamic default import: root/default
+          esm root dynamic named import: root/named
+          esm subroute default import: subroute/default
+          esm subroute named import: subroute/named
+          esm subroute dynamic default import: subroute/default
+          esm subroute dynamic named import: subroute/named
+          esm renamed default import: root/renamed
+          esm renamed named import: root/renamed
+          esm renamed dynamic default import: root/renamed
+          esm renamed dynamic named import: root/renamed
+          esm only default import: onlyDefault/default
+          esm only dynamic default import: onlyDefault/default
+          esm only named import: onlyNamed/named
+          esm only dynamic named import: onlyNamed/named
+          esm only side effect import
+          esm only dynamic side effect import
+          (node:8) ExperimentalWarning: CommonJS module /usr/local/lib/node_modules/npm/node_modules/debug/src/node.js is loading ES Module /usr/local/lib/node_modules/npm/node_modules/supports-color/index.js using require().
+          Support for loading ES Module in require() is an experimental feature and might change at any time
+          (Use \`node --trace-warnings ...\` to show where the warning was created)
+          (node:27) ExperimentalWarning: CommonJS module /usr/local/lib/node_modules/npm/node_modules/debug/src/node.js is loading ES Module /usr/local/lib/node_modules/npm/node_modules/supports-color/index.js using require().
+          Support for loading ES Module in require() is an experimental feature and might change at any time
+          (Use \`node --trace-warnings ...\` to show where the warning was created)
+          "
+        `);
     });
   });
 
@@ -257,42 +252,41 @@ describe("e2e", () => {
       await prepareTestDir(testDirPath);
       const dockerHash = buildBaseImage(testDirPath);
 
-      expect(
-        $.sync`docker run -it -v ${testLibDir}:/test-lib ${dockerHash}`.text(),
-      ).toMatchInlineSnapshot(`
-        "
-        > cjs@1.0.0 build
-        > webpack
+      expect($.sync`docker run -v ${testLibDir}:/test-lib ${dockerHash}`.text())
+        .toMatchInlineSnapshot(`
+          "
+          > cjs@1.0.0 build
+          > webpack
 
-        [1G[0K   12 modules
-        [1G[0K\\[1G[0Kcjs root default import: root/default
-        cjs root named import: root/named
-        cjs subroute default import: subroute/default
-        cjs subroute named import: subroute/named
-        cjs renamed default import: root/renamed
-        cjs renamed named import: root/renamed
-        cjs only default import: onlyDefault/default
-        cjs only named import: onlyNamed/named
-        onlySideEffect
+             12 modules
+          cjs root default import: root/default
+          cjs root named import: root/named
+          cjs subroute default import: subroute/default
+          cjs subroute named import: subroute/named
+          cjs renamed default import: root/renamed
+          cjs renamed named import: root/renamed
+          cjs only default import: onlyDefault/default
+          cjs only named import: onlyNamed/named
+          onlySideEffect
 
-        > esm@1.0.0 build
-        > webpack
+          > esm@1.0.0 build
+          > webpack
 
-        [1G[0K   6 modules
-        [1G[0K\\[1G[0Kesm root default import: root/default
-        esm root named import: root/named
-        esm subroute default import: subroute/default
-        esm subroute named import: subroute/named
-        esm renamed default import: root/renamed
-        esm renamed named import: root/renamed
-        esm root dynamic default import: root/default
-        esm root dynamic named import: root/named
-        esm subroute dynamic default import: subroute/default
-        esm subroute dynamic named import: subroute/named
-        esm renamed dynamic default import: root/renamed
-        esm renamed dynamic named import: root/renamed
-        "
-      `);
+             6 modules
+          esm root default import: root/default
+          esm root named import: root/named
+          esm subroute default import: subroute/default
+          esm subroute named import: subroute/named
+          esm renamed default import: root/renamed
+          esm renamed named import: root/renamed
+          esm root dynamic default import: root/default
+          esm root dynamic named import: root/named
+          esm subroute dynamic default import: subroute/default
+          esm subroute dynamic named import: subroute/named
+          esm renamed dynamic default import: root/renamed
+          esm renamed dynamic named import: root/renamed
+          "
+        `);
     });
 
     test("v5", async () => {
@@ -300,14 +294,61 @@ describe("e2e", () => {
       await prepareTestDir(testDirPath);
       const dockerHash = buildBaseImage(testDirPath);
 
-      expect(
-        $.sync`docker run -it -v ${testLibDir}:/test-lib ${dockerHash}`.text(),
-      ).toMatchInlineSnapshot(`
+      expect($.sync`docker run -v ${testLibDir}:/test-lib ${dockerHash}`.text())
+        .toMatchInlineSnapshot(`
+          "
+          > cjs@1.0.0 build
+          > webpack
+
+          cjs root default import: root/default
+          cjs root named import: root/named
+          cjs subroute default import: subroute/default
+          cjs subroute named import: subroute/named
+          cjs renamed default import: root/renamed
+          cjs renamed named import: root/renamed
+          cjs only default import: onlyDefault/default
+          cjs only named import: onlyNamed/named
+          onlySideEffect
+
+          > esm@1.0.0 build
+          > webpack
+
+          onlySideEffect
+          esm root default import: root/default
+          esm root named import: root/named
+          esm root dynamic default import: root/default
+          esm root dynamic named import: root/named
+          esm subroute default import: subroute/default
+          esm subroute named import: subroute/named
+          esm subroute dynamic default import: subroute/default
+          esm subroute dynamic named import: subroute/named
+          esm renamed default import: root/renamed
+          esm renamed named import: root/renamed
+          esm renamed dynamic default import: root/renamed
+          esm renamed dynamic named import: root/renamed
+          esm only default import: onlyDefault/default
+          esm only dynamic default import: onlyDefault/default
+          esm only named import: onlyNamed/named
+          esm only dynamic named import: onlyNamed/named
+          esm only side effect import
+          esm only dynamic side effect import
+          "
+        `);
+    });
+  });
+
+  test("rspack", async () => {
+    const testDirPath = path.resolve(import.meta.dirname, "rspack");
+    await prepareTestDir(testDirPath);
+    const dockerHash = buildBaseImage(testDirPath);
+
+    expect($.sync`docker run  -v ${testLibDir}:/test-lib ${dockerHash}`.text())
+      .toMatchInlineSnapshot(`
         "
         > cjs@1.0.0 build
-        > webpack
+        > rspack build
 
-        [1G[0K[1G[0K\\[1G[0Kcjs root default import: root/default
+        cjs root default import: root/default
         cjs root named import: root/named
         cjs subroute default import: subroute/default
         cjs subroute named import: subroute/named
@@ -318,9 +359,9 @@ describe("e2e", () => {
         onlySideEffect
 
         > esm@1.0.0 build
-        > webpack
+        > rspack build
 
-        [1G[0K[1G[0K\\[1G[0KonlySideEffect
+        onlySideEffect
         esm root default import: root/default
         esm root named import: root/named
         esm root dynamic default import: root/default
@@ -341,55 +382,6 @@ describe("e2e", () => {
         esm only dynamic side effect import
         "
       `);
-    });
-  });
-
-  test("rspack", async () => {
-    const testDirPath = path.resolve(import.meta.dirname, "rspack");
-    await prepareTestDir(testDirPath);
-    const dockerHash = buildBaseImage(testDirPath);
-
-    expect(
-      $.sync`docker run -it -v ${testLibDir}:/test-lib ${dockerHash}`.text(),
-    ).toMatchInlineSnapshot(`
-      "
-      > cjs@1.0.0 build
-      > rspack build
-
-      [1G[0K[1G[0K\\[1G[0Kcjs root default import: root/default
-      cjs root named import: root/named
-      cjs subroute default import: subroute/default
-      cjs subroute named import: subroute/named
-      cjs renamed default import: root/renamed
-      cjs renamed named import: root/renamed
-      cjs only default import: onlyDefault/default
-      cjs only named import: onlyNamed/named
-      onlySideEffect
-
-      > esm@1.0.0 build
-      > rspack build
-
-      [1G[0K[1G[0K\\[1G[0KonlySideEffect
-      esm root default import: root/default
-      esm root named import: root/named
-      esm root dynamic default import: root/default
-      esm root dynamic named import: root/named
-      esm subroute default import: subroute/default
-      esm subroute named import: subroute/named
-      esm subroute dynamic default import: subroute/default
-      esm subroute dynamic named import: subroute/named
-      esm renamed default import: root/renamed
-      esm renamed named import: root/renamed
-      esm renamed dynamic default import: root/renamed
-      esm renamed dynamic named import: root/renamed
-      esm only default import: onlyDefault/default
-      esm only dynamic default import: onlyDefault/default
-      esm only named import: onlyNamed/named
-      esm only dynamic named import: onlyNamed/named
-      esm only side effect import
-      esm only dynamic side effect import
-      "
-    `);
   });
 
   describe("metro", () => {
@@ -399,17 +391,17 @@ describe("e2e", () => {
       const dockerHash = buildBaseImage(testDirPath);
 
       expect(
-        $.sync`docker run -it -v ${testLibDir}:/test-lib ${dockerHash}`.text(),
+        $.sync`docker run  -v ${testLibDir}:/test-lib ${dockerHash}`.text(),
       ).toMatchInlineSnapshot(`
         "
         > cjs@1.0.0 build
         > metro build ./test.js --out ./test.bundle.js --platform node
 
-        [1G[0K[32m[7m[1m BUNDLE [22m[27m[39m[0m[2m ./[22m[0m[1mtest.js[22m 
+         BUNDLE  ./test.js 
 
         Writing bundle output to: ./test.bundle.js
         Done writing bundle output
-        [1G[0K\\[1G[0Kcjs root default import: root/default
+        cjs root default import: root/default
         cjs root named import: root/named
         cjs subroute default import: subroute/default
         cjs subroute named import: subroute/named

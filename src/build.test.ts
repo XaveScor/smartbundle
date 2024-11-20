@@ -177,3 +177,44 @@ describe("bugs", () => {
     expect(tmpDir).toMatchDirSnapshot();
   });
 });
+
+describe("react", () => {
+  describe("errors", () => {
+    test("jsx", async ({ tmpDir }: { tmpDir: string }) => {
+      const res = await run({
+        outputDir: tmpDir,
+        sourceDir: "./src/fixtures/react-jsx-error",
+      });
+
+      expect(res.error).toBeTruthy();
+      expect(res.errors[0]).toMatchInlineSnapshot(
+        `"[smartbundle:react] SmartBundle cannot find the react dependency inside dependencies, optionalDependencies or peerDependencies. Please, install it before bundling"`,
+      );
+    });
+  });
+
+  describe("transform", () => {
+    test("legacy-createElement", async ({ tmpDir }: { tmpDir: string }) => {
+      const res = await run({
+        outputDir: tmpDir,
+        sourceDir: "./src/fixtures/react-legacy-transform",
+      });
+
+      console.error(res.errors);
+      expect(res.error).toBeFalsy();
+      // @ts-expect-error
+      expect(tmpDir).toMatchDirSnapshot();
+    });
+
+    test("modern-jsx/runtime", async ({ tmpDir }: { tmpDir: string }) => {
+      const res = await run({
+        outputDir: tmpDir,
+        sourceDir: "./src/fixtures/react-modern-transform",
+      });
+
+      expect(res.error).toBeFalsy();
+      // @ts-expect-error
+      expect(tmpDir).toMatchDirSnapshot();
+    });
+  });
+});

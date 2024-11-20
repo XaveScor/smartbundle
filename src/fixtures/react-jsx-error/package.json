@@ -1,0 +1,10 @@
+{
+  "private": true,
+  "name": "react-jsx-error",
+  "type": "module",
+  "version": "0.0.0",
+  "exports": {
+    "./js": "./legacy-js.js",
+    "./jsx": "./legacy-jsx.jsx"
+  }
+}

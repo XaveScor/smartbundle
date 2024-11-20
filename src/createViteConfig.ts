@@ -3,6 +3,7 @@ import { type PackageJson } from "./packageJson.js";
 import { join, relative } from "node:path";
 import { defineConfig } from "vite";
 import { babelPlugin } from "./plugins/babel/index.js";
+import { reactPlugin } from "./plugins/react/index.js";
 
 type CreateViteConfigParam = {
   dirs: Dirs;
@@ -71,9 +72,10 @@ export function createViteConfig({ dirs, packageJson }: CreateViteConfigParam) {
   const depsValidator = createExternalDepValidator(packageJson);
 
   const viteConfig = defineConfig({
-    plugins: [babelPlugin({ packageJson, dirs })],
+    plugins: [reactPlugin({ packageJson }), babelPlugin({ packageJson, dirs })],
     publicDir: false,
     root: sourceDir,
+    logLevel: "silent",
     build: {
       outDir,
       write: true,

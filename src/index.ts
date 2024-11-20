@@ -38,7 +38,16 @@ export async function defineViteConfig(args: Args = {}) {
   return viteConfig;
 }
 
-export async function run(args: Args) {
+type RunResult =
+  | {
+      error: false;
+    }
+  | {
+      error: true;
+      errors: Array<string>;
+    };
+
+export async function run(args: Args): Promise<RunResult> {
   const dirs = resolveDirs(args);
   const { sourceDir, outDir, packagePath, outBinsDir } = dirs;
 
@@ -47,7 +56,6 @@ export async function run(args: Args) {
   const packageJson = await parsePackageJson({ sourceDir, packagePath });
 
   if (Array.isArray(packageJson)) {
-    console.log(packageJson);
     return { error: true, errors: packageJson };
   }
 

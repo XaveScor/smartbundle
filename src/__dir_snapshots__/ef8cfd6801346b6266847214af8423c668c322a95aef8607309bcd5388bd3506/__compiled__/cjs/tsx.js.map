@@ -1,0 +1,1 @@
+{"version":3,"file":"tsx.js","sources":["../../../../../../../../Users/xavescor/projects/bobrik/src/fixtures/react-legacy-transform/tsx.tsx"],"sourcesContent":["import React from \"react\";\n\nexport const Component = () => <div>jsx</div>;\n"],"names":[],"mappings":";;;AAEO,MAAM,YAAY,MAAO,sBAAA,cAAA,OAAA,MAAI,KAAG;;"}

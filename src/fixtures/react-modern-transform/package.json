@@ -1,0 +1,15 @@
+{
+  "private": true,
+  "name": "react-modern-transform",
+  "type": "module",
+  "version": "0.0.0",
+  "dependencies": {
+    "react": "^17.0.0",
+    "@types/react": "^17.0.0"
+  },
+  "exports": {
+    "./js": "./js.js",
+    "./jsx": "./jsx.jsx",
+    "./tsx": "./tsx.tsx"
+  }
+}

@@ -1,0 +1,1 @@
+{"version":3,"file":"jsx.js","sources":["../../../../../../../../Users/xavescor/projects/bobrik/src/fixtures/react-modern-transform/jsx.jsx"],"sourcesContent":["export const Component = (props) => <div>jsx</div>;\n"],"names":["jsx"],"mappings":";;;AAAa,MAAA,YAAY,CAAC,UAAUA,2BAAAA,IAAC,SAAI,UAAG,MAAA,CAAA;;"}

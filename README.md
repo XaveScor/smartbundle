@@ -64,6 +64,9 @@ Just install `typescript@^5.0.0` as a dev dependency and start creating ts files
 ### Babel
 Just install `@babel/core@^7.0.0` as a dev dependency and create a Babel configuration file in the project root.
 
+### React
+Just install `react`. More information on React integration can be found [here](./docs/react.md).
+
 ## `package.json` limitations
 To reduce potential errors and ensure smooth package generation, we follow a stricter configuration for `package.json`.
 

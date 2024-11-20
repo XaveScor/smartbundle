@@ -1,0 +1,40 @@
+{
+  "name": "react-modern-transform",
+  "type": "commonjs",
+  "version": "0.0.0",
+  "description": "",
+  "exports": {
+    "./js": {
+      "import": {
+        "default": "./__compiled__/esm/js.mjs"
+      },
+      "require": {
+        "default": "./__compiled__/cjs/js.js"
+      },
+      "default": "./__compiled__/cjs/js.js"
+    },
+    "./jsx": {
+      "import": {
+        "default": "./__compiled__/esm/jsx.mjs"
+      },
+      "require": {
+        "default": "./__compiled__/cjs/jsx.js"
+      },
+      "default": "./__compiled__/cjs/jsx.js"
+    },
+    "./tsx": {
+      "import": {
+        "default": "./__compiled__/esm/tsx.mjs"
+      },
+      "require": {
+        "default": "./__compiled__/cjs/tsx.js"
+      },
+      "default": "./__compiled__/cjs/tsx.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "dependencies": {
+    "react": "^17.0.0",
+    "@types/react": "^17.0.0"
+  }
+}

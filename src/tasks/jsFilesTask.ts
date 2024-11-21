@@ -1,6 +1,7 @@
-import { type Rollup } from "vite";
+import type { Rollup } from "vite";
 import { dirname, join, relative } from "node:path";
 import { mkdir, writeFile } from "node:fs/promises";
+import { okLog } from "../log.js";
 
 type JsFilesTaskOption = {
   buildOutput: Rollup.OutputChunk[];
@@ -64,5 +65,6 @@ export async function jsFilesTask({
     await writeFile(cdtsPath, `export * from "./${cjsPath}";\n`);
   }
 
+  okLog("no-exports compat layer");
   return res;
 }

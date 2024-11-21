@@ -2,7 +2,9 @@ import { describe, expect } from "vitest";
 import { run } from "./index.js";
 // @ts-expect-error
 import { test } from "vitest-directory-snapshot";
+import { disableLog } from "./log.js";
 
+disableLog();
 describe("static files", () => {
   test("readme.md", async ({ tmpDir }: { tmpDir: string }) => {
     const res = await run({

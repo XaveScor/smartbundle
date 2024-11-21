@@ -1,5 +1,6 @@
 import { writeFile } from "node:fs/promises";
 import { type PackageJson } from "./packageJson.js";
+import { okLog } from "./log.js";
 
 export type ExportsObject = {
   mjs?: string;
@@ -105,4 +106,6 @@ export async function writePackageJson(
   };
 
   await writeFile(`${outDir}/package.json`, JSON.stringify(res, null, 2));
+
+  okLog("package.json");
 }

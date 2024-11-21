@@ -10,6 +10,8 @@ import { buildTypesTask } from "./tasks/buildTypesTask/buildTypesTask.js";
 import { BuildError } from "./error.js";
 import { jsFilesTask } from "./tasks/jsFilesTask.js";
 import { binsTask } from "./tasks/binsTask.js";
+import { detectModules } from "./detectModules.js";
+import { disableLog, lineLog, log, okLog } from "./log.js";
 
 function setExports(
   exportsMap: Map<string, ExportsObject>,
@@ -21,6 +23,7 @@ function setExports(
 }
 
 export async function defineViteConfig(args: Args = {}) {
+  disableLog();
   const dirs = resolveDirs(args);
   const { sourceDir, outDir, packagePath } = dirs;
 
@@ -33,7 +36,8 @@ export async function defineViteConfig(args: Args = {}) {
     throw new Error("Failed to parse package.json");
   }
 
-  const { viteConfig } = createViteConfig({ dirs, packageJson });
+  const modules = await detectModules(packageJson);
+  const { viteConfig } = createViteConfig({ dirs, packageJson, modules });
 
   return viteConfig;
 }
@@ -59,11 +63,14 @@ export async function run(args: Args): Promise<RunResult> {
     return { error: true, errors: packageJson };
   }
 
+  const modules = await detectModules(packageJson);
   const { viteConfig, entrypoints, bins } = createViteConfig({
     dirs,
     packageJson,
+    modules,
   });
 
+  okLog("Vite");
   const outputs = await buildVite({ viteConfig });
   if (outputs.error) {
     return { error: true, errors: outputs.errors };
@@ -79,6 +86,7 @@ export async function run(args: Args): Promise<RunResult> {
       outDir,
       entrypoints,
       buildOutput: viteOutput,
+      modules,
     }).then((res) => {
       for (const [types, source] of res) {
         setExports(exportsMap, source, (entry) => {
@@ -119,8 +127,13 @@ export async function run(args: Args): Promise<RunResult> {
   const errors = tasksRes
     .filter((res) => res.status === "rejected")
     .map((res) => res.reason)
-    .filter((res): res is BuildError => res instanceof BuildError)
-    .map((res) => res.error);
+    .map((res) => {
+      if (res instanceof BuildError) {
+        return res.error;
+      }
+
+      return res.message;
+    });
 
   if (errors.length > 0) {
     return { error: true, errors };
@@ -131,5 +144,7 @@ export async function run(args: Args): Promise<RunResult> {
     binsMap,
   });
 
+  lineLog();
+  log(`Build finished: ./${relative(sourceDir, outDir)}`);
   return { error: false };
 }

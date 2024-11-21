@@ -1,13 +1,15 @@
 import { type Rollup } from "vite";
-import { errors } from "../../errors.js";
 import { callTypescript } from "./callTypescript.js";
 import { reverseMap } from "../utils.js";
+import { okLog } from "../../log.js";
+import type { DetectedModules } from "../../detectModules.js";
 
 type BuildTypesTaskOption = {
   buildOutput: Rollup.OutputChunk[];
   entrypoints: Map<string, string>;
   sourceDir: string;
   outDir: string;
+  modules: DetectedModules;
 };
 
 export async function buildTypesTask({
@@ -15,25 +17,23 @@ export async function buildTypesTask({
   entrypoints,
   sourceDir,
   outDir,
+  modules,
 }: BuildTypesTaskOption) {
   const reversedEntrypoints = reverseMap(entrypoints);
   const tsEntrypoints = [...entrypoints.values()].filter((entry) =>
     entry.endsWith(".ts"),
   );
-  if (tsEntrypoints.length === 0) {
+  if (tsEntrypoints.length === 0 || modules.ts == null) {
     return new Map<string, string>();
   }
 
-  let ts: typeof import("typescript");
-  try {
-    // ts <=4.3 has no named exports. The all methods is located in the default export
-    ts = (await import("typescript")).default;
-  } catch (e) {
-    throw errors.typescriptNotFound;
-  }
-
   const files = buildOutput.map((el) => el.facadeModuleId ?? "");
-  const dtsMap = await callTypescript({ ts, sourceDir, files, outDir });
+  const dtsMap = await callTypescript({
+    ts: modules.ts,
+    sourceDir,
+    files,
+    outDir,
+  });
 
   const result = new Map<string, string>();
   for (const [types, source] of dtsMap) {
@@ -45,6 +45,8 @@ export async function buildTypesTask({
       result.set(types, path);
     }
   }
+
+  okLog(".d.ts");
 
   return result;
 }

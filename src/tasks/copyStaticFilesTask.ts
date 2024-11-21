@@ -1,12 +1,17 @@
 import { join } from "node:path";
 import { copyFile, readdir } from "node:fs/promises";
+import { okLog } from "../log.js";
 
 export async function copyStaticFilesTask(sourceDir: string, outDir: string) {
-  return copyStaticFiles({
+  const files = await copyStaticFiles({
     relativeFiles: new Set(["readme.md"]),
     sourceDir,
     outDir,
   });
+
+  okLog("Static files:", [...files].join(", "));
+
+  return files;
 }
 
 type CopyStaticFilesOptions = {
@@ -26,6 +31,7 @@ async function copyStaticFiles({
     ),
   );
 
+  const res = new Set<string>();
   for (const file of relativeFiles) {
     try {
       const matchingFile = dirFiles.get(file.toLowerCase());
@@ -34,7 +40,10 @@ async function copyStaticFiles({
         const outFilePath = join(outDir, matchingFile);
         const filePath = join(sourceDir, matchingFile);
         await copyFile(filePath, outFilePath);
+        res.add(matchingFile);
       }
     } catch {}
   }
+
+  return res;
 }

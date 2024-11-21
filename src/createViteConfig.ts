@@ -4,10 +4,12 @@ import { join, relative } from "node:path";
 import { defineConfig } from "vite";
 import { babelPlugin } from "./plugins/babel/index.js";
 import { reactPlugin } from "./plugins/react/index.js";
+import { type DetectedModules } from "./detectModules.js";
 
 type CreateViteConfigParam = {
   dirs: Dirs;
   packageJson: PackageJson;
+  modules: DetectedModules;
 };
 
 function mapToObject(map: Map<string, string>) {
@@ -49,7 +51,11 @@ function createExternalDepValidator(packageJson: PackageJson) {
   };
 }
 
-export function createViteConfig({ dirs, packageJson }: CreateViteConfigParam) {
+export function createViteConfig({
+  dirs,
+  packageJson,
+  modules,
+}: CreateViteConfigParam) {
   const { sourceDir, outDir } = dirs;
 
   const entrypoints = new Map<string, string>();
@@ -72,7 +78,10 @@ export function createViteConfig({ dirs, packageJson }: CreateViteConfigParam) {
   const depsValidator = createExternalDepValidator(packageJson);
 
   const viteConfig = defineConfig({
-    plugins: [reactPlugin({ packageJson }), babelPlugin({ packageJson, dirs })],
+    plugins: [
+      reactPlugin({ modules }),
+      babelPlugin({ packageJson, dirs, modules }),
+    ],
     publicDir: false,
     root: sourceDir,
     logLevel: "silent",

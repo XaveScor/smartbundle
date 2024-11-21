@@ -2,7 +2,9 @@ import { describe, expect, test } from "vitest";
 import { join } from "node:path";
 import { parsePackageJson } from "./packageJson.js";
 import { errors } from "./errors.js";
+import { disableLog } from "./log.js";
 
+disableLog();
 describe("parse package.json", () => {
   test("correct", async () => {
     const sourceDir = join(

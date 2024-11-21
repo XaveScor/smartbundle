@@ -1,23 +1,19 @@
-import { type Plugin, transformWithEsbuild } from "vite";
-import type { PackageJson } from "../../packageJson.js";
-import semver from "semver";
+import type { Plugin } from "vite";
+import { transformWithEsbuild } from "vite";
+import { type DetectedModules } from "../../detectModules.js";
+import { okLog } from "../../log.js";
 
 type ReactPluginArg = {
-  packageJson: PackageJson;
+  modules: DetectedModules;
 };
 
 const errorJsxMessage =
   "SmartBundle cannot find the react dependency inside dependencies, optionalDependencies or peerDependencies. Please, install it before bundling";
 
-export function reactPlugin({ packageJson }: ReactPluginArg): Plugin {
+export function reactPlugin({ modules }: ReactPluginArg): Plugin {
   const pluginName = "smartbundle:react";
 
-  const reactVersion =
-    packageJson.dependencies?.react ??
-    packageJson.devDependencies?.react ??
-    packageJson.optionalDependencies?.react;
-
-  if (!reactVersion) {
+  if (modules.react == null) {
     return {
       name: pluginName,
       transform(code, id) {
@@ -36,11 +32,6 @@ export function reactPlugin({ packageJson }: ReactPluginArg): Plugin {
     };
   }
 
-  const isLegacyTransform = semver.lt(
-    semver.minVersion(reactVersion)!,
-    "17.0.0",
-  );
-
   return {
     name: pluginName,
     enforce: "pre",
@@ -57,11 +48,18 @@ export function reactPlugin({ packageJson }: ReactPluginArg): Plugin {
         id,
         {
           loader: isJs || isJsx ? "jsx" : "tsx",
-          jsx: isLegacyTransform ? "transform" : "automatic",
+          jsx: modules.react === "legacy" ? "transform" : "automatic",
           sourcemap: true,
         },
         this.getCombinedSourcemap(),
       );
+    },
+    buildEnd(err) {
+      if (!err) {
+        okLog("React");
+      } else {
+        this.error(err);
+      }
     },
   };
 }

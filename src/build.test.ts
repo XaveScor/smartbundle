@@ -3,6 +3,9 @@ import { run } from "./index.js";
 import { $ } from "zx";
 // @ts-expect-error
 import { test } from "vitest-directory-snapshot";
+import { disableLog } from "./log.js";
+
+disableLog();
 
 describe("build", () => {
   test("simple-build", async ({ tmpDir }: { tmpDir: string }) => {
@@ -200,7 +203,6 @@ describe("react", () => {
         sourceDir: "./src/fixtures/react-legacy-transform",
       });
 
-      console.error(res.errors);
       expect(res.error).toBeFalsy();
       // @ts-expect-error
       expect(tmpDir).toMatchDirSnapshot();

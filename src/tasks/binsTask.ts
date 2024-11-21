@@ -1,7 +1,8 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import { join, relative } from "node:path";
-import { type Rollup } from "vite";
+import type { Rollup } from "vite";
 import { reverseMap } from "./utils.js";
+import { okLog } from "../log.js";
 
 type BinsTaskOption = {
   buildOutput: Rollup.OutputChunk[];
@@ -44,6 +45,10 @@ import("${totalPath}");
       );
       res.set(relative(outDir, execPath), binName);
     }
+  }
+
+  if (res.size) {
+    okLog("Bin:", [...res.values()].join(", "));
   }
 
   return res;

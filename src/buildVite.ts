@@ -1,4 +1,4 @@
-import { build, type UserConfig, Rollup } from "vite";
+import { build, type UserConfig, type Rollup } from "vite";
 import { errors } from "./errors.js";
 
 type BuildViteOptions = {

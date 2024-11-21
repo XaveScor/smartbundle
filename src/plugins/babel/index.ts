@@ -1,36 +1,33 @@
-import { type Plugin } from "vite";
+import type { Plugin } from "vite";
 import * as path from "node:path";
 import { findBabelConfig } from "./findBabelConfig.js";
 import { type PackageJson } from "../../packageJson.js";
 import { type Dirs } from "../../resolveDirs.js";
+import { type DetectedModules } from "../../detectModules.js";
+import { okLog } from "../../log.js";
 
 type BabelPluginOptions = {
   packageJson: PackageJson;
   dirs: Dirs;
+  modules: DetectedModules;
 };
 
-export function babelPlugin({ packageJson, dirs }: BabelPluginOptions): Plugin {
-  let babelCore: typeof import("@babel/core") | undefined;
+export function babelPlugin({
+  packageJson,
+  dirs,
+  modules,
+}: BabelPluginOptions): Plugin {
   let hasBabelConfig = false;
 
   return {
     name: "smartbundle:babel",
     async buildStart() {
-      try {
-        if (!("@babel/core" in (packageJson.optionalDependencies ?? {}))) {
-          babelCore = await import("@babel/core");
-        }
-      } catch (e) {
-        console.error(e);
-        // Leave babelCore as undefined
-      }
-
       hasBabelConfig = await findBabelConfig(dirs.sourceDir, packageJson);
-      if (babelCore && !hasBabelConfig) {
+      if (modules.babel && !hasBabelConfig) {
         this.warn(
           "We have found a @babel/core package, but config was not found. It could be a bug",
         );
-      } else if (!babelCore && hasBabelConfig) {
+      } else if (!modules.babel && hasBabelConfig) {
         this.error(
           new Error(
             "We have found a babel config. Please install @babel/core to devDeps or remove the config file",
@@ -39,7 +36,7 @@ export function babelPlugin({ packageJson, dirs }: BabelPluginOptions): Plugin {
       }
     },
     async transform(code, id) {
-      if (!babelCore || !hasBabelConfig) {
+      if (!modules.babel || !hasBabelConfig) {
         return null;
       }
 
@@ -50,7 +47,7 @@ export function babelPlugin({ packageJson, dirs }: BabelPluginOptions): Plugin {
 
       const map = this.getCombinedSourcemap();
 
-      const result = await babelCore.transformAsync(code, {
+      const result = await modules.babel.transformAsync(code, {
         filename: id,
         sourceMaps: true,
         inputSourceMap: map,
@@ -64,6 +61,15 @@ export function babelPlugin({ packageJson, dirs }: BabelPluginOptions): Plugin {
         code: result.code,
         map: result.map,
       };
+    },
+    buildEnd(error) {
+      if (!error) {
+        if (modules.babel && hasBabelConfig) {
+          okLog("Babel");
+        }
+      } else {
+        this.error(error);
+      }
     },
   };
 }

@@ -1,0 +1,7 @@
+{
+  "name": "101-outdir-ts",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "exports": "./index.ts"
+}

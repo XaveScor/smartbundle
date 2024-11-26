@@ -44,6 +44,7 @@ export async function callTypescript({
       strictPropertyInitialization: false,
       skipLibCheck: true,
       skipDefaultLibCheck: true,
+      outDir: "",
       // https://github.com/XaveScor/bobrik/issues/22#issuecomment-2308552352
       noEmit: false,
     },

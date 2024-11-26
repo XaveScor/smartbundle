@@ -1,6 +1,9 @@
 import * as path from "node:path";
 import * as fs from "node:fs";
-import { inlineExtensionsMjs, inlineExtensionsCjs } from "./inlineExtensions.js";
+import {
+  inlineExtensionsMjs,
+  inlineExtensionsCjs,
+} from "./inlineExtensions.js";
 
 type BuildTypesOptions = {
   ts: typeof import("typescript");
@@ -9,9 +12,12 @@ type BuildTypesOptions = {
   outDir: string;
 };
 
-// It needs for vscode. It cannot resolve the import/export if it has no extension
-const reexportRegex = /export { (.+?) } from "(.+)"/g;
-function inlineExtensionMjs(content: string) {}
+function makeFileExists(outDir: string, type: "esm" | "cjs", filePath: string) {
+  return (p: string) => {
+    const dir = path.join(outDir, "__compiled__", type, path.dirname(filePath));
+    return fs.existsSync(path.join(dir, p));
+  };
+}
 
 export async function callTypescript({
   ts,
@@ -58,11 +64,17 @@ export async function callTypescript({
     const esmFinalPath = finalEsmPath.replace(/\.d\.ts$/, ".d.mts");
     sourceToDtsMap.set(esmFinalPath, sourceFileName);
     fs.mkdirSync(path.dirname(esmFinalPath), { recursive: true });
-    fs.writeFileSync(esmFinalPath, inlineExtensionsMjs(data));
+    fs.writeFileSync(
+      esmFinalPath,
+      inlineExtensionsMjs(data, makeFileExists(outDir, "esm", relativePath)),
+    );
 
     const finalCjsPath = path.join(outDir, "__compiled__", "cjs", relativePath);
     const cjsFinalPath = finalCjsPath.replace(/\.d\.ts$/, ".d.ts");
-    fs.writeFileSync(cjsFinalPath, inlineExtensionsCjs(data));
+    fs.writeFileSync(
+      cjsFinalPath,
+      inlineExtensionsCjs(data, makeFileExists(outDir, "cjs", relativePath)),
+    );
     sourceToDtsMap.set(cjsFinalPath, sourceFileName);
   });
 

@@ -1,0 +1,1 @@
+{"version":3,"file":"reexports.mjs","sources":["../../../../../../../../Users/xavescor/projects/bobrik/src/fixtures/97-dts-reexports-bundler/reexports.ts"],"sourcesContent":["export { a } from \"./dir\";\n\nexport default import(\"./dir\");\n"],"names":[],"mappings":";AAEA,MAAe,YAAA,OAAO,iBAAO;"}

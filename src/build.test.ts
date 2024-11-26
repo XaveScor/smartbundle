@@ -165,6 +165,17 @@ describe("bugs", () => {
     expect(tmpDir).toMatchDirSnapshot();
   });
 
+  test("97-dts-reexports-bundler", async ({ tmpDir }: { tmpDir: string }) => {
+    const res = await run({
+      outputDir: tmpDir,
+      sourceDir: "./src/fixtures/97-dts-reexports-bundler",
+    });
+
+    expect(res.error).toBeFalsy();
+    // @ts-expect-error
+    expect(tmpDir).toMatchDirSnapshot();
+  });
+
   test("4-babel-support", async ({ tmpDir }: { tmpDir: string }) => {
     const sourceDir = "./src/fixtures/4-babel-support";
 

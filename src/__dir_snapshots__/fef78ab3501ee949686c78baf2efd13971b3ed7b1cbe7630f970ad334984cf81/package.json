@@ -1,0 +1,24 @@
+{
+  "name": "97-dts-reexports-bundler",
+  "type": "commonjs",
+  "version": "0.0.0",
+  "types": "./__compiled__/cjs/reexports.d.ts",
+  "module": "./__compiled__/esm/reexports.mjs",
+  "main": "./__compiled__/cjs/reexports.js",
+  "description": "",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./__compiled__/esm/reexports.d.mts",
+        "default": "./__compiled__/esm/reexports.mjs"
+      },
+      "require": {
+        "types": "./__compiled__/cjs/reexports.d.ts",
+        "default": "./__compiled__/cjs/reexports.js"
+      },
+      "types": "./__compiled__/cjs/reexports.d.ts",
+      "default": "./__compiled__/cjs/reexports.js"
+    },
+    "./package.json": "./package.json"
+  }
+}

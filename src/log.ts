@@ -8,6 +8,11 @@ export function log(...messages: Array<string>) {
     console.log(...messages);
   }
 }
+export function warnLog(...messages: Array<string>) {
+  if (logEnabled) {
+    console.warn(...messages);
+  }
+}
 
 export function okLog(...messages: Array<string>) {
   log(`✅ ${messages.join(" ")}`);

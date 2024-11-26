@@ -1,0 +1,16 @@
+{
+  "name": "99-multi-react-dep",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "exports": "./entry.tsx",
+  "devDependencies": {
+    "react": "^18.3.1"
+  },
+  "dependencies": {
+    "react": "^16.3.1"
+  },
+  "optionalDependencies": {
+    "react": "^17.3.1"
+  }
+}

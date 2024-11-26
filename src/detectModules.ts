@@ -1,12 +1,55 @@
 import { type PackageJson } from "./packageJson.js";
 import semver from "semver";
-import { okLog, errorLog, log, lineLog } from "./log.js";
+import { okLog, errorLog, log, lineLog, warnLog } from "./log.js";
 
 export type DetectedModules = {
   ts?: typeof import("typescript");
   babel?: typeof import("@babel/core");
   react?: "legacy" | "modern";
 };
+
+type DepType =
+  | "dependencies"
+  | "devDependencies"
+  | "peerDependencies"
+  | "optionalDependencies";
+function getMinVersion(
+  packageJson: PackageJson,
+  depName: string,
+  exclude: DepType[],
+): semver.SemVer | null {
+  const allDepKeys = new Set<DepType>([
+    "dependencies",
+    "devDependencies",
+    "peerDependencies",
+    "optionalDependencies",
+  ]);
+  for (const e of exclude) {
+    allDepKeys.delete(e);
+  }
+
+  let minVersion: semver.SemVer | null = null;
+  for (const depKey of allDepKeys) {
+    const depVersion = packageJson[depKey]?.[depName];
+    if (depVersion) {
+      const version = semver.minVersion(depVersion);
+      if (!version) {
+        warnLog("node-semver cannot parse version of", depName, "from", depKey);
+        warnLog("Version:", depVersion);
+        continue;
+      }
+      if (!minVersion) {
+        minVersion = version;
+        continue;
+      }
+      if (semver.lt(version, minVersion)) {
+        minVersion = version;
+      }
+    }
+  }
+
+  return minVersion;
+}
 
 async function detectBabel(
   packageJson: PackageJson,
@@ -28,20 +71,14 @@ async function detectBabel(
 async function detectReact(
   packageJson: PackageJson,
 ): Promise<"legacy" | "modern" | undefined> {
-  const reactVersion =
-    packageJson.dependencies?.react ??
-    packageJson.devDependencies?.react ??
-    packageJson.optionalDependencies?.react;
+  const reactVersion = getMinVersion(packageJson, "react", ["devDependencies"]);
   if (reactVersion) {
-    const minReactVersion = semver.minVersion(reactVersion);
-    if (minReactVersion) {
-      const isLegacy = semver.lt(minReactVersion, "17.0.0");
-      const transform = isLegacy ? "legacy" : "modern";
-      okLog(
-        `react, min version: ${minReactVersion.version}. Transform: ${transform}`,
-      );
-      return transform;
-    }
+    const isLegacy = semver.lt(reactVersion, "17.0.0");
+    const transform = isLegacy ? "legacy" : "modern";
+    okLog(
+      `react, min version: ${reactVersion.version}. Transform: ${transform}`,
+    );
+    return transform;
   }
   errorLog("react");
 }

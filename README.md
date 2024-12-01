@@ -90,7 +90,7 @@ Currently, we support all `bin` [specifications](https://docs.npmjs.com/cli/v10/
 
 ## FAQ
 ### SmartBundle have an issue
-Please, look at the [known fixable issues](./docs/isses.md) before creating your own one. Some bugs already have a solution but cannot be fixed without user action.
+Please, look at the [known fixable issues](./docs/issues.md) before creating your own one. Some bugs already have a solution but cannot be fixed without user action.
 
 ### Why don't you minify the output?
 Minification is typically needed only for production. During development, readable, unminified output helps with debugging.

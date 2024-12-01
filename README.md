@@ -89,6 +89,9 @@ Only ESM/TS entry points are currently supported in exports. While [conditional 
 Currently, we support all `bin` [specifications](https://docs.npmjs.com/cli/v10/configuring-npm/package-json#bin) except for `sh` files. Also, we guarantee that the bin files will execute as expected.
 
 ## FAQ
+### SmartBundle have an issue
+Please, look at the [known fixable issues](./docs/isses.md) before creating your own one. Some bugs already have a solution but cannot be fixed without user action.
+
 ### Why don't you minify the output?
 Minification is typically needed only for production. During development, readable, unminified output helps with debugging.
 

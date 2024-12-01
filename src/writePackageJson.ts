@@ -103,6 +103,7 @@ export async function writePackageJson(
     unpkg: parsed.unpkg,
     homepage: parsed.homepage,
     devDependencies: parsed.devDependencies,
+    peerDependenciesMeta: parsed.peerDependenciesMeta,
   };
 
   await writeFile(`${outDir}/package.json`, JSON.stringify(res, null, 2));

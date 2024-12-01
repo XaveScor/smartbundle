@@ -190,6 +190,7 @@ function createPackageJsonSchema(sourceDir: string) {
     unpkg: z.any().optional(),
     homepage: z.any().optional(),
     babel: z.any().optional(),
+    peerDependenciesMeta: z.any().optional(),
   });
 }
 type PackageJsonSchema = ReturnType<typeof createPackageJsonSchema>;

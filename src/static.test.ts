@@ -1,6 +1,5 @@
 import { describe, expect } from "vitest";
 import { run } from "./index.js";
-// @ts-expect-error
 import { test } from "vitest-directory-snapshot";
 import { disableLog } from "./log.js";
 
@@ -13,7 +12,6 @@ describe("static files", () => {
     });
 
     expect(res.error).toBeFalsy();
-    // @ts-expect-error
     expect(tmpDir).toMatchDirSnapshot();
   });
 });

@@ -1,7 +1,6 @@
 import { describe, expect } from "vitest";
 import { run } from "./index.js";
 import { $ } from "zx";
-// @ts-expect-error
 import { test } from "vitest-directory-snapshot";
 import { disableLog } from "./log.js";
 
@@ -15,7 +14,6 @@ describe("build", () => {
     });
 
     expect(res.error).toBeFalsy();
-    // @ts-expect-error
     expect(tmpDir).toMatchDirSnapshot();
   });
 
@@ -26,7 +24,6 @@ describe("build", () => {
     });
 
     expect(res.error).toBeFalsy();
-    // @ts-expect-error
     expect(tmpDir).toMatchDirSnapshot();
   });
 
@@ -37,7 +34,6 @@ describe("build", () => {
     });
 
     expect(res.error).toBeFalsy();
-    // @ts-expect-error
     expect(tmpDir).toMatchDirSnapshot();
   });
 
@@ -48,7 +44,6 @@ describe("build", () => {
     });
 
     expect(res.error).toBeFalsy();
-    // @ts-expect-error
     expect(tmpDir).toMatchDirSnapshot();
   });
 
@@ -59,7 +54,6 @@ describe("build", () => {
     });
 
     expect(res.error).toBeFalsy();
-    // @ts-expect-error
     expect(tmpDir).toMatchDirSnapshot();
   });
 
@@ -72,7 +66,6 @@ describe("build", () => {
       });
 
       expect(res.error).toBeFalsy();
-      // @ts-expect-error
       expect(tmpDir).toMatchDirSnapshot();
     });
 
@@ -84,7 +77,6 @@ describe("build", () => {
       });
 
       expect(res.error).toBeFalsy();
-      // @ts-expect-error
       expect(tmpDir).toMatchDirSnapshot();
     });
   });
@@ -96,7 +88,6 @@ describe("build", () => {
     });
 
     expect(res.error).toBeFalsy();
-    // @ts-expect-error
     expect(tmpDir).toMatchDirSnapshot();
   });
 
@@ -107,7 +98,6 @@ describe("build", () => {
     });
 
     expect(res.error).toBeFalsy();
-    // @ts-expect-error
     expect(tmpDir).toMatchDirSnapshot();
   });
 });
@@ -120,7 +110,6 @@ describe("bugs", () => {
     });
 
     expect(res.error).toBeFalsy();
-    // @ts-expect-error
     expect(tmpDir).toMatchDirSnapshot();
   });
   test("43-save-devdeps", async ({ tmpDir }: { tmpDir: string }) => {
@@ -130,7 +119,6 @@ describe("bugs", () => {
     });
 
     expect(res.error).toBeFalsy();
-    // @ts-expect-error
     expect(tmpDir).toMatchDirSnapshot();
   });
   test("37-ignore-deps", async ({ tmpDir }: { tmpDir: string }) => {
@@ -140,7 +128,6 @@ describe("bugs", () => {
     });
 
     expect(res.error).toBeFalsy();
-    // @ts-expect-error
     expect(tmpDir).toMatchDirSnapshot();
   });
   test("37-ignore-subroutes", async ({ tmpDir }: { tmpDir: string }) => {
@@ -150,7 +137,6 @@ describe("bugs", () => {
     });
 
     expect(res.error).toBeFalsy();
-    // @ts-expect-error
     expect(tmpDir).toMatchDirSnapshot();
   });
 
@@ -161,7 +147,6 @@ describe("bugs", () => {
     });
 
     expect(res.error).toBeFalsy();
-    // @ts-expect-error
     expect(tmpDir).toMatchDirSnapshot();
   });
 
@@ -172,7 +157,7 @@ describe("bugs", () => {
     });
 
     expect(res.error).toBeFalsy();
-    // @ts-expect-error
+
     expect(tmpDir).toMatchDirSnapshot();
   });
 
@@ -183,7 +168,6 @@ describe("bugs", () => {
     });
 
     expect(res.error).toBeFalsy();
-    // @ts-expect-error
     expect(tmpDir).toMatchDirSnapshot();
   });
 
@@ -194,7 +178,6 @@ describe("bugs", () => {
     });
 
     expect(res.error).toBeFalsy();
-    // @ts-expect-error
     expect(tmpDir).toMatchDirSnapshot();
   });
 
@@ -209,7 +192,6 @@ describe("bugs", () => {
     });
 
     expect(res.error).toBeFalsy();
-    // @ts-expect-error
     expect(tmpDir).toMatchDirSnapshot();
   });
 });
@@ -237,7 +219,6 @@ describe("react", () => {
       });
 
       expect(res.error).toBeFalsy();
-      // @ts-expect-error
       expect(tmpDir).toMatchDirSnapshot();
     });
 
@@ -248,7 +229,6 @@ describe("react", () => {
       });
 
       expect(res.error).toBeFalsy();
-      // @ts-expect-error
       expect(tmpDir).toMatchDirSnapshot();
     });
   });

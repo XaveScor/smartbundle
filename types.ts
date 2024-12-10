@@ -1,1 +1,1 @@
-import "vitest-directory-snapshot/dist/types.js";
+import "vitest-directory-snapshot/types";

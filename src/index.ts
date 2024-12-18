@@ -3,7 +3,7 @@ import { mkdir, rm } from "node:fs/promises";
 import { parsePackageJson } from "./packageJson.js";
 import { type ExportsObject, writePackageJson } from "./writePackageJson.js";
 import { buildVite } from "./buildVite.js";
-import { type Args, resolveDirs } from "./resolveDirs.js";
+import { resolveDirs } from "./resolveDirs.js";
 import { createViteConfig } from "./createViteConfig.js";
 import { copyStaticFilesTask } from "./tasks/copyStaticFilesTask.js";
 import { buildTypesTask } from "./tasks/buildTypesTask/buildTypesTask.js";
@@ -12,6 +12,8 @@ import { jsFilesTask } from "./tasks/jsFilesTask.js";
 import { binsTask } from "./tasks/binsTask.js";
 import { detectModules } from "./detectModules.js";
 import { disableLog, lineLog, log, okLog } from "./log.js";
+import { runSettled } from "./pipeline.js";
+import { type Args } from "./args.js";
 
 function setExports(
   exportsMap: Map<string, ExportsObject>,
@@ -79,13 +81,12 @@ export async function run(args: Args): Promise<RunResult> {
 
   const exportsMap = new Map<string, ExportsObject>();
   const binsMap = new Map<string, string>();
-  const tasksRes = await Promise.allSettled([
+  const tasksRes = await runSettled(args, [
     copyStaticFilesTask(sourceDir, outDir),
     buildTypesTask({
       sourceDir,
       outDir,
       entrypoints,
-      buildOutput: viteOutput,
       modules,
     }).then((res) => {
       for (const [types, source] of res) {

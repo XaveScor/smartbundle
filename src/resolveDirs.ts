@@ -1,10 +1,5 @@
 import { isAbsolute, join } from "node:path";
-
-export type Args = {
-  sourceDir?: string;
-  packagePath?: string;
-  outputDir?: string;
-};
+import { type Args } from "./args.js";
 
 function myResolve(path1: string, path2: string) {
   if (isAbsolute(path2)) {

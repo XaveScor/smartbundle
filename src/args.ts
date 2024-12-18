@@ -1,7 +1,8 @@
 import yargs from "yargs";
 import * as process from "node:process";
+import { hideBin } from "yargs/helpers";
 
-export const args = yargs(process.argv.slice(2))
+const argsSchema = yargs()
   .option("sourceDir", {
     alias: "s",
     type: "string",
@@ -18,7 +19,28 @@ export const args = yargs(process.argv.slice(2))
     type: "string",
     describe: "path to the output directory. Default: cwd()/dist",
   })
-  .help("help")
-  .parseSync();
+  // Do not cover this option in tests because it is unstable
+  .option("seq", {
+    type: "boolean",
+    describe:
+      "run internal tasks sequentially. It is useful for performance testing and debugging. This option is unstable and not recommended for production use.",
+  })
+  .help("help");
 
-export type Args = typeof args;
+export const args = argsSchema.parseSync(hideBin(process.argv));
+
+type OmitUnknown<T> = {
+  [K in keyof T as string extends K ? never : K]: T[K];
+};
+type ConvertUndefinedToOptional<T> = {
+  [K in keyof T as undefined extends T[K] ? K : never]?: Exclude<
+    T[K],
+    undefined
+  >;
+} & {
+  [K in keyof T as undefined extends T[K] ? never : K]: T[K];
+};
+
+export type Args = ConvertUndefinedToOptional<
+  Omit<OmitUnknown<typeof args>, "_" | "$0">
+>;

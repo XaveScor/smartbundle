@@ -1,11 +1,9 @@
-import { type Rollup } from "vite";
 import { callTypescript } from "./callTypescript.js";
 import { reverseMap } from "../utils.js";
 import { okLog } from "../../log.js";
 import type { DetectedModules } from "../../detectModules.js";
 
 type BuildTypesTaskOption = {
-  buildOutput: Rollup.OutputChunk[];
   entrypoints: Map<string, string>;
   sourceDir: string;
   outDir: string;
@@ -13,7 +11,6 @@ type BuildTypesTaskOption = {
 };
 
 export async function buildTypesTask({
-  buildOutput,
   entrypoints,
   sourceDir,
   outDir,
@@ -27,11 +24,10 @@ export async function buildTypesTask({
     return new Map<string, string>();
   }
 
-  const files = buildOutput.map((el) => el.facadeModuleId ?? "");
   const dtsMap = await callTypescript({
     ts: modules.ts,
     sourceDir,
-    files,
+    files: tsEntrypoints,
     outDir,
   });
 

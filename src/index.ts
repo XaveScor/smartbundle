@@ -2,8 +2,7 @@ import { relative } from "node:path";
 import { mkdir, rm } from "node:fs/promises";
 import { parsePackageJson } from "./packageJson.js";
 import { type ExportsObject, writePackageJson } from "./writePackageJson.js";
-import { buildVite } from "./buildVite.js";
-import { type Args, resolveDirs } from "./resolveDirs.js";
+import { resolveDirs } from "./resolveDirs.js";
 import { createViteConfig } from "./createViteConfig.js";
 import { copyStaticFilesTask } from "./tasks/copyStaticFilesTask.js";
 import { buildTypesTask } from "./tasks/buildTypesTask/buildTypesTask.js";
@@ -12,6 +11,10 @@ import { jsFilesTask } from "./tasks/jsFilesTask.js";
 import { binsTask } from "./tasks/binsTask.js";
 import { detectModules } from "./detectModules.js";
 import { disableLog, lineLog, log, okLog } from "./log.js";
+import { runSettled } from "./pipeline.js";
+import { type Args } from "./args.js";
+import { viteTask } from "./tasks/viteTask.js";
+import { promiseSettledResultErrors } from "./promiseSettledResultErrors.js";
 
 function setExports(
   exportsMap: Map<string, ExportsObject>,
@@ -70,70 +73,65 @@ export async function run(args: Args): Promise<RunResult> {
     modules,
   });
 
-  okLog("Vite");
-  const outputs = await buildVite({ viteConfig });
-  if (outputs.error) {
-    return { error: true, errors: outputs.errors };
-  }
-  const viteOutput = outputs.output;
-
   const exportsMap = new Map<string, ExportsObject>();
   const binsMap = new Map<string, string>();
-  const tasksRes = await Promise.allSettled([
+
+  const tasksRes = await runSettled(args, [
     copyStaticFilesTask(sourceDir, outDir),
-    buildTypesTask({
-      sourceDir,
-      outDir,
-      entrypoints,
-      buildOutput: viteOutput,
-      modules,
-    }).then((res) => {
-      for (const [types, source] of res) {
-        setExports(exportsMap, source, (entry) => {
-          if (types.endsWith(".d.ts")) {
-            entry.dcts = "./" + relative(outDir, types);
+    viteTask({ viteConfig }).then((viteOutput) =>
+      runSettled(args, [
+        // TS Task SHOULD be after Vite task because we fix the imports based on the Vite FS output
+        buildTypesTask({
+          sourceDir,
+          outDir,
+          entrypoints,
+          modules,
+        }).then((res) => {
+          for (const [types, source] of res) {
+            setExports(exportsMap, source, (entry) => {
+              if (types.endsWith(".d.ts")) {
+                entry.dcts = "./" + relative(outDir, types);
+              }
+              if (types.endsWith(".d.mts")) {
+                entry.dmts = "./" + relative(outDir, types);
+              }
+              return entry;
+            });
           }
-          if (types.endsWith(".d.mts")) {
-            entry.dmts = "./" + relative(outDir, types);
-          }
-          return entry;
-        });
-      }
-    }),
-    jsFilesTask({ buildOutput: viteOutput, entrypoints, outDir }).then(
-      (res) => {
-        for (const [filePath, name] of res) {
-          setExports(exportsMap, name, (entry) => {
-            const format = filePath.endsWith(".js") ? "cjs" : "es";
-            if (format === "es") {
-              entry.mjs = "./" + filePath;
-            } else if (format === "cjs") {
-              entry.cjs = "./" + filePath;
+        }),
+        jsFilesTask({ buildOutput: viteOutput, entrypoints, outDir }).then(
+          (res) => {
+            for (const [filePath, name] of res) {
+              setExports(exportsMap, name, (entry) => {
+                const format = filePath.endsWith(".js") ? "cjs" : "es";
+                if (format === "es") {
+                  entry.mjs = "./" + filePath;
+                } else if (format === "cjs") {
+                  entry.cjs = "./" + filePath;
+                }
+                return entry;
+              });
             }
-            return entry;
-          });
-        }
-      },
-    ),
-    binsTask({ outBinsDir, bins, buildOutput: viteOutput, outDir }).then(
-      (res) => {
-        for (const [value, key] of res) {
-          binsMap.set(key, value);
-        }
-      },
+          },
+        ),
+        binsTask({ outBinsDir, bins, buildOutput: viteOutput, outDir }).then(
+          (res) => {
+            for (const [value, key] of res) {
+              binsMap.set(key, value);
+            }
+          },
+        ),
+      ]),
     ),
   ]);
 
-  const errors = tasksRes
-    .filter((res) => res.status === "rejected")
-    .map((res) => res.reason)
-    .map((res) => {
-      if (res instanceof BuildError) {
-        return res.error;
-      }
+  const errors = promiseSettledResultErrors(tasksRes).map((res) => {
+    if (res instanceof BuildError) {
+      return res.error;
+    }
 
-      return res.message;
-    });
+    return res.message;
+  });
 
   if (errors.length > 0) {
     return { error: true, errors };

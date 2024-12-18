@@ -71,6 +71,7 @@ export async function callTypescript({
     );
 
     const finalCjsPath = path.join(outDir, "__compiled__", "cjs", relativePath);
+    fs.mkdirSync(path.dirname(finalCjsPath), { recursive: true });
     const cjsFinalPath = finalCjsPath.replace(/\.d\.ts$/, ".d.ts");
     fs.writeFileSync(
       cjsFinalPath,

@@ -78,27 +78,26 @@ export async function run(args: Args): Promise<RunResult> {
 
   const tasksRes = await runSettled(args, [
     copyStaticFilesTask(sourceDir, outDir),
+    buildTypesTask({
+      sourceDir,
+      outDir,
+      entrypoints,
+      modules,
+    }).then((res) => {
+      for (const [types, source] of res) {
+        setExports(exportsMap, source, (entry) => {
+          if (types.endsWith(".d.ts")) {
+            entry.dcts = "./" + relative(outDir, types);
+          }
+          if (types.endsWith(".d.mts")) {
+            entry.dmts = "./" + relative(outDir, types);
+          }
+          return entry;
+        });
+      }
+    }),
     viteTask({ viteConfig }).then((viteOutput) =>
       runSettled(args, [
-        // TS Task SHOULD be after Vite task because we fix the imports based on the Vite FS output
-        buildTypesTask({
-          sourceDir,
-          outDir,
-          entrypoints,
-          modules,
-        }).then((res) => {
-          for (const [types, source] of res) {
-            setExports(exportsMap, source, (entry) => {
-              if (types.endsWith(".d.ts")) {
-                entry.dcts = "./" + relative(outDir, types);
-              }
-              if (types.endsWith(".d.mts")) {
-                entry.dmts = "./" + relative(outDir, types);
-              }
-              return entry;
-            });
-          }
-        }),
         jsFilesTask({ buildOutput: viteOutput, entrypoints, outDir }).then(
           (res) => {
             for (const [filePath, name] of res) {

@@ -12,9 +12,9 @@ type BuildTypesOptions = {
   outDir: string;
 };
 
-function makeFileExists(outDir: string, type: "esm" | "cjs", filePath: string) {
+function makeFileExists(outDir: string, filePath: string) {
   return (p: string) => {
-    const dir = path.join(outDir, "__compiled__", type, path.dirname(filePath));
+    const dir = path.join(outDir, path.dirname(filePath));
     return fs.existsSync(path.join(dir, p));
   };
 }
@@ -25,6 +25,7 @@ export async function callTypescript({
   files,
   outDir,
 }: BuildTypesOptions) {
+  // <build d.ts>
   const configPath = path.join(sourceDir, "tsconfig.json");
   const configFile = ts.readConfigFile(configPath, (path) =>
     // https://github.com/XaveScor/bobrik/issues/22
@@ -65,20 +66,35 @@ export async function callTypescript({
     const esmFinalPath = finalEsmPath.replace(/\.d\.ts$/, ".d.mts");
     sourceToDtsMap.set(esmFinalPath, sourceFileName);
     fs.mkdirSync(path.dirname(esmFinalPath), { recursive: true });
-    fs.writeFileSync(
-      esmFinalPath,
-      inlineExtensionsMjs(data, makeFileExists(outDir, "esm", relativePath)),
-    );
+    fs.writeFileSync(esmFinalPath, data);
 
     const finalCjsPath = path.join(outDir, "__compiled__", "cjs", relativePath);
     fs.mkdirSync(path.dirname(finalCjsPath), { recursive: true });
-    const cjsFinalPath = finalCjsPath.replace(/\.d\.ts$/, ".d.ts");
-    fs.writeFileSync(
-      cjsFinalPath,
-      inlineExtensionsCjs(data, makeFileExists(outDir, "cjs", relativePath)),
-    );
+    const cjsFinalPath = finalCjsPath;
+    fs.writeFileSync(cjsFinalPath, data);
     sourceToDtsMap.set(cjsFinalPath, sourceFileName);
   });
+
+  // </build d.ts>
+
+  // <fix vscode typings>
+  for (const file of sourceToDtsMap.keys()) {
+    const content = fs.readFileSync(file, "utf-8");
+    const relativePath = path.relative(outDir, file);
+    if (file.endsWith(".d.ts")) {
+      fs.writeFileSync(
+        file,
+        inlineExtensionsCjs(ts, content, makeFileExists(outDir, relativePath)),
+      );
+    }
+    if (file.endsWith(".d.mts")) {
+      fs.writeFileSync(
+        file,
+        inlineExtensionsMjs(ts, content, makeFileExists(outDir, relativePath)),
+      );
+    }
+  }
+  // </fix vscode typings>
 
   return sourceToDtsMap;
 }

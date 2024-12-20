@@ -81,6 +81,7 @@ export async function run(args: Args): Promise<RunResult> {
     buildTypesTask({
       sourceDir,
       outDir,
+      packageJson,
       entrypoints,
       modules,
     }).then((res) => {

@@ -194,6 +194,16 @@ describe("bugs", () => {
     expect(res.error).toBeFalsy();
     expect(tmpDir).toMatchDirSnapshot();
   });
+
+  test("109-validate-dts-imports", async ({ tmpDir }: { tmpDir: string }) => {
+    const res = await run({
+      outputDir: tmpDir,
+      sourceDir: "./src/fixtures/109-validate-dts-imports",
+    });
+
+    expect(res.error).toBeTruthy();
+    expect(res.errors[0]).toMatchInlineSnapshot(`"You use types from dependencies that are not installed: "devDep". Please install them into dependencies or peerDependencies."`);
+  });
 });
 
 describe("react", () => {

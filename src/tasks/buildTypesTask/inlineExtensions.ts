@@ -5,47 +5,49 @@ import { join } from "node:path";
 
 export type FileExists = (path: string) => boolean;
 
-function addExtension(
-  ts: typeof import("typescript"),
-  node: TS.StringLiteral,
-  ext: string,
-  dtsExt: string,
-  fileExists: FileExists,
-): TS.StringLiteral {
-  const importPath = node.text;
-
-  if (!importPath.startsWith(".")) {
-    return node; // Leave external imports untouched
-  }
-
-  if (
-    importPath.endsWith(".cjs") ||
-    importPath.endsWith(".mjs") ||
-    importPath.endsWith(".js")
-  ) {
-    return node;
-  }
-
-  if (fileExists(`${importPath}${dtsExt}`)) {
-    return ts.factory.createStringLiteral(`${importPath}${ext}`);
-  }
-
-  if (fileExists("./" + join(importPath, `index${dtsExt}`))) {
-    return ts.factory.createStringLiteral(
-      "./" + join(importPath, `index${ext}`),
-    );
-  }
-
-  return node; // Return the original node if no modification was made
-}
-
-function transformImportsAndExports(
+function transformAndExtractImports(
   ts: typeof import("typescript"),
   content: string,
   ext: string,
   dtsExt: string,
   fileExists: FileExists,
-): string {
+) {
+  const usedLibraries = new Set<string>();
+  function addExtension(
+    ts: typeof import("typescript"),
+    node: TS.StringLiteral,
+    ext: string,
+    dtsExt: string,
+    fileExists: FileExists,
+  ): TS.StringLiteral {
+    const importPath = node.text;
+
+    if (!importPath.startsWith(".")) {
+      usedLibraries.add(importPath);
+      return node; // Leave external imports untouched
+    }
+
+    if (
+      importPath.endsWith(".cjs") ||
+      importPath.endsWith(".mjs") ||
+      importPath.endsWith(".js")
+    ) {
+      return node;
+    }
+
+    if (fileExists(`${importPath}${dtsExt}`)) {
+      return ts.factory.createStringLiteral(`${importPath}${ext}`);
+    }
+
+    if (fileExists("./" + join(importPath, `index${dtsExt}`))) {
+      return ts.factory.createStringLiteral(
+        "./" + join(importPath, `index${ext}`),
+      );
+    }
+
+    return node; // Return the original node if no modification was made
+  }
+
   const sourceFile = ts.createSourceFile(
     "temp.ts",
     content,
@@ -143,21 +145,21 @@ function transformImportsAndExports(
   const output = printer.printFile(transformedSourceFile);
   result.dispose();
 
-  return output;
+  return { output, usedLibraries };
 }
 
 export function inlineExtensionsMjs(
   ts: typeof import("typescript"),
   content: string,
   fileExists: FileExists,
-): string {
-  return transformImportsAndExports(ts, content, ".mjs", ".d.mts", fileExists);
+) {
+  return transformAndExtractImports(ts, content, ".mjs", ".d.mts", fileExists);
 }
 
 export function inlineExtensionsCjs(
   ts: typeof import("typescript"),
   content: string,
   fileExists: FileExists,
-): string {
-  return transformImportsAndExports(ts, content, ".js", ".d.ts", fileExists);
+) {
+  return transformAndExtractImports(ts, content, ".js", ".d.ts", fileExists);
 }

@@ -13,7 +13,7 @@ type DepType =
   | "devDependencies"
   | "peerDependencies"
   | "optionalDependencies";
-function getMinVersion(
+export function getMinVersion(
   packageJson: PackageJson,
   depName: string,
   exclude: DepType[],

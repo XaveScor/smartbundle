@@ -4,10 +4,14 @@ import {
   inlineExtensionsMjs,
   inlineExtensionsCjs,
 } from "./inlineExtensions.js";
+import { type PackageJson } from "../../packageJson.js";
+import { getMinVersion } from "../../detectModules.js";
+import { BuildError } from "../../error.js";
 
 type BuildTypesOptions = {
   ts: typeof import("typescript");
   sourceDir: string;
+  packageJson: PackageJson;
   files: string[];
   outDir: string;
 };
@@ -23,6 +27,7 @@ export async function callTypescript({
   ts,
   sourceDir,
   files,
+  packageJson,
   outDir,
 }: BuildTypesOptions) {
   // <build d.ts>
@@ -77,24 +82,55 @@ export async function callTypescript({
 
   // </build d.ts>
 
+  const allImportedLibraries = new Set<string>();
   // <fix vscode typings>
   for (const file of sourceToDtsMap.keys()) {
     const content = fs.readFileSync(file, "utf-8");
     const relativePath = path.relative(outDir, file);
     if (file.endsWith(".d.ts")) {
-      fs.writeFileSync(
-        file,
-        inlineExtensionsCjs(ts, content, makeFileExists(outDir, relativePath)),
+      const transformedCode = inlineExtensionsCjs(
+        ts,
+        content,
+        makeFileExists(outDir, relativePath),
       );
+      for (const lib of transformedCode.usedLibraries.values()) {
+        allImportedLibraries.add(lib);
+      }
+      fs.writeFileSync(file, transformedCode.output);
     }
     if (file.endsWith(".d.mts")) {
-      fs.writeFileSync(
-        file,
-        inlineExtensionsMjs(ts, content, makeFileExists(outDir, relativePath)),
+      const transformedCode = inlineExtensionsMjs(
+        ts,
+        content,
+        makeFileExists(outDir, relativePath),
       );
+      for (const lib of transformedCode.usedLibraries.values()) {
+        allImportedLibraries.add(lib);
+      }
+      fs.writeFileSync(file, transformedCode.output);
     }
   }
   // </fix vscode typings>
+
+  // <check not installed typings libraries>
+  const notInstalledLibraries = new Set<string>();
+  for (const lib of allImportedLibraries) {
+    if (
+      getMinVersion(packageJson, lib, [
+        "optionalDependencies",
+        "devDependencies",
+      ]) == null
+    ) {
+      notInstalledLibraries.add(lib);
+    }
+  }
+  if (notInstalledLibraries.size > 0) {
+    const libsList = [...notInstalledLibraries].map((x) => `"${x}"`).join(", ");
+    throw new BuildError(
+      `You use types from dependencies that are not installed: ${libsList}. Please install them into dependencies or peerDependencies.`,
+    );
+  }
+  // </check not installed typings libraries>
 
   return sourceToDtsMap;
 }

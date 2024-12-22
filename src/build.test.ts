@@ -202,7 +202,25 @@ describe("bugs", () => {
     });
 
     expect(res.error).toBeTruthy();
-    expect(res.errors[0]).toMatchInlineSnapshot(`"You use types from dependencies that are not installed: "devDep". Please install them into dependencies or peerDependencies."`);
+    expect(res.errors[0]).toMatchInlineSnapshot(
+      `"You use types from dependencies that are not installed: "devDep". Please install them into dependencies or peerDependencies."`,
+    );
+  });
+
+  test("118-validate-dts-typings-imports", async ({
+    tmpDir,
+  }: {
+    tmpDir: string;
+  }) => {
+    const res = await run({
+      outputDir: tmpDir,
+      sourceDir: "./src/fixtures/118-validate-dts-typings-imports",
+    });
+
+    expect(res.error).toBeTruthy();
+    expect(res.errors[0]).toMatchInlineSnapshot(
+      `"You use types from dependencies that are not installed: "devDep". Please install them into dependencies or peerDependencies."`,
+    );
   });
 });
 

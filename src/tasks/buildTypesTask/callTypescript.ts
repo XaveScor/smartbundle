@@ -7,6 +7,7 @@ import {
 import { type PackageJson } from "../../packageJson.js";
 import { getMinVersion } from "../../detectModules.js";
 import { BuildError } from "../../error.js";
+import { findTypingsPackages } from "./findTypingsPackages.js";
 
 type BuildTypesOptions = {
   ts: typeof import("typescript");
@@ -113,19 +114,22 @@ export async function callTypescript({
   // </fix vscode typings>
 
   // <check not installed typings libraries>
-  const notInstalledLibraries = new Set<string>();
-  for (const lib of allImportedLibraries) {
+  const { missingTypings, existingTypingPackages } = findTypingsPackages(
+    allImportedLibraries,
+    sourceDir,
+  );
+  for (const lib of existingTypingPackages) {
     if (
       getMinVersion(packageJson, lib, [
         "optionalDependencies",
         "devDependencies",
       ]) == null
     ) {
-      notInstalledLibraries.add(lib);
+      missingTypings.add(lib);
     }
   }
-  if (notInstalledLibraries.size > 0) {
-    const libsList = [...notInstalledLibraries].map((x) => `"${x}"`).join(", ");
+  if (missingTypings.size > 0) {
+    const libsList = [...missingTypings].map((x) => `"${x}"`).join(", ");
     throw new BuildError(
       `You use types from dependencies that are not installed: ${libsList}. Please install them into dependencies or peerDependencies.`,
     );

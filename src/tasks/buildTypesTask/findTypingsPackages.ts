@@ -117,13 +117,12 @@ export function findTypingsPackages(packages: Set<string>, sourceDir: string) {
           host,
         );
 
-        if (
-          !moduleResolution.resolvedModule ||
-          !moduleResolution.resolvedModule.packageId
-        ) {
+        if (!moduleResolution?.resolvedModule?.packageId) {
           missingTypings.add(moduleSpecifier.text);
         } else {
-          existingTypingPackages.add(moduleSpecifier.text);
+          existingTypingPackages.add(
+            moduleResolution.resolvedModule.packageId.name,
+          );
         }
       }
     }

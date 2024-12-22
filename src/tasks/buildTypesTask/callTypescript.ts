@@ -131,7 +131,7 @@ export async function callTypescript({
   if (missingTypings.size > 0) {
     const libsList = [...missingTypings].map((x) => `"${x}"`).join(", ");
     throw new BuildError(
-      `You use types from dependencies that are not installed: ${libsList}. Please install them into dependencies or peerDependencies.`,
+      `The typings won't installed in bundled package: ${libsList}. Please install them into dependencies or peerDependencies.`,
     );
   }
   // </check not installed typings libraries>

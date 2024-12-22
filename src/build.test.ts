@@ -203,7 +203,7 @@ describe("bugs", () => {
 
     expect(res.error).toBeTruthy();
     expect(res.errors[0]).toMatchInlineSnapshot(
-      `"You use types from dependencies that are not installed: "devDep". Please install them into dependencies or peerDependencies."`,
+      `"The typings won't installed in bundled package: "devDep". Please install them into dependencies or peerDependencies."`,
     );
   });
 
@@ -219,7 +219,7 @@ describe("bugs", () => {
 
     expect(res.error).toBeTruthy();
     expect(res.errors[0]).toMatchInlineSnapshot(
-      `"You use types from dependencies that are not installed: "devDep". Please install them into dependencies or peerDependencies."`,
+      `"The typings won't installed in bundled package: "@types/devDep". Please install them into dependencies or peerDependencies."`,
     );
   });
 });

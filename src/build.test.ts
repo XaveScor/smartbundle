@@ -222,6 +222,16 @@ describe("bugs", () => {
       `"The typings won't installed in bundled package: "@types/devDep". Please install them into dependencies or peerDependencies."`,
     );
   });
+
+  test("122-check-types-deps", async ({ tmpDir }: { tmpDir: string }) => {
+    const res = await run({
+      outputDir: tmpDir,
+      sourceDir: "./src/fixtures/122-check-types-deps",
+    });
+
+    expect(res.error).toBeFalsy();
+    expect(tmpDir).toMatchDirSnapshot();
+  });
 });
 
 describe("react", () => {

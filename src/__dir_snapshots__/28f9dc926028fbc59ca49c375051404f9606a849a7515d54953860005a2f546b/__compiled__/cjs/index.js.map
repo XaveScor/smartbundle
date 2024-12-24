@@ -1,0 +1,1 @@
+{"version":3,"file":"index.js","sources":["../../../../../../../../Users/xavescor/projects/bobrik/src/fixtures/122-check-types-deps/index.ts"],"sourcesContent":["import { a } from \"dep\";\n\nexport const f = () => {\n  console.log(a);\n};\n"],"names":["a"],"mappings":";;;AAEO,MAAM,IAAI,MAAM;AACrB,UAAQ,IAAIA,KAAC;AACf;;"}

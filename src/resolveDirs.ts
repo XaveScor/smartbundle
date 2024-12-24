@@ -16,9 +16,11 @@ export function resolveDirs(args: Args) {
     args.packagePath ?? "./package.json",
   );
   const outDir = myResolve(process.cwd(), args.outputDir ?? "./dist");
+  const esmOutDir = myResolve(outDir, "__compiled__/esm");
+  const cjsOutDir = myResolve(outDir, "__compiled__/cjs");
   const outBinsDir = myResolve(outDir, "__bin__");
 
-  return { sourceDir, packagePath, outDir, outBinsDir };
+  return { sourceDir, packagePath, outDir, outBinsDir, cjsOutDir, esmOutDir };
 }
 
 export type Dirs = ReturnType<typeof resolveDirs>;

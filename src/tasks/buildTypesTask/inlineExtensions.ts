@@ -12,7 +12,6 @@ function transformAndExtractImports(
   dtsExt: string,
   fileExists: FileExists,
 ) {
-  const usedLibraries = new Set<string>();
   function addExtension(
     ts: typeof import("typescript"),
     node: TS.StringLiteral,
@@ -23,8 +22,7 @@ function transformAndExtractImports(
     const importPath = node.text;
 
     if (!importPath.startsWith(".")) {
-      usedLibraries.add(importPath);
-      return node; // Leave external imports untouched
+      return node;
     }
 
     if (
@@ -35,13 +33,15 @@ function transformAndExtractImports(
       return node;
     }
 
-    if (fileExists(`${importPath}${dtsExt}`)) {
-      return ts.factory.createStringLiteral(`${importPath}${ext}`);
+    const cleanedImportPath = importPath.replace(/\.[cm]?js$/, "");
+
+    if (fileExists(`${cleanedImportPath}${dtsExt}`)) {
+      return ts.factory.createStringLiteral(`${cleanedImportPath}${ext}`);
     }
 
-    if (fileExists("./" + join(importPath, `index${dtsExt}`))) {
+    if (fileExists("./" + join(cleanedImportPath, `index${dtsExt}`))) {
       return ts.factory.createStringLiteral(
-        "./" + join(importPath, `index${ext}`),
+        "./" + join(cleanedImportPath, `index${ext}`),
       );
     }
 
@@ -145,7 +145,7 @@ function transformAndExtractImports(
   const output = printer.printFile(transformedSourceFile);
   result.dispose();
 
-  return { output, usedLibraries };
+  return output;
 }
 
 export function inlineExtensionsMjs(

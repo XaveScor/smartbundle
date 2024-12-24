@@ -3,50 +3,60 @@ import { reverseMap } from "../utils.js";
 import { okLog } from "../../log.js";
 import type { DetectedModules } from "../../detectModules.js";
 import { type PackageJson } from "../../packageJson.js";
+import { type Dirs } from "../../resolveDirs.js";
 
 type BuildTypesTaskOption = {
   entrypoints: Map<string, string>;
-  sourceDir: string;
-  outDir: string;
+  dirs: Dirs;
   modules: DetectedModules;
   packageJson: PackageJson;
 };
 
 export async function buildTypesTask({
   entrypoints,
-  sourceDir,
-  outDir,
+  dirs,
   packageJson,
   modules,
 }: BuildTypesTaskOption) {
-  const reversedEntrypoints = reverseMap(entrypoints);
+  const { outDir } = dirs;
   const tsEntrypoints = [...entrypoints.values()].filter((entry) =>
     entry.endsWith(".ts"),
   );
+  const reversedEntrypoints = reverseMap(entrypoints);
+
+  const entrypointToEsDtsMap = new Map<string, string>();
+  const entrypointToCjsDtsMap = new Map<string, string>();
   if (tsEntrypoints.length === 0 || modules.ts == null) {
-    return new Map<string, string>();
+    return { entrypointToEsDtsMap, entrypointToCjsDtsMap };
   }
 
   const dtsMap = await callTypescript({
     ts: modules.ts,
-    sourceDir,
+    dirs,
     packageJson,
-    files: tsEntrypoints,
+    tsEntrypoints,
     outDir,
   });
 
-  const result = new Map<string, string>();
-  for (const [types, source] of dtsMap) {
-    const exportPath = reversedEntrypoints.get(source);
-    if (!exportPath) {
-      continue;
+  for (const [source, dts] of dtsMap.sourceToEsmDtsMap) {
+    const entrypoints = reversedEntrypoints.get(source);
+    if (entrypoints) {
+      for (const entrypoint of entrypoints) {
+        entrypointToEsDtsMap.set(entrypoint, dts);
+      }
     }
-    for (const path of exportPath) {
-      result.set(types, path);
+  }
+
+  for (const [source, dts] of dtsMap.sourceToCjsDtsMap) {
+    const entrypoints = reversedEntrypoints.get(source);
+    if (entrypoints) {
+      for (const entrypoint of entrypoints) {
+        entrypointToCjsDtsMap.set(entrypoint, dts);
+      }
     }
   }
 
   okLog(".d.ts");
 
-  return result;
+  return { entrypointToEsDtsMap, entrypointToCjsDtsMap };
 }

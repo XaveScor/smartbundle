@@ -79,20 +79,21 @@ export async function run(args: Args): Promise<RunResult> {
   const tasksRes = await runSettled(args, [
     copyStaticFilesTask(sourceDir, outDir),
     buildTypesTask({
-      sourceDir,
-      outDir,
+      dirs,
       packageJson,
       entrypoints,
       modules,
-    }).then((res) => {
-      for (const [types, source] of res) {
-        setExports(exportsMap, source, (entry) => {
-          if (types.endsWith(".d.ts")) {
-            entry.dcts = "./" + relative(outDir, types);
-          }
-          if (types.endsWith(".d.mts")) {
-            entry.dmts = "./" + relative(outDir, types);
-          }
+    }).then(({ entrypointToEsDtsMap, entrypointToCjsDtsMap }) => {
+      for (const [entrypoint, dts] of entrypointToEsDtsMap) {
+        setExports(exportsMap, entrypoint, (entry) => {
+          entry.dmts = "./" + relative(outDir, dts);
+          return entry;
+        });
+      }
+
+      for (const [entrypoint, dts] of entrypointToCjsDtsMap) {
+        setExports(exportsMap, entrypoint, (entry) => {
+          entry.dcts = "./" + relative(outDir, dts);
           return entry;
         });
       }

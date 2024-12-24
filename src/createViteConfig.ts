@@ -56,7 +56,7 @@ export function createViteConfig({
   packageJson,
   modules,
 }: CreateViteConfigParam) {
-  const { sourceDir, outDir } = dirs;
+  const { sourceDir, outDir, esmOutDir, cjsOutDir } = dirs;
 
   const entrypoints = new Map<string, string>();
   if (packageJson.exports) {
@@ -77,6 +77,8 @@ export function createViteConfig({
 
   const depsValidator = createExternalDepValidator(packageJson);
 
+  const esmRelativeOutPath = relative(outDir, esmOutDir);
+  const cjsRelativeOutPath = relative(outDir, cjsOutDir);
   const viteConfig = defineConfig({
     plugins: [
       reactPlugin({ modules }),
@@ -104,22 +106,20 @@ export function createViteConfig({
           if (!entrypoint) {
             const noExt = entryName.replace(/\.[^.]+$/, "");
             if (format === "es") {
-              return join("__compiled__", "esm", `${noExt}.mjs`);
+              return join(esmRelativeOutPath, `${noExt}.mjs`);
             } else {
-              return join("__compiled__", "cjs", `${noExt}.js`);
+              return join(cjsRelativeOutPath, `${noExt}.js`);
             }
           }
 
           if (format === "es") {
             return join(
-              "__compiled__",
-              "esm",
+              esmRelativeOutPath,
               relative(sourceDir, entrypoint).replace(/\.[^.]+$/, "") + ".mjs",
             );
           } else {
             return join(
-              "__compiled__",
-              "cjs",
+              cjsRelativeOutPath,
               relative(sourceDir, entrypoint).replace(/\.[^.]+$/, "") + ".js",
             );
           }

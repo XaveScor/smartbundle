@@ -1,0 +1,30 @@
+{
+  "name": "109-validate-dts-imports",
+  "type": "commonjs",
+  "version": "0.0.0",
+  "types": "./__compiled__/cjs/index.d.ts",
+  "module": "./__compiled__/esm/index.mjs",
+  "main": "./__compiled__/cjs/index.js",
+  "description": "",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./__compiled__/esm/index.d.mts",
+        "default": "./__compiled__/esm/index.mjs"
+      },
+      "require": {
+        "types": "./__compiled__/cjs/index.d.ts",
+        "default": "./__compiled__/cjs/index.js"
+      },
+      "types": "./__compiled__/cjs/index.d.ts",
+      "default": "./__compiled__/cjs/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "dependencies": {
+    "dep": "*"
+  },
+  "devDependencies": {
+    "@types/dep": "*"
+  }
+}

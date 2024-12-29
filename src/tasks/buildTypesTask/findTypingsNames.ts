@@ -49,12 +49,7 @@ export function findTypingsNames(
   const processedFiles = new Set<string>();
   const filesQueue = [relative(sourceDir, entrypoint)];
 
-  function processModuleSpecifier(
-    filename: string,
-    moduleSpecifier: ts.Expression,
-  ) {
-    if (!ts.isStringLiteral(moduleSpecifier)) return;
-
+  function processModuleSpecifier(moduleSpecifier: ts.StringLiteral) {
     const moduleName = moduleSpecifier.text;
     if (moduleName.startsWith(".")) {
       filesQueue.push(moduleName.replace(/\.js$/, ext));
@@ -72,28 +67,39 @@ export function findTypingsNames(
     const sourceFile = program.getSourceFile(currentFile);
     if (!sourceFile) continue;
 
-    processedFiles.add(currentFile);
-
-    ts.forEachChild(sourceFile, (node) => {
+    function visit(node: ts.Node) {
       // import "moduleSpecifier";
-      if (ts.isImportDeclaration(node)) {
-        processModuleSpecifier(relativeCurrentFile, node.moduleSpecifier);
+      if (
+        ts.isImportDeclaration(node) &&
+        ts.isStringLiteral(node.moduleSpecifier)
+      ) {
+        processModuleSpecifier(node.moduleSpecifier);
       }
 
-      // import("arguments[0]");
+      // Generic<import("node")>;
       if (
-        ts.isCallExpression(node) &&
-        node.expression.kind === ts.SyntaxKind.ImportKeyword &&
-        node.arguments.length === 1
+        ts.isImportTypeNode(node) &&
+        ts.isLiteralTypeNode(node.argument) &&
+        ts.isStringLiteral(node.argument.literal)
       ) {
-        processModuleSpecifier(relativeCurrentFile, node.arguments[0]);
+        processModuleSpecifier(node.argument.literal);
       }
 
       // export * from "moduleSpecifier";
-      if (ts.isExportDeclaration(node) && node.moduleSpecifier) {
-        processModuleSpecifier(relativeCurrentFile, node.moduleSpecifier);
+      if (
+        ts.isExportDeclaration(node) &&
+        node.moduleSpecifier &&
+        ts.isStringLiteral(node.moduleSpecifier)
+      ) {
+        processModuleSpecifier(node.moduleSpecifier);
       }
-    });
+
+      ts.forEachChild(node, visit);
+    }
+
+    processedFiles.add(currentFile);
+
+    ts.forEachChild(sourceFile, visit);
   }
 
   return packages;

@@ -1,11 +1,17 @@
 {
-  "name": "109-validate-dts-imports",
+  "name": "118-validate-dts-typings-imports",
   "private": true,
   "version": "0.0.0",
   "type": "module",
   "exports": "./index.ts",
+  "dependencies": {
+    "dep": "*",
+    "dynamicDep": "*",
+    "importDep": "*"
+  },
   "devDependencies": {
-    "devDep": "*",
-    "@types/devDep": "*"
+    "@types/dep": "*",
+    "@types/dynamicDep": "*",
+    "@types/importDep": "*"
   }
 }

@@ -219,7 +219,7 @@ describe("bugs", () => {
 
     expect(res.error).toBeTruthy();
     expect(res.errors[0]).toMatchInlineSnapshot(
-      `"The typings won't installed in bundled package: "@types/devDep". Please install them into dependencies or peerDependencies."`,
+      `"The typings won't installed in bundled package: "@types/dep", "@types/importDep", "@types/dynamicDep". Please install them into dependencies or peerDependencies."`,
     );
   });
 

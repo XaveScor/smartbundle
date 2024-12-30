@@ -4,7 +4,7 @@ import { okLog } from "../log.js";
 
 export async function copyStaticFilesTask(sourceDir: string, outDir: string) {
   const files = await copyStaticFiles({
-    relativeFiles: new Set(["readme.md"]),
+    relativeFiles: new Set(["readme.md", "license", "license.txt"]),
     sourceDir,
     outDir,
   });

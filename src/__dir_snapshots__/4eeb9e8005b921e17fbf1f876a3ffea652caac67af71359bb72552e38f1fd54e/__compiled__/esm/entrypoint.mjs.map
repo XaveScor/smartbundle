@@ -1,1 +1,0 @@
-{"version":3,"file":"entrypoint.mjs","sources":["../../../../../../../../Users/xavescor/projects/bobrik/src/fixtures/ts-import/entrypoint.ts"],"sourcesContent":["import { a } from \"./a.js\";\nexport { a } from \"./a.js\";\n\nexport function helloWorld() {\n  console.log(\"Hello, world!\" + a);\n}\n"],"names":[],"mappings":";AAGO,SAAS,aAAa;AACnB,UAAA,IAAI,kBAAkB,CAAC;AACjC;"}

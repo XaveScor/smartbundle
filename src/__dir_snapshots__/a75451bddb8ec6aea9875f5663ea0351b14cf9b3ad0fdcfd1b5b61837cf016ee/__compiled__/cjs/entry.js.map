@@ -1,1 +1,0 @@
-{"version":3,"file":"entry.js","sources":["../../../../../../../../Users/xavescor/projects/bobrik/src/fixtures/99-multi-react-dep/entry.tsx"],"sourcesContent":["import React from 'react'\n\nexport const App = () => {\n  return <div>Hello, World!</div>\n}\n"],"names":[],"mappings":";;;AAEO,MAAM,MAAM,MAAM;AAChB,SAAA,sBAAA,cAAC,aAAI,eAAa;AAC3B;;"}

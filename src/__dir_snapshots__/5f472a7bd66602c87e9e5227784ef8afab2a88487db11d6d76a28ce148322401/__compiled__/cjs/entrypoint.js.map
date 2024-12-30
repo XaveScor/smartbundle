@@ -1,0 +1,1 @@
+{"version":3,"file":"entrypoint.js","sources":["../../../../../../../../Users/xavescor/projects/smartbundle/src/fixtures/es-js-import/entrypoint.js"],"sourcesContent":["import { a } from \"./a.mjs\";\n\nconsole.log(\"Hello, world!\" + a);\n"],"names":["a"],"mappings":";;AAEA,QAAQ,IAAI,kBAAkBA,GAAC;"}

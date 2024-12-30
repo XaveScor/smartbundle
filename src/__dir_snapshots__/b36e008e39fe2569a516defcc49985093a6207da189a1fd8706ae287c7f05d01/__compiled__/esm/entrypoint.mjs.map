@@ -1,0 +1,1 @@
+{"version":3,"file":"entrypoint.mjs","sources":["../../../../../../../../Users/xavescor/projects/smartbundle/src/fixtures/37-ignore-subroutes/entrypoint.js"],"sourcesContent":["import { a } from \"dep/a\";\n\nconsole.log(a);\n"],"names":[],"mappings":";AAEA,QAAQ,IAAI,CAAC;"}

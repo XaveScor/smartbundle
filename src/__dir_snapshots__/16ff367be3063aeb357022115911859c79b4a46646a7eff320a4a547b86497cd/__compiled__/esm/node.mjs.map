@@ -1,1 +1,0 @@
-{"version":3,"file":"node.mjs","sources":["../../../../../../../../Users/xavescor/projects/bobrik/src/fixtures/external-deps/node.mjs"],"sourcesContent":["import * as all from \"node:fs\";\n\nconsole.log(all);\n"],"names":[],"mappings":";AAEA,QAAQ,IAAI,GAAG;"}

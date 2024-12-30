@@ -1,0 +1,1 @@
+{"version":3,"file":"jsx.mjs","sources":["../../../../../../../../Users/xavescor/projects/smartbundle/src/fixtures/react-legacy-transform/jsx.jsx"],"sourcesContent":["import React from \"react\";\n\nexport const Component = (props) => <div>jsx</div>;\n"],"names":[],"mappings":";AAEO,MAAM,YAAY,CAAC,gCAAU,cAAC,aAAI,KAAG;"}

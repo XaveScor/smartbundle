@@ -100,6 +100,16 @@ describe("build", () => {
     expect(res.error).toBeFalsy();
     expect(tmpDir).toMatchDirSnapshot();
   });
+
+  test("114-license", async ({ tmpDir }: { tmpDir: string }) => {
+    const res = await run({
+      outputDir: tmpDir,
+      sourceDir: "./src/fixtures/114-license",
+    });
+
+    expect(res.error).toBeFalsy();
+    expect(tmpDir).toMatchDirSnapshot();
+  });
 });
 
 describe("bugs", () => {

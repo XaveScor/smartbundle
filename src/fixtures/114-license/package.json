@@ -1,0 +1,6 @@
+{
+  "name": "114-license",
+  "private": true,
+  "version": "0.0.0",
+  "exports": "./index.js"
+}

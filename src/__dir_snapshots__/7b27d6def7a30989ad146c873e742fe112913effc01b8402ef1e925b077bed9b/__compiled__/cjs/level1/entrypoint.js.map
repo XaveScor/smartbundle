@@ -1,1 +1,0 @@
-{"version":3,"file":"entrypoint.js","sources":["../../../../../../../../../Users/xavescor/projects/bobrik/src/fixtures/34-deep-structure/level1/entrypoint.ts"],"sourcesContent":["import { a } from \"./level2/a.js\";\n\nexport default () => {\n  console.log(a);\n};\n"],"names":["a"],"mappings":";;;AAEA,MAAA,aAAe,MAAM;AACnB,UAAQ,IAAIA,GAAC;AACf;;"}

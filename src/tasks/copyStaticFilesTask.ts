@@ -4,6 +4,9 @@ import { okLog } from "../log.js";
 
 export async function copyStaticFilesTask(sourceDir: string, outDir: string) {
   const files = await copyStaticFiles({
+    // WARN only files inside sourceDir are supported because of node_modules
+    // Fix this behavior if needed in the future
+    // This place is not tested because I don't want to test node_modules or some same folders
     relativeFiles: new Set(["readme.md", "license", "license.txt"]),
     sourceDir,
     outDir,
@@ -26,9 +29,8 @@ async function copyStaticFiles({
   relativeFiles,
 }: CopyStaticFilesOptions) {
   const dirFiles = new Map(
-    (await readdir(sourceDir, { recursive: true })).map(
-      (f) => [f.toLowerCase(), f] as const,
-    ),
+    // avoid {recursive: true} because of node_modules
+    (await readdir(sourceDir)).map((f) => [f.toLowerCase(), f] as const),
   );
 
   const res = new Set<string>();

@@ -39,7 +39,11 @@ export async function defineViteConfig(args: Args = {}) {
     throw new Error("Failed to parse package.json");
   }
 
-  const modules = await detectModules(packageJson);
+  const modulesResult = await detectModules(packageJson, dirs);
+  if (modulesResult.error) {
+    return { error: true, errors: modulesResult.errors };
+  }
+  const { modules } = modulesResult;
   const { viteConfig } = createViteConfig({ dirs, packageJson, modules });
 
   return viteConfig;
@@ -66,7 +70,11 @@ export async function run(args: Args): Promise<RunResult> {
     return { error: true, errors: packageJson };
   }
 
-  const modules = await detectModules(packageJson);
+  const modulesResult = await detectModules(packageJson, dirs);
+  if (modulesResult.error) {
+    return { error: true, errors: modulesResult.errors };
+  }
+  const { modules } = modulesResult;
   const { viteConfig, entrypoints, bins } = createViteConfig({
     dirs,
     packageJson,

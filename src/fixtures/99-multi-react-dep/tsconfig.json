@@ -4,5 +4,6 @@
     "target": "ES2018",
     "moduleResolution": "Bundler",
     "jsx": "react",
+    "verbatimModuleSyntax": true
   }
 }

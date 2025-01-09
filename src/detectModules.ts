@@ -1,9 +1,15 @@
 import { type PackageJson } from "./packageJson.js";
 import semver from "semver";
 import { okLog, errorLog, log, lineLog, warnLog } from "./log.js";
+import type { Dirs } from "./resolveDirs.js";
 
+export type TS = {
+  ts: typeof import("typescript");
+  parsedConfig: import("typescript").ParsedCommandLine;
+  host: import("typescript").CompilerHost;
+};
 export type DetectedModules = {
-  ts?: typeof import("typescript");
+  ts?: TS;
   babel?: typeof import("@babel/core");
   react?: "legacy" | "modern";
 };
@@ -83,22 +89,82 @@ async function detectReact(
   errorLog("react");
 }
 
-export async function detectModules(
-  packageJson: PackageJson,
-): Promise<DetectedModules> {
-  const result: DetectedModules = {};
-  log("Detecting modules");
+async function detectTypescript(dirs: Dirs): Promise<TS | undefined> {
+  let ts: typeof import("typescript");
   try {
     // ts <=4.3 has no named exports. The all methods is located in the default export
-    result.ts = (await import("typescript")).default;
-    okLog("typescript, version:", result.ts.version);
+    ts = (await import("typescript")).default;
   } catch {
     errorLog("typescript");
+    return;
   }
 
-  result.babel = await detectBabel(packageJson);
-  result.react = await detectReact(packageJson);
+  okLog("typescript, version:", ts.version);
 
-  lineLog();
-  return result;
+  const configFilePath = ts.findConfigFile(dirs.sourceDir, ts.sys.fileExists);
+  if (!configFilePath) {
+    throw new Error(
+      "Cannot find a tsconfig.json file. You should declare it. Please, read the https://github.com/XaveScor/smartbundle/issues/131 for more information",
+    );
+  }
+  const configFile = ts.readConfigFile(configFilePath, ts.sys.readFile);
+  if (configFile.error) {
+    const readableError = ts.flattenDiagnosticMessageText(
+      configFile.error.messageText,
+      "\n",
+    );
+    throw new Error(`Cannot read tsconfig.json file, error: ${readableError}`);
+  }
+  const parsedConfig = ts.parseJsonConfigFileContent(
+    configFile.config,
+    ts.sys,
+    dirs.sourceDir,
+    {
+      declaration: true,
+      emitDeclarationOnly: true,
+      strict: false,
+      strictNullChecks: false,
+      strictFunctionTypes: false,
+      strictPropertyInitialization: false,
+      skipLibCheck: true,
+      skipDefaultLibCheck: true,
+      outDir: "",
+      // https://github.com/XaveScor/bobrik/issues/22#issuecomment-2308552352
+      noEmit: false,
+    },
+    configFilePath,
+  );
+
+  if (!parsedConfig.options.verbatimModuleSyntax) {
+    throw new Error(
+      "verbatimModuleSyntax should be enabled in tsconfig.json. Read https://github.com/XaveScor/smartbundle/issues/131 for more explanation.\n" +
+        "You also can upvote the issue if you need the support of verbatimModuleSyntax: false in your library",
+    );
+  }
+
+  const host = ts.createCompilerHost(parsedConfig.options);
+
+  return { ts, parsedConfig, host };
+}
+
+export async function detectModules(
+  packageJson: PackageJson,
+  dirs: Dirs,
+): Promise<
+  | { error: false; modules: DetectedModules }
+  | { error: true; errors: Array<string> }
+> {
+  try {
+    const result: DetectedModules = {};
+    log("Detecting modules");
+
+    result.ts = await detectTypescript(dirs);
+    result.babel = await detectBabel(packageJson);
+    result.react = await detectReact(packageJson);
+
+    lineLog();
+    return { error: false, modules: result };
+  } catch (e: any) {
+    return { error: true, errors: [e.message] };
+  }
 }

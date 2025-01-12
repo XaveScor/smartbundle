@@ -1,5 +1,8 @@
 import { a as depa } from "dep";
-import { a as opta } from "optionaldep";
+(async () => {
+  const { a: opta } = import("optionaldep");
+  console.log(opta);
+})();
 import { a as peera } from "peerdep";
 
-console.log(depa, opta, peera);
+console.log(depa, peera);

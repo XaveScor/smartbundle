@@ -63,12 +63,8 @@ export function babelPlugin({
       };
     },
     buildEnd(error) {
-      if (!error) {
-        if (modules.babel && hasBabelConfig) {
-          okLog("Babel");
-        }
-      } else {
-        this.error(error);
+      if (modules.babel && hasBabelConfig) {
+        okLog("Babel");
       }
     },
   };

@@ -5,11 +5,13 @@ import { defineConfig } from "vite";
 import { babelPlugin } from "./plugins/babel/index.js";
 import { reactPlugin } from "./plugins/react/index.js";
 import { type DetectedModules } from "./detectModules.js";
+import { importsPlugin } from "./plugins/imports/index.js";
 
 type CreateViteConfigParam = {
   dirs: Dirs;
   packageJson: PackageJson;
   modules: DetectedModules;
+  test?: boolean;
 };
 
 function mapToObject(map: Map<string, string>) {
@@ -20,41 +22,11 @@ function mapToObject(map: Map<string, string>) {
   return obj;
 }
 
-function createExternalDepValidator(packageJson: PackageJson) {
-  const allExternalPackages = new Set();
-  for (const key of [
-    "dependencies",
-    "optionalDependencies",
-    "peerDependencies",
-  ] as const) {
-    for (const dep of Object.keys(packageJson[key] ?? {})) {
-      allExternalPackages.add(dep);
-    }
-  }
-  allExternalPackages.add(packageJson.name);
-
-  return (id: string) => {
-    if (id.startsWith("node:")) {
-      return true;
-    }
-    const segments = id.split("/");
-    let current = "";
-    for (const segment of segments) {
-      current += segment;
-      // import {} from "a/b/c/d"; case
-      if (allExternalPackages.has(current)) {
-        return true;
-      }
-      current += "/";
-    }
-    return false;
-  };
-}
-
 export function createViteConfig({
   dirs,
   packageJson,
   modules,
+  test,
 }: CreateViteConfigParam) {
   const { sourceDir, outDir, esmOutDir, cjsOutDir } = dirs;
 
@@ -75,12 +47,11 @@ export function createViteConfig({
 
   const mergedEntries = new Map([...entrypoints, ...bins]);
 
-  const depsValidator = createExternalDepValidator(packageJson);
-
   const esmRelativeOutPath = relative(outDir, esmOutDir);
   const cjsRelativeOutPath = relative(outDir, cjsOutDir);
   const viteConfig = defineConfig({
     plugins: [
+      importsPlugin(packageJson, test),
       reactPlugin({ modules }),
       babelPlugin({ packageJson, dirs, modules }),
     ],
@@ -126,7 +97,6 @@ export function createViteConfig({
         },
       },
       rollupOptions: {
-        external: depsValidator,
         output: {
           preserveModulesRoot: sourceDir,
           exports: "named",

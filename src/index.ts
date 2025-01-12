@@ -15,6 +15,7 @@ import { runSettled } from "./pipeline.js";
 import { type Args } from "./args.js";
 import { viteTask } from "./tasks/viteTask.js";
 import { promiseSettledResultErrors } from "./promiseSettledResultErrors.js";
+import { PrettyError } from "./PrettyErrors.js";
 
 function setExports(
   exportsMap: Map<string, ExportsObject>,
@@ -44,7 +45,12 @@ export async function defineViteConfig(args: Args = {}) {
     return { error: true, errors: modulesResult.errors };
   }
   const { modules } = modulesResult;
-  const { viteConfig } = createViteConfig({ dirs, packageJson, modules });
+  const { viteConfig } = createViteConfig({
+    dirs,
+    packageJson,
+    modules,
+    test: true,
+  });
 
   return viteConfig;
 }
@@ -55,7 +61,7 @@ type RunResult =
     }
   | {
       error: true;
-      errors: Array<string>;
+      errors: Array<string | PrettyError>;
     };
 
 export async function run(args: Args): Promise<RunResult> {
@@ -135,6 +141,10 @@ export async function run(args: Args): Promise<RunResult> {
   ]);
 
   const errors = promiseSettledResultErrors(tasksRes).map((res) => {
+    if (res instanceof PrettyError) {
+      return res;
+    }
+
     if (res instanceof BuildError) {
       return res.error;
     }

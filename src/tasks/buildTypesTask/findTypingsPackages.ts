@@ -1,5 +1,6 @@
-import * as ts from "typescript";
+import type * as ts from "typescript";
 import * as path from "node:path";
+import type { TS } from "../../detectModules.js";
 
 type HostFunctions = {
   getSourceFile: ts.CompilerHost["getSourceFile"];
@@ -8,6 +9,7 @@ type HostFunctions = {
 };
 
 function createVirtualHostFunctions(
+  ts: TS["ts"],
   virtualFilePath: string,
   virtualSourceContent: string,
   originalHost: ts.CompilerHost,
@@ -48,6 +50,7 @@ function createVirtualHostFunctions(
 }
 
 function createCompilerHostWithVirtualSource(
+  ts: TS["ts"],
   packages: Set<string>,
   sourceDir: string,
 ) {
@@ -70,6 +73,7 @@ function createCompilerHostWithVirtualSource(
     },
   });
   const virtualFunctions = createVirtualHostFunctions(
+    ts,
     virtualFilePath,
     virtualSourceContent,
     originalHost,
@@ -85,8 +89,13 @@ function createCompilerHostWithVirtualSource(
   };
 }
 
-export function findTypingsPackages(packages: Set<string>, sourceDir: string) {
+export function findTypingsPackages(
+  { ts }: TS,
+  packages: Set<string>,
+  sourceDir: string,
+) {
   const { host, virtualFilePath } = createCompilerHostWithVirtualSource(
+    ts,
     packages,
     sourceDir,
   );

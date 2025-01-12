@@ -2,6 +2,7 @@ import { build, type UserConfig, type Rollup } from "vite";
 import { errors } from "../errors.js";
 import { okLog } from "../log.js";
 import { BuildError } from "../error.js";
+import { PrettyError } from "../PrettyErrors.js";
 
 type ViteTaskParams = {
   viteConfig: UserConfig;
@@ -13,14 +14,12 @@ type BuildSuccess = {
 };
 type BuildErrorType = {
   error: true;
-  errors: Array<string>;
+  errors: Array<string | PrettyError>;
 };
 
 type BuildResult = BuildSuccess | BuildErrorType;
 
-export async function buildVite({
-  viteConfig,
-}: ViteTaskParams): Promise<BuildResult> {
+async function buildVite({ viteConfig }: ViteTaskParams): Promise<BuildResult> {
   try {
     const outputs = await build(viteConfig);
     if (!Array.isArray(outputs)) {
@@ -37,6 +36,12 @@ export async function buildVite({
       ),
     };
   } catch (e) {
+    if (e instanceof PrettyError) {
+      return {
+        error: true,
+        errors: [e],
+      };
+    }
     if (e instanceof Error) {
       return {
         error: true,
@@ -53,7 +58,9 @@ export async function buildVite({
 export async function viteTask({ viteConfig }: ViteTaskParams) {
   const outputs = await buildVite({ viteConfig });
   if (outputs.error) {
-    throw outputs.errors.map((e) => new BuildError(e));
+    throw outputs.errors.map((e) =>
+      e instanceof PrettyError ? e : new BuildError(e),
+    );
   }
 
   okLog("Vite");

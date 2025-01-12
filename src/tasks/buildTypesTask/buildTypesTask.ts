@@ -26,6 +26,11 @@ export async function buildTypesTask({
 
   const entrypointToEsDtsMap = new Map<string, string>();
   const entrypointToCjsDtsMap = new Map<string, string>();
+  if (tsEntrypoints.length > 0 && modules.ts == null) {
+    throw new Error(
+      'smartbundle found the .ts entrypoint but required "typescript" to build .d.ts files. Please install the "typescript" dependency.',
+    );
+  }
   if (tsEntrypoints.length === 0 || modules.ts == null) {
     return { entrypointToEsDtsMap, entrypointToCjsDtsMap };
   }

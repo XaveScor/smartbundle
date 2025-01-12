@@ -89,7 +89,16 @@ async function detectReact(
   errorLog("react");
 }
 
-async function detectTypescript(dirs: Dirs): Promise<TS | undefined> {
+async function detectTypescript(
+  packageJson: PackageJson,
+  dirs: Dirs,
+): Promise<TS | undefined> {
+  const typescriptVersion = getMinVersion(packageJson, "typescript", []);
+  if (!typescriptVersion) {
+    errorLog("typescript");
+    return;
+  }
+
   let ts: typeof import("typescript");
   try {
     // ts <=4.3 has no named exports. The all methods is located in the default export
@@ -158,7 +167,7 @@ export async function detectModules(
     const result: DetectedModules = {};
     log("Detecting modules");
 
-    result.ts = await detectTypescript(dirs);
+    result.ts = await detectTypescript(packageJson, dirs);
     result.babel = await detectBabel(packageJson);
     result.react = await detectReact(packageJson);
 

@@ -11,5 +11,8 @@
     "./onlyNamed": "./onlyNamed.ts",
     "./onlySideEffect": "./onlySideEffect.ts",
     "./reexport": "./reexport.ts"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.3"
   }
 }

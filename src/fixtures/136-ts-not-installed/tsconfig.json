@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "module": "ESNext",
+    "target": "ES2018",
+    "moduleResolution": "Bundler",
+    "outDir": "a/b/c/d",
+    "verbatimModuleSyntax": true
+  }
+}

@@ -3,5 +3,8 @@
   "private": true,
   "type": "module",
   "version": "1.0.0",
-  "exports": "./entrypoint.ts"
+  "exports": "./entrypoint.ts",
+  "devDependencies": {
+      "typescript": "^5.7.3"
+  }
 }

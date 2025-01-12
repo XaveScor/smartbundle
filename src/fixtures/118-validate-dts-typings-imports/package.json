@@ -12,6 +12,7 @@
   "devDependencies": {
     "@types/dep": "*",
     "@types/dynamicDep": "*",
-    "@types/importDep": "*"
+    "@types/importDep": "*",
+    "typescript": "^5.7.3"
   }
 }

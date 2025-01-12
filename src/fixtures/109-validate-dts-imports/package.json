@@ -5,6 +5,7 @@
   "type": "module",
   "exports": "./index.ts",
   "devDependencies": {
-    "devDep": "*"
+    "devDep": "*",
+    "typescript": "^5.7.3"
   }
 }

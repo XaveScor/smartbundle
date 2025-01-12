@@ -25,6 +25,7 @@
     "dep": "*"
   },
   "devDependencies": {
-    "@types/dep": "*"
+    "@types/dep": "*",
+    "typescript": "^5.7.3"
   }
 }

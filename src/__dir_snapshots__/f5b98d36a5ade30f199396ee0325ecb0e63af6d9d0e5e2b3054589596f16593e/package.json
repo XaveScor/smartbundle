@@ -20,5 +20,8 @@
       "default": "./__compiled__/cjs/level1/entrypoint.js"
     },
     "./package.json": "./package.json"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.3"
   }
 }

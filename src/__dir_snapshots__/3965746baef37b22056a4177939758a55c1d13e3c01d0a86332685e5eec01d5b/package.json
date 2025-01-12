@@ -20,5 +20,8 @@
       "default": "./__compiled__/cjs/reexports.js"
     },
     "./package.json": "./package.json"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.3"
   }
 }

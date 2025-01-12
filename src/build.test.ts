@@ -242,6 +242,16 @@ describe("bugs", () => {
     expect(res.error).toBeFalsy();
     expect(tmpDir).toMatchDirSnapshot();
   });
+
+  test("136-ts-not-installed", async ({ tmpDir }: { tmpDir: string }) => {
+    const res = await run({
+      outputDir: tmpDir,
+      sourceDir: "./src/fixtures/136-ts-not-installed",
+    });
+
+    expect(res.error).toBeTruthy();
+    expect(res.errors[0]).toMatchInlineSnapshot(`"smartbundle found the .ts entrypoint but required "typescript" to build .d.ts files. Please install the "typescript" dependency."`);
+  });
 });
 
 describe("react", () => {

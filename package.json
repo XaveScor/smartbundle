@@ -48,6 +48,7 @@
     "semver": "^7.6.3",
     "vite": "^5.4.11",
     "yargs": "^17.7.2",
+    "youch": "4.1.0-beta.4",
     "zod": "^3.24.0"
   },
   "peerDependencies": {

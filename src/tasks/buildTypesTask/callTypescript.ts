@@ -94,6 +94,7 @@ export async function callTypescript({
     const esmEntrypoint = sourceToEsmDtsMap.get(sourceEntrypoint);
     if (esmEntrypoint) {
       const localPackages = findTypingsNames(
+        ts,
         esmEntrypoint,
         esmOutDir,
         ".d.mts",
@@ -105,7 +106,12 @@ export async function callTypescript({
 
     const cjsEntrypoint = sourceToCjsDtsMap.get(sourceEntrypoint);
     if (cjsEntrypoint) {
-      const localPackages = findTypingsNames(cjsEntrypoint, cjsOutDir, ".d.ts");
+      const localPackages = findTypingsNames(
+        ts,
+        cjsEntrypoint,
+        cjsOutDir,
+        ".d.ts",
+      );
       for (const p of localPackages) {
         packages.add(p);
       }
@@ -115,6 +121,7 @@ export async function callTypescript({
 
   // <check not installed typings libraries>
   const { missingTypings, existingTypingPackages } = findTypingsPackages(
+    ts,
     packages,
     sourceDir,
   );

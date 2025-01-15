@@ -46,11 +46,16 @@ export async function callTypescript({
     // .d.ts for cjs because "type": "commonjs" in package.json
     // .d.mts for esm
     const relativePath = path.relative(sourceDir, fileName);
-    const sourceFileName = fileName.replace(/\.d\.ts$/, ".ts"); // Assuming source files have .ts extension
+    // we create maps for ts and tsx because it can have any of these extensions
+    // I don't want to detect the original ext,
+    // so I've decided just create two maps and calculate the original file name outside of this function
+    const sourceFileNameTS = fileName.replace(/\.d\.ts$/, ".ts"); // Assuming source files have .ts extension
+    const sourceFileNameTSX = fileName.replace(/\.d\.ts$/, ".tsx"); // Assuming source files have .ts extension
 
     const finalEsmPath = path.join(esmOutDir, relativePath);
     const esmFinalPath = finalEsmPath.replace(/\.d\.ts$/, ".d.mts");
-    sourceToEsmDtsMap.set(sourceFileName, esmFinalPath);
+    sourceToEsmDtsMap.set(sourceFileNameTS, esmFinalPath);
+    sourceToEsmDtsMap.set(sourceFileNameTSX, esmFinalPath);
     fs.mkdirSync(path.dirname(esmFinalPath), { recursive: true });
     fs.writeFileSync(esmFinalPath, data);
 
@@ -58,7 +63,8 @@ export async function callTypescript({
     fs.mkdirSync(path.dirname(finalCjsPath), { recursive: true });
     const cjsFinalPath = finalCjsPath;
     fs.writeFileSync(cjsFinalPath, data);
-    sourceToCjsDtsMap.set(sourceFileName, cjsFinalPath);
+    sourceToCjsDtsMap.set(sourceFileNameTS, cjsFinalPath);
+    sourceToCjsDtsMap.set(sourceFileNameTSX, cjsFinalPath);
   });
   // </build d.ts>
 

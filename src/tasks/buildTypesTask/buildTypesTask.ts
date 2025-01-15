@@ -20,7 +20,7 @@ export async function buildTypesTask({
 }: BuildTypesTaskOption) {
   const { outDir } = dirs;
   const tsEntrypoints = [...entrypoints.values()].filter((entry) =>
-    entry.endsWith(".ts"),
+    entry.endsWith(".ts") || entry.endsWith(".tsx"),
   );
   const reversedEntrypoints = reverseMap(entrypoints);
 

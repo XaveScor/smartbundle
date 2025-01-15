@@ -2,17 +2,21 @@
   "name": "99-multi-react-dep",
   "type": "commonjs",
   "version": "0.0.0",
+  "types": "./__compiled__/cjs/entry.d.ts",
   "module": "./__compiled__/esm/entry.mjs",
   "main": "./__compiled__/cjs/entry.js",
   "description": "",
   "exports": {
     ".": {
       "import": {
+        "types": "./__compiled__/esm/entry.d.mts",
         "default": "./__compiled__/esm/entry.mjs"
       },
       "require": {
+        "types": "./__compiled__/cjs/entry.d.ts",
         "default": "./__compiled__/cjs/entry.js"
       },
+      "types": "./__compiled__/cjs/entry.d.ts",
       "default": "./__compiled__/cjs/entry.js"
     },
     "./package.json": "./package.json"
@@ -24,6 +28,7 @@
     "react": "^17.3.1"
   },
   "devDependencies": {
-    "react": "^18.3.1"
+    "react": "^18.3.1",
+    "typescript": "^5.7.3"
   }
 }

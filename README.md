@@ -1,92 +1,124 @@
 # SmartBundle
-SmartBundle is a zero-config bundler tailored for library authors and package maintainers looking for simplicity and broad compatibility without the need for complex setup.
 
-## Features
-`SmartBundle` aims to make the build process seamless and distraction-free. Key features include:
-- Configuration-free setup via `package.json`
-- Compatibility with popular bundlers and runtimes
-- Support for ESM and CJS compatibility
-- TypeScript typings generation
-- Harmless bin scripts
-- Source maps generation for easier debugging
+<div align="center">
+  <h3>The Library Bundler That Respects Your Time</h3>
+  
+  <p>
+    <a href="#getting-started">Getting Started</a> •
+    <a href="#features">Features</a> •
+    <a href="#compatibility">Compatibility</a> •
+    <a href="#tool-integration">Tool Integration</a> •
+    <a href="#advanced-usage">Advanced Usage</a> •
+    <a href="#faq">FAQ</a>
+  </p>
+</div>
 
-We've also optimized several aspects to ensure the resulting package is as smooth to use as possible.
+Build your library for any JavaScript environment without the complexity
 
-## How to use
-1) Create a `package.json` file like the following:
+## Getting Started
+
+SmartBundle makes it easy to bundle your library for any JavaScript environment. Just create a minimal package.json (see below), install SmartBundle, and run the build command.
+
 ```json5
+// Minimal package.json (annotated for SmartBundle)
 {
-  "name": "my-package",
-  "version": "1.0.0",
-  "private": true, // prevents accidental publishing
-  "type": "module",
-  "exports": "./src/index.ts" // entrypoint for building the package
+  "name": "my-package",         // Your package name.
+  "version": "1.0.0",           // Package version.
+  "private": true,              // Must be true to avoid accidental publishing.
+  "type": "module",             // SmartBundle supports only ES modules.
+  "exports": "./src/index.js",  // Entry point used by SmartBundle.
+  "scripts": {
+    "build": "smartbundle"      // Run this to build your package.
+  }
 }
 ```
-2) Run
+
+Need more details? See our [package.json guide](./docs/package-json.md) for a full explanation of each field. If you plan to use TypeScript, check out our [TS guide](./docs/ts-guide.md) for tailored advice.
+
+To build your package:
+
+1) Create the package.json as shown above
+2) Install SmartBundle:
 ```bash
-npx smartbundle@latest
+npm install --save-dev smartbundle@latest
 ```
-The built files will appear in the `./dist` folder, including an auto-generated `package.json` file.
+3) Build your package:
+```bash
+npm run build
+```
+4) Your built files (including an auto-generated package.json) will be in the ./dist folder
 
-3) Navigate to the `./dist` folder and publish your package to the npm registry.
+## Features
 
-## Supported targets
-| Target                         | Supported | Covered by e2e tests |
-|--------------------------------|-----------|----------------------|
-| Bun ^1.0.0                     | ✔         | ✔                    |
-| Node ^18.0.0                   | ✔         | ✔                    |
-| Node ^20.0.0                   | ✔         | ✔                    |
-| Node ^22.0.0                   | ✔         | ✔                    |
-| Node ^23.0.0                   | ✔         | ✔                    |
-| Webpack ^4.47.0                | ✔         | ✔                    |
-| Webpack ^5.95.0                | ✔         | ✔                    |
-| Rspack ^1.0.0                  | ✔         | ✔                    |
-| Vite ^5.0.0                    | ✔         | not yet              |
-| Rollup ^4.0.0                  | ✔         | not yet              |
-| Deno ^2.0.0                    | ✔         | not yet              |
-| Parcel ^2.0.0                  | ✔         | not yet              |
-| Browserify ^17.0.0             | ✔         | not yet              |
-| Esbuild ^0.24.0                | ✔         | not yet              |
-| Metro ^0.81.0                  | ✔         | ✔                    |
-| Next.js/Turbopack ^13.0.0      | ✔         | not yet              |
-| TS/ModuleResolution: bundler   | ✔         | ✔                    |
-| TS/ModuleResolution: node10    | ✔         | ✔                    |
-| TS/ModuleResolution: node16es  | ✔         | ✔                    |
-| TS/ModuleResolution: node16cjs | ✔         | ✔                    |
+- **Zero Configuration** - Point to your entry file and build
+- **Universal Output** - ESM and CommonJS bundles generated automatically  
+- **TypeScript Ready** - Full TypeScript support with type definitions
+- **React Support** - Automatic JSX transformations for modern and legacy modes
+- **Developer Friendly** - Source maps included for better debugging
+- **Broad Compatibility** - Works with Node.js, Webpack, Vite, Rollup, Bun, and more
+
+
+## Compatibility
+
+Every bundled package is tested in real environments - from Node.js and Bun to Webpack and Metro - to ensure it just works.
+
+### Runtimes
+| Runtime    | Version   | Supported | E2E Tests |
+|------------|-----------|:---------:|:---------:|
+| Node.js    | ^18.0.0   | ✔        | ✔        |
+|            | ^20.0.0   | ✔        | ✔        |
+|            | ^22.0.0   | ✔        | ✔        |
+|            | ^23.0.0   | ✔        | ✔        |
+| Bun        | ^1.0.0    | ✔        | ✔        |
+| Deno       | ^2.0.0    | ✔        | -        |
+
+### Bundlers
+| Bundler           | Version   | Supported | E2E Tests |
+|-------------------|-----------|:---------:|:---------:|
+| Webpack           | ^4.47.0   | ✔        | ✔        |
+|                   | ^5.95.0   | ✔        | ✔        |
+| Rspack           | ^1.0.0    | ✔        | ✔        |
+| Vite             | ^5.0.0    | ✔        | -        |
+| Rollup           | ^4.0.0    | ✔        | -        |
+| Parcel           | ^2.0.0    | ✔        | -        |
+| Browserify       | ^17.0.0   | ✔        | -        |
+| Esbuild          | ^0.24.0   | ✔        | -        |
+| Metro            | ^0.81.0   | ✔        | ✔        |
+| Next.js/Turbopack| ^13.0.0   | ✔        | -        |
+
+### TypeScript Module Resolution
+| Strategy    | Supported | E2E Tests |
+|-------------|:---------:|:---------:|
+| bundler     | ✔        | ✔        |
+| node10      | ✔        | ✔        |
+| node16es    | ✔        | ✔        |
+| node16cjs   | ✔        | ✔        |
 
 We aim to support as many bundlers and runtimes as possible. If the bundled package doesn't work with your bundler, please let us know.
 
-## Third party tools support
-### Typescript
-Just install `typescript@^5.0.0` as a dev dependency and start creating ts files.
+## Tool Integration
+
+SmartBundle automatically detects and integrates with your tools - just add what you need to your project.
+
+### TypeScript
+Add `typescript@^5.0.0` as a dev dependency and start creating `.ts` files. SmartBundle will handle the rest.
 
 ### Babel
-Just install `@babel/core@^7.0.0` as a dev dependency and create a Babel configuration file in the project root.
+Add `@babel/core@^7.0.0` as a dev dependency and create a Babel configuration file in your project root. SmartBundle will automatically apply your transformations.
 
 ### React
-Just install `react`. More information on React integration can be found [here](./docs/react.md).
+Add `react` to your dependencies. SmartBundle automatically detects React and configures JSX transformations. Both modern and legacy modes are supported.
 
-## `package.json` limitations
-To reduce potential errors and ensure smooth package generation, we follow a stricter configuration for `package.json`.
+For detailed React configuration options, see our [React guide](./docs/react.md).
 
-### Banned fields
-#### `files`
-SmartBundle calculates the import graph and includes all necessary files, making `files` unnecessary and potentially confusing.
-#### `main`, `module`, `browser`, `types`
-We rely on the `exports` field for entry points. These fields are redundant and automatically generated in `./dist/package.json`.
+## Advanced Usage
 
-### Required fields
-#### `private`
-Setting `"private": true` avoids accidental publishing of the source package by ensuring it is not mistakenly published to npm.
+SmartBundle enforces certain package.json conventions to ensure reliable builds. For detailed information about:
+- Required and banned fields
+- Configuration limitations
+- Package.json best practices
 
-### Stricter fields
-#### `type`
-We currently support only the `module` type for packages, with plans to support `commonjs` in future releases.
-#### `exports`
-Only ESM/TS entry points are currently supported in exports. While [conditional exports](https://nodejs.org/api/packages.html#conditional-exports) are not yet available, they’re planned for an upcoming release.
-#### `bin`
-Currently, we support all `bin` [specifications](https://docs.npmjs.com/cli/v10/configuring-npm/package-json#bin) except for `sh` files. Also, we guarantee that the bin files will execute as expected.
+See our [package.json guide](./docs/package-json.md).
 
 ## FAQ
 ### SmartBundle have an issue

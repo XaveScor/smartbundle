@@ -2,3 +2,4 @@
 node_modules
 dist
 !src/fixtures/**/node_modules
+.aider*

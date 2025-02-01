@@ -20,15 +20,20 @@ Build your library for any JavaScript environment without the complexity
 SmartBundle makes it easy to bundle your library for any JavaScript environment. Just create a minimal package.json (see below), install SmartBundle, and run the build command.
 
 ```json5
-// Minimal package.json (annotated for SmartBundle)
 {
-  "name": "my-package",         // Your package name.
-  "version": "1.0.0",           // Package version.
-  "private": true,              // Must be true to avoid accidental publishing.
-  "type": "module",             // SmartBundle supports only ES modules.
-  "exports": "./src/index.js",  // Entry point used by SmartBundle.
+  // Your package name
+  "name": "my-package",         
+  // Package version
+  "version": "1.0.0",           
+  // Must be true to avoid accidental publishing
+  "private": true,              
+  // SmartBundle supports only ES modules
+  "type": "module",             
+  // Entry point used by SmartBundle
+  "exports": "./src/index.js",  
   "scripts": {
-    "build": "smartbundle"      // Run this to build your package.
+    // Run this to build your package
+    "build": "smartbundle"      
   }
 }
 ```
@@ -129,3 +134,6 @@ Minification is typically needed only for production. During development, readab
 
 ### Why do you require third-party tools for building?
 We prioritize keeping the `node_modules` size manageable and avoid unnecessary dependencies. If your package does not require TypeScript, for instance, you don’t need to install those specific tools.
+
+### Community and Support
+If you need assistance or wish to contribute, please check out our [discussion forum](https://github.com/your-org/smartbundle/discussions) and [issue tracker](https://github.com/your-org/smartbundle/issues).

@@ -12,11 +12,12 @@ SmartBundle’s React Integration Guide explains how SmartBundle builds and opti
 
 First, ensure your project has the React package installed:
 
-```shell
+```bash
 npm install react
 ```
 
-It is recommended to use React **>= 16.8.0** to take advantage of hooks and other modern features.
+> [!INFO]
+> Ensure you are using React **>= 16.8.0** to take full advantage of hooks and modern features.
 
 (This step allows SmartBundle to automatically detect your React version.)
 
@@ -26,8 +27,8 @@ SmartBundle optimizes JSX compilation by applying different transformation strat
 
 ### Transformation Modes
 
-- **React < 17.0.0:** Compiles JSX files into calls to `React.createElement`.
-- **React >= 17.0.0:** Uses the new JSX runtime (see [new JSX transform](https://legacy.reactjs.org/blog/2020/09/22/introducing-the-new-jsx-transform.html)).
+- **React version < 17.0.0:** JSX is compiled into `React.createElement` calls.
+- **React version >= 17.0.0:** The new JSX runtime is used (see [new JSX transform](https://legacy.reactjs.org/blog/2020/09/22/introducing-the-new-jsx-transform.html)).
 
 ### Rationale
 
@@ -37,9 +38,11 @@ SmartBundle selects the best JSX transformation method to ensure both performanc
 
 SmartBundle processes both the `.jsx` and `.tsx` extensions automatically. Use `.jsx` for JavaScript files containing JSX syntax, and prefer `.tsx` for TypeScript files so you also benefit from type checking.
 
-**Note:** Support for the `.tsx` extension is available only when TS mode is enabled in your project. For more details, see the [TypeScript Integration Guide](./ts-guide.md).
+> **Info:** Support for the `.tsx` extension is enabled only when your project has TypeScript configured. See the [TypeScript Integration Guide](./ts-guide.md) for details.
 
 ## Example Package.json Configuration for React Projects
+
+For installation and build commands, please use fenced code blocks (e.g. using ```bash) to clearly highlight terminal commands.
 
 Below is a sample configuration. SmartBundle auto-detects React and applies the correct JSX transformation, so your package.json setup remains straightforward:
 
@@ -56,3 +59,4 @@ Below is a sample configuration. SmartBundle auto-detects React and applies the 
 ```
 
 In this example, using React 17 triggers the new JSX runtime.
+

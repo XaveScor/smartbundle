@@ -1,5 +1,6 @@
 # SmartBundle TypeScript Integration Guide
 
+
 <!-- Table of Contents -->
 - [Requirements & Setup](#requirements--setup)
 - [TypeScript Configuration: verbatimModuleSyntax](#typescript-configuration-verbatimmodulesyntax)
@@ -7,16 +8,20 @@
   - [Bin Field Example](#bin-field-example)
   - [Exports Field Example](#exports-field-example)
 
+
 This guide explains how SmartBundle integrates with TypeScript to produce consistent and reliable builds. SmartBundle supports projects using TypeScript (v5.0 and above) by requiring a specific TS configuration and by extending package.json semantics. In addition to outlining how to install and configure TypeScript, this guide explains how fields such as bin and exports are interpreted—similar to our JavaScript workflows but with TS-aware adjustments.
 
 For detailed information on how SmartBundle extends package.json semantics, refer to our [package.json guide](./package-json.md).
+
 
 ## Requirements & Setup
 
 - Minimum TypeScript version: **>= 5.0**.  
 - To enable TypeScript support in your project, simply install TypeScript:
-  
-  `npm install --save-dev typescript`
+
+```bash
+npm install --save-dev typescript
+```
 
 SmartBundle detects and uses the locally installed TypeScript.
 
@@ -27,6 +32,9 @@ SmartBundle requires that the TypeScript compilation option **"verbatimModuleSyn
 ### Rationale
 
 Enabling `"verbatimModuleSyntax": true` ensures that the original ES module import/export syntax is maintained throughout the build process. This is essential because SmartBundle analyzes the source code to correctly generate package exports and executable scripts, avoiding any side effects caused by module system transformations.
+
+> [!TIP]  
+> If you haven't already, update your tsconfig.json to include `"verbatimModuleSyntax": true` to preserve ESM import/export syntax for proper export generation.  
 
 To enable this option, update your tsconfig.json:
 
@@ -90,7 +98,13 @@ It is possible to mix both TypeScript and JavaScript entrypoints within your pac
 }
 ```
 
-In this example:
-- The main entry point (`"."`) is defined as a TypeScript file. SmartBundle will compile it and automatically generate corresponding type definitions.
-- The `./legacy` entry is a JavaScript-only file.
-- Similarly, the `bin` field includes both a TypeScript-based command and a JavaScript-based command.
+This configuration demonstrates:
+- Main entry point (`"."`) uses TypeScript:
+  - SmartBundle compiles the TypeScript file
+  - Type definitions are automatically generated
+- Legacy entry (`./legacy`) uses JavaScript only:
+  - No type definitions are generated for this entry
+  - Consumers won't get TypeScript support when importing this path
+- Bin commands support both formats:
+  - TypeScript-based command (`my-command`)
+  - JavaScript-based command (`old-command`)

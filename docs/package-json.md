@@ -37,7 +37,9 @@ These fields create ambiguity in module resolution. SmartBundle uses only the `e
 
 - Declaration: "private": true  
 - Requirement: This field must be set to true to prevent accidental publishing.
-- Note: When you run SmartBundle, it generates a new package.json in the output directory containing only the fields needed for publishing.
+
+> [!INFO]  
+> When you run SmartBundle, it generates a new package.json in the output directory containing only the fields needed for publishing.  
 
 #### type Field
 
@@ -71,7 +73,11 @@ The `exports` field defines the package’s entry points for SmartBundle’s ESM
 > The "exports" field defines the entry points—and only the entry points—that SmartBundle uses.  
 > During bundling, SmartBundle regenerates this field with the correct values for the output package.
 
-For more information, see the [Node.js Documentation: Package Exports](https://nodejs.org/api/packages.html#exports). Note that SmartBundle currently supports only direct mappings (string paths) in the exports field. Conditional keys such as "import", "require", and glob patterns (e.g. "**") are not supported at this time.
+For more information, see the [Node.js Documentation: Package Exports](https://nodejs.org/api/packages.html#exports).
+
+
+> [!IMPORTANT]  
+> SmartBundle supports only direct string mappings in the exports field. Conditional keys (such as "import" or "require") and glob patterns (e.g. "**") are not supported.  
 
 ### Simple String Notation
 
@@ -135,3 +141,4 @@ mainPkg.default();
 ```
 
 For additional TypeScript-related setup and best practices, please refer to our [TS Guide](./docs/ts-guide.md).
+

@@ -46,6 +46,10 @@ These fields create ambiguity in module resolution. SmartBundle uses only the `e
 - Declaration: "type": "module"  
 - Requirement: SmartBundle only bundles ESM sources. Setting "type": "module" ensures that Node.js treats your .js files as ES modules, which is mandatory.
 
+#### Required Entry Points
+
+- **Requirement:** Your package.json must include *either* the `bin` field or the `exports` field. At least one of these is required so that SmartBundle can correctly determine the entry points for bundling and publishing.
+
 #### bin Field
 
 - Declaration Example: 

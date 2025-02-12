@@ -1,1 +1,1 @@
-{"version":3,"file":"entrypoint.js","sources":["../../../../../../../../Users/xavescor/projects/smartbundle/src/fixtures/simple-build/entrypoint.js"],"sourcesContent":["console.log(\"Hello, world!\");\n"],"names":[],"mappings":";AAAA,QAAQ,IAAI,eAAe;"}
+{"version":3,"file":"entrypoint.js","sources":["../../../../../../../../Users/xavescor/projects/bobrik/src/fixtures/simple-build/entrypoint.js"],"sourcesContent":["console.log(\"Hello, world!\");\n"],"names":[],"mappings":";AAAA,QAAQ,IAAI,eAAe;"}

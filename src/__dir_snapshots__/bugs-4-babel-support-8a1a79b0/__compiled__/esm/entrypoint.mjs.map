@@ -1,1 +1,1 @@
-{"version":3,"file":"entrypoint.mjs","sources":["../../../../../../../../Users/xavescor/projects/smartbundle/src/fixtures/4-babel-support/entrypoint.ts"],"sourcesContent":["export const a = 1;\n"],"names":["a"],"mappings":"AAAO,MAAMA,IAAI;"}
+{"version":3,"file":"entrypoint.mjs","sources":["../../../../../../../../Users/xavescor/projects/bobrik/src/fixtures/4-babel-support/entrypoint.ts"],"sourcesContent":["export const a = 1;\n"],"names":["a"],"mappings":"AAAO,MAAMA,IAAI;"}

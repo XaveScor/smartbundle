@@ -1,1 +1,1 @@
-{"version":3,"file":"first.js","sources":["../../../../../../../../Users/xavescor/projects/smartbundle/src/fixtures/3-exports-object/first.js"],"sourcesContent":["export const a = 'first';\n"],"names":[],"mappings":";;AAAY,MAAC,IAAI;;"}
+{"version":3,"file":"first.js","sources":["../../../../../../../../Users/xavescor/projects/bobrik/src/fixtures/3-exports-object/first.js"],"sourcesContent":["export const a = 'first';\n"],"names":[],"mappings":";;AAAY,MAAC,IAAI;;"}

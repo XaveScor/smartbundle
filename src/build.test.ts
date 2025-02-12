@@ -3,6 +3,7 @@ import { run } from "./index.js";
 import { $ } from "zx";
 import { test } from "vitest-directory-snapshot";
 import { disableLog } from "./log.js";
+import { errors } from "./errors";
 
 disableLog();
 
@@ -250,7 +251,22 @@ describe("bugs", () => {
     });
 
     expect(res.error).toBeTruthy();
-    expect(res.errors[0]).toMatchInlineSnapshot(`"smartbundle found the .ts entrypoint but required "typescript" to build .d.ts files. Please install the "typescript" dependency."`);
+    expect(res.errors[0]).toMatchInlineSnapshot(
+      `"smartbundle found the .ts entrypoint but required "typescript" to build .d.ts files. Please install the "typescript" dependency."`,
+    );
+  });
+
+  test("135-should error when package.json lacks both exports and bin", async ({
+    tmpDir,
+  }: {
+    tmpDir: string;
+  }) => {
+    const res = await run({
+      outputDir: tmpDir,
+      sourceDir: "./src/fixtures/no-exports-no-bin",
+    });
+    expect(res.error).toBeTruthy();
+    expect(res.errors[0]).toBe(errors.exportsRequired);
   });
 });
 

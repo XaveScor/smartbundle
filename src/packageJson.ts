@@ -86,7 +86,7 @@ function fillPackageJson(packageJson: PackageJson) {
 function createPackageJsonSchema(sourceDir: string) {
   const pathValidator = createPathValidator(sourceDir);
 
-  return z.object({
+  const schema = z.object({
     exports: z
       .union(
         [
@@ -191,6 +191,17 @@ function createPackageJsonSchema(sourceDir: string) {
     homepage: z.any().optional(),
     babel: z.any().optional(),
     peerDependenciesMeta: z.any().optional(),
+  });
+
+  // Add custom logic so that at least one of exports or bin is provided
+  return schema.superRefine((data, ctx) => {
+    if (!data.exports && !data.bin) {
+      ctx.addIssue({
+        code: "custom",
+        message: errors.exportsRequired,
+        path: ["exports"],
+      });
+    }
   });
 }
 type PackageJsonSchema = ReturnType<typeof createPackageJsonSchema>;

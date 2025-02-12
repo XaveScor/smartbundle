@@ -1,5 +1,11 @@
 # Base Prompt for Creating Tests
 
+# Compliance with SmartBundle Guidelines
+Ensure that all tests and fixture projects comply with SmartBundle's rules as described in the docs. In particular:
+  - Each fixture's package.json must include `"private": true` and `"type": "module"` and **must not** include banned fields such as `files`, `main`, `module`, `browser`, or `types`.
+  - For TypeScript fixtures, ensure the tsconfig.json has `"verbatimModuleSyntax": true`.
+  - Do not disable logging in tests.
+
 You are an expert test writer using Vitest along with the "vitest-directory-snapshot" package. Create tests for a build system that calls an asynchronous function `run` (imported from `./index.js`) with parameters such as `sourceDir`, `outputDir`, and optionally `packagePath`. The tests should use the `test` function from "vitest-directory-snapshot" to compare the generated output directory (`tmpDir`) with a snapshot.
 
 ## Guidelines
@@ -15,6 +21,7 @@ You are an expert test writer using Vitest along with the "vitest-directory-snap
    - `outputDir`: the temporary output directory (`tmpDir`)
    - `sourceDir`: a path to a fixture directory inside `./src/fixtures`. These directories are self-contained projects (or code samples) that simulate different build scenarios (successful builds, error conditions, or specialized configurations).
    - Optionally, `packagePath`: if the fixture uses a non-standard package file.
+   *Note:* The build's output (including any generated package.json modifications) must respect SmartBundle's guidelines detailed in the documentation.
 
 4. **Expectations**  
    - For **successful builds**, the test should verify:

@@ -1,6 +1,6 @@
 export const errors = {
   exportsRequired:
-    "The `exports` field is string or Record<string, string>. Please, verify the value. More info: https://nodejs.org/api/packages.html#package-entry-points",
+    "The `exports` or `bin` field is required. Please, verify the value. More info: https://nodejs.org/api/packages.html#package-entry-points",
   exportsInvalid:
     "The `exports` field must be a path to entrypoint. Please, verify the value. More info: https://nodejs.org/api/packages.html#package-entry-points",
   nameRequired:

@@ -1,1 +1,1 @@
-{"version":3,"file":"node.js","sources":["../../../../../../../../Users/xavescor/projects/smartbundle/src/fixtures/external-deps/node.mjs"],"sourcesContent":["import * as all from \"node:fs\";\n\nconsole.log(all);\n"],"names":["all"],"mappings":";;;;;;;;;;;;;;;;;;;AAEA,QAAQ,IAAIA,cAAG;"}
+{"version":3,"file":"node.js","sources":["../../../../../../../../Users/xavescor/projects/bobrik/src/fixtures/external-deps/node.mjs"],"sourcesContent":["import * as all from \"node:fs\";\n\nconsole.log(all);\n"],"names":["all"],"mappings":";;;;;;;;;;;;;;;;;;;AAEA,QAAQ,IAAIA,cAAG;"}

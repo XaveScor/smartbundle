@@ -1,1 +1,1 @@
-{"version":3,"file":"dep1.mjs","sources":["../../../../../../../../../Users/xavescor/projects/smartbundle/src/fixtures/deep-structure/level1/dep1.ts"],"sourcesContent":["export const a = 1;\n"],"names":[],"mappings":"AAAO,MAAM,IAAI;"}
+{"version":3,"file":"dep1.mjs","sources":["../../../../../../../../../Users/xavescor/projects/bobrik/src/fixtures/deep-structure/level1/dep1.ts"],"sourcesContent":["export const a = 1;\n"],"names":[],"mappings":"AAAO,MAAM,IAAI;"}

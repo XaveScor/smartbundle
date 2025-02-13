@@ -35,21 +35,21 @@
   "license": "MIT",
   "devDependencies": {
     "@types/babel__core": "^7.20.5",
-    "@types/node": "^22.10.7",
+    "@types/node": "^22.13.2",
     "@types/semver": "^7.5.8",
     "@types/yargs": "^17.0.33",
-    "prettier": "^3.4.2",
+    "prettier": "^3.5.1",
     "typescript": "^5.7.3",
-    "vitest": "^3.0.2",
-    "vitest-directory-snapshot": "^0.4.0",
-    "zx": "^8.3.0"
+    "vitest": "^3.0.5",
+    "vitest-directory-snapshot": "^0.5.0",
+    "zx": "^8.3.2"
   },
   "dependencies": {
-    "semver": "^7.6.3",
-    "vite": "^6.0.7",
+    "semver": "^7.7.1",
+    "vite": "^6.1.0",
     "yargs": "^17.7.2",
     "youch": "4.1.0-beta.5",
-    "zod": "^3.24.1"
+    "zod": "^3.24.2"
   },
   "peerDependencies": {
     "@babel/core": "^7.26.0",

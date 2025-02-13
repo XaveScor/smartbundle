@@ -33,12 +33,12 @@ SmartBundle makes it easy to bundle your library for any JavaScript environment.
   "exports": "./src/index.js",  
   "scripts": {
     // Run this to build your package
-    "build": "smartbundle"      
+    "build": "smartbundle build"      
   }
 }
 ```
-
-Need more details? See our [package.json guide](./docs/package-json.md) for a full explanation of each field. If you plan to use TypeScript, check out our [TS guide](./docs/ts-guide.md) for tailored advice.
+> [!TIP]
+> Need more details? See our [package.json guide](./docs/package-json.md) for a full explanation of each field. If you plan to use TypeScript, check out our [TS guide](./docs/ts-guide.md) for tailored advice.
 
 To build your package:
 
@@ -51,6 +51,8 @@ npm install --save-dev smartbundle@latest
 ```bash
 npm run build
 ```
+> [!TIP]
+> You can learn more about smartbundle modes here [SmartBundle Modes](./docs/modes.md)
 4) Your built files (including an auto-generated package.json) will be in the ./dist folder
 
 ## Features

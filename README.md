@@ -1,9 +1,17 @@
 # SmartBundle
 
-**The Library Bundler That Respects Your Time**
+<div align="center">
+  <h3>The Library Bundler That Respects Your Time</h3>
 
-**Table of Contents**  
-[Getting Started](#getting-started) • [Features](#features) • [Compatibility](#compatibility) • [Tool Integration](#tool-integration) • [Advanced Usage](#advanced-usage) • [FAQ](#faq)
+  <p>
+    <a href="#getting-started">Getting Started</a> •
+    <a href="#features">Features</a> •
+    <a href="#compatibility">Compatibility</a> •
+    <a href="#tool-integration">Tool Integration</a> •
+    <a href="#advanced-usage">Advanced Usage</a> •
+    <a href="#faq">FAQ</a>
+  </p>
+</div>
 
 Build your library for any JavaScript environment without the complexity
 
@@ -32,20 +40,24 @@ SmartBundle makes it easy to bundle your library for any JavaScript environment.
 > [!TIP]
 > Need more details? See our [package.json guide](./docs/package-json.md) for a full explanation of each field. If you plan to use TypeScript, check out our [TS guide](./docs/ts-guide.md) for tailored advice.
 
-To build your package:
+### Steps to Build Your Package:
+1. **Create your package.json** using the template above.
 
-1) Create the package.json as shown above
-2) Install SmartBundle:
-```bash
-npm install --save-dev smartbundle@latest
-```
-3) Build your package:
-```bash
-npm run build
-```
+2. **Install SmartBundle:**
+
+   ```bash
+   npm install --save-dev smartbundle@latest
+   ```
+
+3. **Build your package:**
+
+   ```bash
+   npm run build
+   ```
 > [!TIP]
-> You can learn more about smartbundle modes here [SmartBundle Modes](./docs/modes.md)
-4) Your built files (including an auto-generated package.json) will be in the ./dist folder
+> Learn more about different [SmartBundle Modes](./docs/modes.md).
+
+4. **Find your built files** (including an auto-generated package.json) in the `./dist` folder.
 
 ## Features
 
@@ -123,14 +135,14 @@ For detailed options regarding React configuration, see our [React guide](./docs
 SmartBundle follows strict package.json conventions to guarantee reliable builds. For detailed information on required fields, disallowed fields, and configuration best practices, please refer to our [package.json guide](./docs/package-json.md).
 
 ## FAQ
-### SmartBundle have an issue
-Please, look at the [known fixable issues](./docs/issues.md) before creating your own one. Some bugs already have a solution but cannot be fixed without user action.
+### I Encounter an Issue with SmartBundle
+Before reporting a new issue, please check the [known fixable issues](./docs/issues.md) as some bugs might already have a solution that requires a small adjustment.
 
-### Why don't you minify the output?
-Minification is typically needed only for production. During development, readable, unminified output helps with debugging.
+### Why isn’t the output minified?
+Minification is generally applied only in production. During development, readable (unminified) output is provided to facilitate debugging.
 
-### Why do you require third-party tools for building?
-We prioritize keeping the `node_modules` size manageable and avoid unnecessary dependencies. If your package does not require TypeScript, for instance, you don’t need to install those specific tools.
+### Why are third-party tools required for building?
+This approach keeps the `node_modules` footprint manageable. For example, if your package doesn’t require TypeScript, you can skip installing its dependencies.
 
 ### Community and Support
 If you need assistance or wish to contribute, please check out our [discussion forum](https://github.com/your-org/smartbundle/discussions) and [issue tracker](https://github.com/your-org/smartbundle/issues).

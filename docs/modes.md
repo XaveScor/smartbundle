@@ -1,20 +1,14 @@
 # SmartBundle Modes
-
-SmartBundle now supports two operation modes that determine how the tool behaves during a run. Each mode answers two main questions:
-1. **What the mode is doing**
-2. **What parameters (CLI options) it has**
-
 ## Bundle Mode
 
 **What it does:**
-- This mode corresponds to the current behavior of SmartBundle.
 - It processes your source files, applies any necessary transformations (Babel, TypeScript, etc.), and bundles your code into the output directory.
 - It generates an auto-generated package.json with the correct export mappings as needed.
 - No publish or extra linking steps are performed in this mode.
 
 **Parameters:**
-- `--sourceDir`: Specifies the directory containing your source code.
-- `--outputDir`: Specifies the directory where the bundled outputs will be placed.
+- `--sourceDir`: (Optional) Specifies the directory containing your source code.
+- `--outputDir`: (Optional) Specifies the directory where the bundled outputs will be placed.
 - `--packagePath`: (Optional) Path to the project's package.json used during the build.
 - `--verbose`: (Optional) Enables verbose logging of the bundling process.
 - *(Other parameters defined in the CLI documentation that affect the build process can also be used.)*
@@ -23,12 +17,12 @@ SmartBundle now supports two operation modes that determine how the tool behaves
 
 Command:
 ```bash
-smartbundle --sourceDir=./src --outputDir=./dist --verbose
+smartbundle build --sourceDir=. --outputDir=./dist --verbose
 ```
 
 Explanation:
 - This command runs SmartBundle in bundle mode.
-- It takes the source code from the `./src` directory, bundles it into the `./dist` directory, and provides verbose logging.
+- It takes the source code from the `.` directory, bundles it into the `./dist` directory, and provides verbose logging.
 - No publish step is triggered because this is the standard build (bundle) mode.
 
 ## Release Mode
@@ -37,23 +31,27 @@ Explanation:
 - This mode includes everything from the Bundle Mode.
 - Once the build is successfully completed, it automatically triggers a publish step (using npm or pnpm) to release the package.
 - It ensures that only a successfully bundled package gets published to avoid accidental release of incomplete builds.
+- Automatically detects the package manager (npm or pnpm) based on the project's lock file. `package-lock.json` for npm and `pnpm-lock.yaml` for pnpm.
 
 **Parameters:**
 - All parameters from Bundle Mode are supported.
-- `--publishCmd`: (Optional) Defines the command used for publishing (defaults to `npm publish` or `pnpm publish` depending on your project's configuration).
-- `--access`: (Optional) Sets the access level (e.g., public or restricted) for the package when publishing.
-- `--tag`: (Optional) Specifies a release tag such as `latest`, `beta`, etc.
-- `--dryRun`: (Optional) Executes all steps up to publishing without actually sending your package to the registry.
+- `--dry-run`: (Optional) Simulates the publish step without actually pushing the package. Also, you can see what command do we call to publish the package.
+- You can pass the additional params after `--`. It will be passed to the publish command directly.
+> [!TIP]
+> You can pass `--dry-run` after the `--` safely. Smartbundle can handle this situation and pass dry-run as you can expect.
 
 ### Example
 
 Command:
 ```bash
-smartbundle --sourceDir=./src --outputDir=./dist --publishCmd="npm publish" --tag=latest --dryRun
+smartbundle publish --dry-run -- --otp=<otp code for npm>
 ```
+> [!TIP]
+> We recommend to avoid passing the `--outputDir` parameter in release mode. The output directory is automatically set to /tmp/<random> for the publish step.
+> After successful publish, the output directory is deleted.
+> If you provide the `--outputDir` parameter, the output directory will not be deleted after the publish step.
 
 Explanation:
 - This command runs SmartBundle in release mode.
 - It first bundles the project (using the same parameters as in bundle mode).
-- After a successful build, it will simulate a publish using `npm publish` under the tag `latest`.
-- The `--dryRun` flag means the publish step will not actually push the package, allowing you to verify the process without releasing.
+- After a successful build, it will simulate a publish using `npm publish` or `pnpm publish` under the tag `latest`.

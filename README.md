@@ -1,17 +1,9 @@
 # SmartBundle
 
-<div align="center">
-  <h3>The Library Bundler That Respects Your Time</h3>
-  
-  <p>
-    <a href="#getting-started">Getting Started</a> •
-    <a href="#features">Features</a> •
-    <a href="#compatibility">Compatibility</a> •
-    <a href="#tool-integration">Tool Integration</a> •
-    <a href="#advanced-usage">Advanced Usage</a> •
-    <a href="#faq">FAQ</a>
-  </p>
-</div>
+**The Library Bundler That Respects Your Time**
+
+**Table of Contents**  
+[Getting Started](#getting-started) • [Features](#features) • [Compatibility](#compatibility) • [Tool Integration](#tool-integration) • [Advanced Usage](#advanced-usage) • [FAQ](#faq)
 
 Build your library for any JavaScript environment without the complexity
 
@@ -57,12 +49,17 @@ npm run build
 
 ## Features
 
-- **Zero Configuration** - Point to your entry file and build
-- **Universal Output** - ESM and CommonJS bundles generated automatically  
-- **TypeScript Ready** - Full TypeScript support with type definitions
-- **React Support** - Automatic JSX transformations for modern and legacy modes
-- **Developer Friendly** - Source maps included for better debugging
-- **Broad Compatibility** - Works with Node.js, Webpack, Vite, Rollup, Bun, and more
+- **Zero Configuration**: Simply point to your entry file and let SmartBundle do the rest.
+
+- **Universal Output**: Automatically generates both ESM and CommonJS bundles.
+
+- **TypeScript Ready**: Offers full TypeScript support with up-to-date type definitions.
+
+- **React Support**: Provides automatic JSX transformations with support for both modern and legacy modes.
+
+- **Developer Friendly**: Includes source maps for better debugging of your bundles.
+
+- **Broad Compatibility**: Works seamlessly with Node.js, Webpack, Vite, Rollup, Bun, and more.
 
 
 ## Compatibility
@@ -105,27 +102,25 @@ We aim to support as many bundlers and runtimes as possible. If the bundled pack
 
 ## Tool Integration
 
-SmartBundle automatically detects and integrates with your tools - just add what you need to your project.
+SmartBundle automatically detects and integrates with your tools—just add what you need to your project.
 
 ### TypeScript
-Add `typescript@^5.0.0` as a dev dependency and start creating `.ts` files. SmartBundle will handle the rest.
+
+Install `typescript@^5.0.0` as a dev dependency and begin writing `.ts` files. SmartBundle handles TypeScript compilation and type definition generation automatically.
 
 ### Babel
-Add `@babel/core@^7.0.0` as a dev dependency and create a Babel configuration file in your project root. SmartBundle will automatically apply your transformations.
+
+Install `@babel/core@^7.0.0` as a dev dependency and add a Babel configuration file (usually `babel.config.js`) at the project root. Your transformations will be applied automatically.
 
 ### React
-Add `react` to your dependencies. SmartBundle automatically detects React and configures JSX transformations. Both modern and legacy modes are supported.
 
-For detailed React configuration options, see our [React guide](./docs/react.md).
+Add `react` to your dependencies. SmartBundle will detect React and configure JSX transformations for both modern and legacy modes.
+
+For detailed options regarding React configuration, see our [React guide](./docs/react.md).
 
 ## Advanced Usage
 
-SmartBundle enforces certain package.json conventions to ensure reliable builds. For detailed information about:
-- Required and banned fields
-- Configuration limitations
-- Package.json best practices
-
-See our [package.json guide](./docs/package-json.md).
+SmartBundle follows strict package.json conventions to guarantee reliable builds. For detailed information on required fields, disallowed fields, and configuration best practices, please refer to our [package.json guide](./docs/package-json.md).
 
 ## FAQ
 ### SmartBundle have an issue

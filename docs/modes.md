@@ -1,17 +1,20 @@
 # SmartBundle Modes
+SmartBundle supports two primary modes: **Bundle Mode** for building your project and **Release Mode** for publishing it. Each mode is designed to streamline your workflow.
 ## Bundle Mode
 
-**What it does:**
-- It processes your source files, applies any necessary transformations (Babel, TypeScript, etc.), and bundles your code into the output directory.
-- It generates an auto-generated package.json with the correct export mappings as needed.
-- No publish or extra linking steps are performed in this mode.
+### Overview
+In Bundle Mode, SmartBundle performs the following steps:
 
-**Parameters:**
-- `--sourceDir`: (Optional) Specifies the directory containing your source code.
-- `--outputDir`: (Optional) Specifies the directory where the bundled outputs will be placed.
-- `--packagePath`: (Optional) Path to the project's package.json used during the build.
-- `--verbose`: (Optional) Enables verbose logging of the bundling process.
-- *(Other parameters defined in the CLI documentation that affect the build process can also be used.)*
+- **Transforms your source files:** Applies necessary transformations (e.g., Babel, TypeScript) and bundles them into the output directory.
+- **Generates package metadata:** Automatically creates a package.json with accurate export mappings.
+- **Build-only workflow:** This mode strictly builds your package, without triggering any publish steps.
+
+### Parameters
+- `--sourceDir`: (Optional) Directory containing your source code.
+- `--outputDir`: (Optional) Directory where bundled files are placed.
+- `--packagePath`: (Optional) Path to the project's package.json used in the build.
+- `--verbose`: (Optional) Enables verbose logging during bundling.
+- *(Additional parameters from the CLI documentation are also supported.)*
 
 ### Example
 
@@ -27,18 +30,21 @@ Explanation:
 
 ## Release Mode
 
-**What it does:**
-- This mode includes everything from the Bundle Mode.
-- Once the build is successfully completed, it automatically triggers a publish step (using npm or pnpm) to release the package.
-- It ensures that only a successfully bundled package gets published to avoid accidental release of incomplete builds.
-- Automatically detects the package manager (npm or pnpm) based on the project's lock file. `package-lock.json` for npm and `pnpm-lock.yaml` for pnpm.
+### Overview
+Release Mode extends Bundle Mode by automatically publishing your package after a successful build. Key points include:
 
-**Parameters:**
-- All parameters from Bundle Mode are supported.
-- `--dry-run`: (Optional) Simulates the publish step without actually pushing the package. Also, you can see what command do we call to publish the package.
-- You can pass the additional params after `--`. It will be passed to the publish command directly.
+- **Complete build and publish workflow:** First bundles your project, then triggers the publish step using either npm or pnpm.
+- **Safe publishing:** Only successfully built packages are published, preventing incomplete releases.
+- **Automatic package manager detection:** Uses `package-lock.json` for npm and `pnpm-lock.yaml` for pnpm.
+
+### Parameters
+Inherits all parameters from Bundle Mode, with the following addition:
+
+- `--dry-run`: (Optional) Simulates the publish step without actually pushing the package, letting you preview the publish command.
+- Any extra parameters provided after `--` will be passed directly to the publish command.
+
 > [!TIP]
-> You can pass `--dry-run` after the `--` safely. Smartbundle can handle this situation and pass dry-run as you can expect.
+> `--dry-run` can be safely used after `--`. SmartBundle will propagate this flag to the publish command correctly.
 
 ### Example
 

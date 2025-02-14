@@ -2,29 +2,37 @@ import yargs from "yargs";
 import * as process from "node:process";
 import { hideBin } from "yargs/helpers";
 
-const argsSchema = yargs()
-  .option("sourceDir", {
+const commonOptions = {
+  sourceDir: {
     alias: "s",
     type: "string",
-    describe:
-      "path to the project directory. Default: current working directory",
-  })
-  .option("packagePath", {
-    alias: "p",
+    describe: "path to the project directory. Default: current working directory",
+  },
+  packagePath: {
+    alias: "p", 
     type: "string",
     describe: "path to the package.json. Default: cwd()/package.json",
-  })
-  .option("outputDir", {
+  },
+  outputDir: {
     alias: "o",
-    type: "string",
+    type: "string", 
     describe: "path to the output directory. Default: cwd()/dist",
-  })
+  },
   // Do not cover this option in tests because it is unstable
-  .option("seq", {
+  seq: {
     type: "boolean",
-    describe:
-      "run internal tasks sequentially. It is useful for performance testing and debugging. This option is unstable and not recommended for production use.",
+    describe: "run internal tasks sequentially. It is useful for performance testing and debugging. This option is unstable and not recommended for production use.",
+  }
+} as const;
+
+const argsSchema = yargs()
+  .command('build', 'Build your package for distribution', (yargs) => {
+    return yargs.options(commonOptions);
   })
+  .command('release', 'Build and publish your package', (yargs) => {
+    return yargs.options(commonOptions);
+  })
+  .demandCommand(1, 'You must specify a command (build or release)')
   .help("help");
 
 export const args = argsSchema.parseSync(hideBin(process.argv));

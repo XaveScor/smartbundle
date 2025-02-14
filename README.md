@@ -49,10 +49,14 @@ SmartBundle makes it easy to bundle your library for any JavaScript environment.
    npm install --save-dev smartbundle@latest
    ```
 
-3. **Build your package:**
+3. **Build your package** with either:
 
    ```bash
    npm run build
+   # or
+   npx smartbundle
+   # or explicitly
+   npx smartbundle build
    ```
 > [!TIP]
 > Learn more about different [SmartBundle Modes](./docs/modes.md).

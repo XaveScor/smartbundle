@@ -2,6 +2,17 @@
 
 SmartBundle provides two main commands: `build` for creating distributable packages and `release` for bundling and publishing them. Each command is designed to streamline your workflow.
 
+## Default Command
+
+If you invoke `smartbundle` without specifying a command, it defaults to **build mode**. In other words, the following invocations are equivalent:
+
+```bash
+smartbundle
+smartbundle build
+```
+
+See the [Build Command](#build-command) section below for further details.
+
 ## Build Command
 
 ### Overview

@@ -4,12 +4,15 @@ SmartBundle provides two main commands: `build` for creating distributable packa
 
 ## Default Command
 
-If you invoke `smartbundle` without specifying a command, it defaults to **build mode**. In other words, the following invocations are equivalent:
+Running `smartbundle` without a subcommand defaults to build mode. Both of these commands invoke the same behavior:
 
 ```bash
 smartbundle
 smartbundle build
 ```
+
+> [!INFO]
+> `smartbundle` is a shortcut for `smartbundle build`.
 
 See the [Build Command](#build-command) section below for further details.
 

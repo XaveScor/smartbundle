@@ -1,63 +1,68 @@
-# SmartBundle Modes
-SmartBundle supports two primary modes: **Bundle Mode** for building your project and **Release Mode** for publishing it. Each mode is designed to streamline your workflow.
-## Bundle Mode
+# SmartBundle CLI Commands
+
+SmartBundle provides two main commands: `build` for creating distributable packages and `release` for bundling and publishing them. Each command is designed to streamline your workflow.
+
+## Build Command
 
 ### Overview
-In Bundle Mode, SmartBundle performs the following steps:
+The `build` command performs the following steps:
 
 - **Transforms your source files:** Applies necessary transformations (e.g., Babel, TypeScript) and bundles them into the output directory.
 - **Generates package metadata:** Automatically creates a package.json with accurate export mappings.
-- **Build-only workflow:** This mode strictly builds your package, without triggering any publish steps.
+- **Build-only workflow:** This command strictly builds your package, without triggering any publish steps.
 
-### Parameters
-- `--sourceDir`: (Optional) Directory containing your source code.
-- `--outputDir`: (Optional) Directory where bundled files are placed.
-- `--packagePath`: (Optional) Path to the project's package.json used in the build.
-- `--verbose`: (Optional) Enables verbose logging during bundling.
-- *(Additional parameters from the CLI documentation are also supported.)*
+### Optional Parameters
+- `--sourceDir`: Directory containing your source code
+- `--outputDir`: Directory where bundled files will be placed
+- `--packagePath`: Path to the project's package.json (defaults to sourceDir/package.json)
+- `--verbose`: Enables verbose logging during bundling
 
 ### Example
 
-Command:
 ```bash
-smartbundle build --sourceDir=. --outputDir=./dist --verbose
+smartbundle build --sourceDir=./src --outputDir=./dist
 ```
 
-Explanation:
-- This command runs SmartBundle in bundle mode.
-- It takes the source code from the `.` directory, bundles it into the `./dist` directory, and provides verbose logging.
-- No publish step is triggered because this is the standard build (bundle) mode.
+This command:
+- Takes source code from `./src`
+- Outputs the bundled files to `./dist`
+- Creates a distribution-ready package
 
-## Release Mode
+## Release Command
 
 ### Overview
-Release Mode extends Bundle Mode by automatically publishing your package after a successful build. Key points include:
+The `release` command extends the build process by automatically publishing your package. Key features:
 
-- **Complete build and publish workflow:** First bundles your project, then triggers the publish step using either npm or pnpm.
-- **Safe publishing:** Only successfully built packages are published, preventing incomplete releases.
-- **Automatic package manager detection:** Uses `package-lock.json` for npm and `pnpm-lock.yaml` for pnpm.
+- **Complete build and publish workflow:** First bundles your project, then publishes it
+- **Safe publishing:** Only successfully built packages are published
+- **Automatic output management:** Creates and cleans up temporary build directories
+- **Package manager integration:** Automatically detects and uses npm or pnpm
 
-### Parameters
-Inherits all parameters from Bundle Mode, with the following addition:
+### Optional Parameters
+- The all from the build command, plus:
+- Additional npm/pnpm publish flags can be passed after `--`
 
-- `--dry-run`: (Optional) Simulates the publish step without actually pushing the package, letting you preview the publish command.
-- Any extra parameters provided after `--` will be passed directly to the publish command.
-
-> [!TIP]
-> `--dry-run` can be safely used after `--`. SmartBundle will propagate this flag to the publish command correctly.
+> [!IMPORTANT]
+> We recommend do not use the `--outputDir` parameter with the release command. SmartBundle automatically manages temporary build directories during the release process.
+> If you provide it, smartbundle bundles your project into the specified directory and avoids the automatic cleanup.
 
 ### Example
 
-Command:
 ```bash
-smartbundle publish --dry-run -- --otp=<otp code for npm>
+smartbundle release --sourceDir=./src -- --access public
 ```
-> [!TIP]
-> We recommend to avoid passing the `--outputDir` parameter in release mode. The output directory is automatically set to /tmp/<random> for the publish step.
-> After successful publish, the output directory is deleted.
-> If you provide the `--outputDir` parameter, the output directory will not be deleted after the publish step.
 
-Explanation:
-- This command runs SmartBundle in release mode.
-- It first bundles the project (using the same parameters as in bundle mode).
-- After a successful build, it will simulate a publish using `npm publish` or `pnpm publish` under the tag `latest`.
+This command:
+1. Builds your package from `./src` into a temporary directory
+2. Runs `npm publish` or `pnpm publish` with the `--access public` flag
+3. Cleans up the temporary directory after successful publishing
+
+> [!TIP]
+> To test the release process without publishing, add `--dry-run` anywhere. Smartbundle can manage it:
+> ```bash
+> smartbundle release --sourceDir=./src -- --dry-run
+> ```
+> or
+> ```bash
+> smartbundle release --dry-run --sourceDir=./src
+> ```

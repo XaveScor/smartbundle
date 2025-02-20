@@ -2,6 +2,11 @@ import yargs from "yargs";
 import * as process from "node:process";
 import { hideBin } from "yargs/helpers";
 
+// In test mode, if no arguments (i.e. no command) are provided, default to "build"
+if (process.env.NODE_ENV === "test" && hideBin(process.argv).length === 0) {
+  process.argv.push("build");
+}
+
 // Configure yargs to capture arguments after --
 const parser = yargs(hideBin(process.argv)).parserConfiguration({
   "populate--": true,

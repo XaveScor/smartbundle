@@ -6,9 +6,11 @@
   "bin": "./src/run.ts",
   "type": "module",
   "scripts": {
-    "test": "vitest src",
+    "test:local": "pnpm test:type && pnpm test:unit",
+    "test:type": "tsc",
+    "test:unit": "vitest run src",
     "test:update-snapshots": "pnpm test -- -u",
-    "test:e2e": "vitest e2e",
+    "test:e2e": "vitest run e2e",
     "test:e2e-update-snapshots": "pnpm test:e2e -- -u"
   },
   "keywords": [

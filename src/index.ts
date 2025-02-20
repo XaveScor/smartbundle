@@ -4,6 +4,8 @@ import { parsePackageJson } from "./packageJson.js";
 import { type ExportsObject, writePackageJson } from "./writePackageJson.js";
 import { resolveDirs } from "./resolveDirs.js";
 import { createViteConfig } from "./createViteConfig.js";
+
+type RunArgs = Partial<Omit<Args, "command">> & { command: "build" | "release" };
 import { copyStaticFilesTask } from "./tasks/copyStaticFilesTask.js";
 import { buildTypesTask } from "./tasks/buildTypesTask/buildTypesTask.js";
 import { BuildError } from "./error.js";
@@ -74,12 +76,12 @@ type RunResult =
       errors: Array<string | PrettyError>;
     };
 
-export async function run(args: Partial<Args>): Promise<RunResult> {
+export async function run(args: RunArgs): Promise<RunResult> {
   const completeArgs: Args = {
     sourceDir: args.sourceDir ?? process.cwd(),
     packagePath: args.packagePath ?? `${args.sourceDir ?? process.cwd()}/package.json`,
     outputDir: args.outputDir ?? `${process.cwd()}/dist`,
-    command: args.command ?? "build",
+    command: args.command,
     verbose: args.verbose,
     seq: args.seq,
     publishFlags: args.publishFlags,

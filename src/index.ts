@@ -26,9 +26,18 @@ function setExports(
   exportsMap.set(exportName, mapFn(entry));
 }
 
-export async function defineViteConfig(args: Args = {}) {
+export async function defineViteConfig(args: Partial<Args> = {}) {
+  const completeArgs: Args = {
+    sourceDir: args.sourceDir ?? process.cwd(),
+    packagePath: args.packagePath ?? `${args.sourceDir ?? process.cwd()}/package.json`,
+    outputDir: args.outputDir ?? `${process.cwd()}/dist`,
+    command: args.command ?? "build",
+    verbose: args.verbose,
+    seq: args.seq,
+    publishFlags: args.publishFlags,
+  };
   disableLog();
-  const dirs = resolveDirs(args);
+  const dirs = resolveDirs(completeArgs);
   const { sourceDir, outDir, packagePath } = dirs;
 
   await rm(outDir, { recursive: true, force: true });
@@ -64,8 +73,17 @@ type RunResult =
       errors: Array<string | PrettyError>;
     };
 
-export async function run(args: Args): Promise<RunResult> {
-  const dirs = resolveDirs(args);
+export async function run(args: Partial<Args>): Promise<RunResult> {
+  const completeArgs: Args = {
+    sourceDir: args.sourceDir ?? process.cwd(),
+    packagePath: args.packagePath ?? `${args.sourceDir ?? process.cwd()}/package.json`,
+    outputDir: args.outputDir ?? `${process.cwd()}/dist`,
+    command: args.command ?? "build",
+    verbose: args.verbose,
+    seq: args.seq,
+    publishFlags: args.publishFlags,
+  };
+  const dirs = resolveDirs(completeArgs);
   const { sourceDir, outDir, packagePath, outBinsDir } = dirs;
 
   await rm(outDir, { recursive: true, force: true });
@@ -90,7 +108,7 @@ export async function run(args: Args): Promise<RunResult> {
   const exportsMap = new Map<string, ExportsObject>();
   const binsMap = new Map<string, string>();
 
-  const tasksRes = await runSettled(args, [
+  const tasksRes = await runSettled(completeArgs, [
     copyStaticFilesTask(sourceDir, outDir),
     buildTypesTask({
       dirs,
@@ -113,7 +131,7 @@ export async function run(args: Args): Promise<RunResult> {
       }
     }),
     viteTask({ viteConfig }).then((viteOutput) =>
-      runSettled(args, [
+      runSettled(completeArgs, [
         jsFilesTask({ buildOutput: viteOutput, entrypoints, outDir }).then(
           (res) => {
             for (const [filePath, name] of res) {

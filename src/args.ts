@@ -84,4 +84,5 @@ export type Args = ConvertUndefinedToOptional<
   outputDir: string;
   verbose?: boolean;
   publishFlags?: string[];
+  seq?: boolean;
 };

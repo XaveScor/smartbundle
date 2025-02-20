@@ -12,6 +12,7 @@ describe("build", () => {
     const res = await run({
       outputDir: tmpDir,
       sourceDir: "./src/fixtures/simple-build",
+      command: "build",
     });
 
     expect(res.error).toBeFalsy();
@@ -22,6 +23,7 @@ describe("build", () => {
     const res = await run({
       outputDir: tmpDir,
       sourceDir: "./src/fixtures/es-js-import",
+      command: "build",
     });
 
     expect(res.error).toBeFalsy();
@@ -32,6 +34,7 @@ describe("build", () => {
     const res = await run({
       outputDir: tmpDir,
       sourceDir: "./src/fixtures/ts-import",
+      command: "build",
     });
 
     expect(res.error).toBeFalsy();
@@ -42,6 +45,7 @@ describe("build", () => {
     const res = await run({
       outputDir: tmpDir,
       sourceDir: "./src/fixtures/deep-structure",
+      command: "build",
     });
 
     expect(res.error).toBeFalsy();
@@ -52,6 +56,7 @@ describe("build", () => {
     const res = await run({
       outputDir: tmpDir,
       sourceDir: "./src/fixtures/simple-bin-build",
+      command: "build",
     });
 
     expect(res.error).toBeFalsy();
@@ -64,6 +69,7 @@ describe("build", () => {
         outputDir: tmpDir,
         sourceDir: "./src/fixtures/external-deps",
         packagePath: "./dependencies.json",
+        command: "build",
       });
 
       expect(res.error).toBeFalsy();
@@ -75,6 +81,7 @@ describe("build", () => {
         outputDir: tmpDir,
         sourceDir: "./src/fixtures/external-deps",
         packagePath: "./node.json",
+        command: "build",
       });
 
       expect(res.error).toBeFalsy();
@@ -86,6 +93,7 @@ describe("build", () => {
     const res = await run({
       outputDir: tmpDir,
       sourceDir: "./src/fixtures/export-default",
+      command: "build",
     });
 
     expect(res.error).toBeFalsy();
@@ -96,6 +104,7 @@ describe("build", () => {
     const res = await run({
       outputDir: tmpDir,
       sourceDir: "./src/fixtures/3-exports-object",
+      command: "build",
     });
 
     expect(res.error).toBeFalsy();
@@ -106,6 +115,7 @@ describe("build", () => {
     const res = await run({
       outputDir: tmpDir,
       sourceDir: "./src/fixtures/114-license",
+      command: "build",
     });
 
     expect(res.error).toBeFalsy();
@@ -118,6 +128,7 @@ describe("bugs", () => {
     const res = await run({
       outputDir: tmpDir,
       sourceDir: "./src/fixtures/34-deep-structure",
+      command: "build",
     });
 
     expect(res.error).toBeFalsy();
@@ -127,6 +138,7 @@ describe("bugs", () => {
     const res = await run({
       outputDir: tmpDir,
       sourceDir: "./src/fixtures/43-save-devdeps",
+      command: "build",
     });
 
     expect(res.error).toBeFalsy();
@@ -136,6 +148,7 @@ describe("bugs", () => {
     const res = await run({
       outputDir: tmpDir,
       sourceDir: "./src/fixtures/37-ignore-deps",
+      command: "build",
     });
 
     expect(res.error).toBeFalsy();
@@ -145,6 +158,7 @@ describe("bugs", () => {
     const res = await run({
       outputDir: tmpDir,
       sourceDir: "./src/fixtures/37-ignore-subroutes",
+      command: "build",
     });
 
     expect(res.error).toBeFalsy();
@@ -155,6 +169,7 @@ describe("bugs", () => {
     const res = await run({
       outputDir: tmpDir,
       sourceDir: "./src/fixtures/84-vscode-typings-resolve",
+      command: "build",
     });
 
     expect(res.error).toBeFalsy();
@@ -165,6 +180,7 @@ describe("bugs", () => {
     const res = await run({
       outputDir: tmpDir,
       sourceDir: "./src/fixtures/97-dts-reexports-bundler",
+      command: "build",
     });
 
     expect(res.error).toBeFalsy();
@@ -176,6 +192,7 @@ describe("bugs", () => {
     const res = await run({
       outputDir: tmpDir,
       sourceDir: "./src/fixtures/99-multi-react-dep",
+      command: "build",
     });
 
     expect(res.error).toBeFalsy();
@@ -186,6 +203,7 @@ describe("bugs", () => {
     const res = await run({
       outputDir: tmpDir,
       sourceDir: "./src/fixtures/101-outDir-ts",
+      command: "build",
     });
 
     expect(res.error).toBeFalsy();
@@ -200,6 +218,7 @@ describe("bugs", () => {
     const res = await run({
       outputDir: tmpDir,
       sourceDir,
+      command: "build",
     });
 
     expect(res.error).toBeFalsy();
@@ -210,6 +229,7 @@ describe("bugs", () => {
     const res = await run({
       outputDir: tmpDir,
       sourceDir: "./src/fixtures/109-validate-dts-imports",
+      command: "build",
     });
 
     expect(res.error).toBeTruthy();
@@ -226,6 +246,7 @@ describe("bugs", () => {
     const res = await run({
       outputDir: tmpDir,
       sourceDir: "./src/fixtures/118-validate-dts-typings-imports",
+      command: "build",
     });
 
     expect(res.error).toBeTruthy();
@@ -238,6 +259,7 @@ describe("bugs", () => {
     const res = await run({
       outputDir: tmpDir,
       sourceDir: "./src/fixtures/122-check-types-deps",
+      command: "build",
     });
 
     expect(res.error).toBeFalsy();
@@ -248,6 +270,7 @@ describe("bugs", () => {
     const res = await run({
       outputDir: tmpDir,
       sourceDir: "./src/fixtures/136-ts-not-installed",
+      command: "build",
     });
 
     expect(res.error).toBeTruthy();
@@ -264,6 +287,7 @@ describe("bugs", () => {
     const res = await run({
       outputDir: tmpDir,
       sourceDir: "./src/fixtures/no-exports-no-bin",
+      command: "build",
     });
     expect(res.error).toBeTruthy();
     expect(res.errors[0]).toBe(errors.exportsRequired);
@@ -276,6 +300,7 @@ describe("react", () => {
       const res = await run({
         outputDir: tmpDir,
         sourceDir: "./src/fixtures/react-jsx-error",
+        command: "build",
       });
 
       expect(res.error).toBeTruthy();
@@ -290,6 +315,7 @@ describe("react", () => {
       const res = await run({
         outputDir: tmpDir,
         sourceDir: "./src/fixtures/react-legacy-transform",
+        command: "build",
       });
 
       expect(res.error).toBeFalsy();
@@ -300,6 +326,7 @@ describe("react", () => {
       const res = await run({
         outputDir: tmpDir,
         sourceDir: "./src/fixtures/react-modern-transform",
+        command: "build",
       });
 
       expect(res.error).toBeFalsy();

@@ -67,6 +67,7 @@ export async function defineViteConfig(args: Partial<Args> = {}) {
 type RunResult =
   | {
       error: false;
+      errors: [];
     }
   | {
       error: true;
@@ -181,5 +182,5 @@ export async function run(args: Partial<Args>): Promise<RunResult> {
 
   lineLog();
   log(`Build finished: ./${relative(sourceDir, outDir)}`);
-  return { error: false };
+  return { error: false, errors: [] };
 }

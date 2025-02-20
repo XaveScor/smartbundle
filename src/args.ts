@@ -57,10 +57,11 @@ export const args = {
     ? { publishFlags: rawArgs["--"] as string[] }
     : {}),
   // Set default paths if not provided
-  sourceDir: rawArgs.sourceDir || process.cwd(),
-  packagePath:
-    rawArgs.packagePath || `${rawArgs.sourceDir || process.cwd()}/package.json`,
-  outputDir: rawArgs.outputDir || `${process.cwd()}/dist`,
+  sourceDir: typeof rawArgs.sourceDir === "string" ? rawArgs.sourceDir : process.cwd(),
+  packagePath: typeof rawArgs.packagePath === "string"
+    ? rawArgs.packagePath
+    : `${typeof rawArgs.sourceDir === "string" ? rawArgs.sourceDir : process.cwd()}/package.json`,
+  outputDir: typeof rawArgs.outputDir === "string" ? rawArgs.outputDir : `${process.cwd()}/dist`,
 };
 
 type OmitUnknown<T> = {

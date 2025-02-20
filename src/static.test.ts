@@ -9,6 +9,7 @@ describe("static files", () => {
     const res = await run({
       outputDir: tmpDir,
       sourceDir: "./src/fixtures/readme-md-copied",
+      command: "build",
     });
 
     expect(res.error).toBeFalsy();

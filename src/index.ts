@@ -31,7 +31,7 @@ function setExports(
 export async function defineViteConfig(args: Partial<Args> = {}) {
   const completeArgs: Args = {
     sourceDir: args.sourceDir ?? process.cwd(),
-    packagePath: args.packagePath ?? `${args.sourceDir ?? process.cwd()}/package.json`,
+    packagePath: args.packagePath ?? "package.json",
     outputDir: args.outputDir ?? `${process.cwd()}/dist`,
     command: args.command ?? "build",
     verbose: args.verbose,
@@ -79,7 +79,7 @@ type RunResult =
 export async function run(args: RunArgs): Promise<RunResult> {
   const completeArgs: Args = {
     sourceDir: args.sourceDir ?? process.cwd(),
-    packagePath: args.packagePath ?? `${args.sourceDir ?? process.cwd()}/package.json`,
+    packagePath: args.packagePath ?? "package.json",
     outputDir: args.outputDir ?? `${process.cwd()}/dist`,
     command: args.command,
     verbose: args.verbose,

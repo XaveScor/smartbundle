@@ -1,20 +1,10 @@
 # SmartBundle CLI Commands
 
-SmartBundle provides two main commands: `build` for creating distributable packages and `release` for bundling and publishing them. Each command is designed to streamline your workflow.
+SmartBundle provides two main commands:
+- `smartbundle build` for creating distributable packages
+- `smartbundle release` for building and publishing your package
 
-## Default Command
-
-Running `smartbundle` without a subcommand defaults to build mode. Both of these commands invoke the same behavior:
-
-```bash
-smartbundle
-smartbundle build
-```
-
-> [!INFO]
-> `smartbundle` is a shortcut for `smartbundle build`.
-
-See the [Build Command](#build-command) section below for further details.
+Each command is designed to streamline your workflow. Please ensure you explicitly specify the desired command.
 
 ## Build Command
 

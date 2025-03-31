@@ -40,6 +40,7 @@ describe("e2e", () => {
     await run({
       sourceDir: path.resolve(import.meta.dirname, "test-lib"),
       outputDir: testLibDir,
+      command: "build",
     });
   });
 
@@ -416,6 +417,10 @@ describe("e2e", () => {
   });
 
   describe("typescript", () => {
+    function gitReset(testDirPath: string) {
+      $.sync`git checkout -- ${testDirPath}`;
+    }
+
     function linkTestLib(testDirPath: string, testLibPath: string) {
       $.sync`pnpm link --silent --dir ${testDirPath} ${testLibPath}`;
     }
@@ -432,9 +437,13 @@ describe("e2e", () => {
           "node10",
         );
 
-        linkTestLib(testDirPath, testLibDir);
+        try {
+          linkTestLib(testDirPath, testLibDir);
 
-        expect(runTsCheck(testDirPath)).toMatchInlineSnapshot(`""`);
+          expect(runTsCheck(testDirPath)).toMatchInlineSnapshot(`""`);
+        } finally {
+          gitReset(testDirPath);
+        }
       });
 
       test("bundler", () => {
@@ -444,9 +453,13 @@ describe("e2e", () => {
           "bundler",
         );
 
-        linkTestLib(testDirPath, testLibDir);
+        try {
+          linkTestLib(testDirPath, testLibDir);
 
-        expect(runTsCheck(testDirPath)).toMatchInlineSnapshot(`""`);
+          expect(runTsCheck(testDirPath)).toMatchInlineSnapshot(`""`);
+        } finally {
+          gitReset(testDirPath);
+        }
       });
 
       test("node16cjs", () => {
@@ -456,9 +469,13 @@ describe("e2e", () => {
           "node16cjs",
         );
 
-        linkTestLib(testDirPath, testLibDir);
+        try {
+          linkTestLib(testDirPath, testLibDir);
 
-        expect(runTsCheck(testDirPath)).toMatchInlineSnapshot(`""`);
+          expect(runTsCheck(testDirPath)).toMatchInlineSnapshot(`""`);
+        } finally {
+          gitReset(testDirPath);
+        }
       });
 
       test("node16es", () => {
@@ -468,9 +485,13 @@ describe("e2e", () => {
           "node16es",
         );
 
-        linkTestLib(testDirPath, testLibDir);
+        try {
+          linkTestLib(testDirPath, testLibDir);
 
-        expect(runTsCheck(testDirPath)).toMatchInlineSnapshot(`""`);
+          expect(runTsCheck(testDirPath)).toMatchInlineSnapshot(`""`);
+        } finally {
+          gitReset(testDirPath);
+        }
       });
     });
   });

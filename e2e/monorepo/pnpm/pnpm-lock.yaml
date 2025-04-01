@@ -6,7 +6,11 @@ settings:
 
 importers:
 
-  .: {}
+  .:
+    devDependencies:
+      smartbundle:
+        specifier: link:../../../dist
+        version: link:../../../dist
 
   packages/dep: {}
 
@@ -23,6 +27,10 @@ importers:
         version: link:../dep/out
 
   packages/root/out:
+    dependencies:
+      dep:
+        specifier: workspace:*
+        version: link:../../dep/out
     devDependencies:
       root-sbsources:
         specifier: workspace:*

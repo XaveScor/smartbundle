@@ -1,0 +1,9 @@
+{
+  "name": "dep-sbsources",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "build": "smartbundle --outputDir ./out"
+  },
+  "exports": "./index.js"
+}

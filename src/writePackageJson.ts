@@ -74,6 +74,14 @@ export async function writePackageJson(
 
   const rootExport =
     typeof allExports["."] === "object" ? allExports["."] : undefined;
+
+  if (parsed.name.endsWith("-sbsources")) {
+    const originalName = parsed.name;
+    parsed.name = parsed.name.replace(/-sbsources$/, "");
+
+    parsed.devDependencies = parsed.devDependencies ?? {};
+    parsed.devDependencies[originalName] = "workspace:*";
+  }
   const res = {
     name: parsed.name,
     type: "commonjs",

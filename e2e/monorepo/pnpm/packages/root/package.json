@@ -1,0 +1,12 @@
+{
+  "name": "root-sbsources",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {
+    "dep": "workspace:*"
+  },
+  "scripts": {
+    "build": "smartbundle --outputDir ./out"
+  },
+  "exports": "./index.js"
+}

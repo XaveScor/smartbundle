@@ -1,0 +1,6 @@
+{
+  "name": "dep",
+  "devDependencies": {
+    "dep-sbsources": "workspace:*"
+  }
+}

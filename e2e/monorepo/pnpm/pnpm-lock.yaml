@@ -1,0 +1,29 @@
+lockfileVersion: '9.0'
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
+importers:
+
+  .: {}
+
+  packages/dep: {}
+
+  packages/dep/out:
+    devDependencies:
+      dep-sbsources:
+        specifier: workspace:*
+        version: link:..
+
+  packages/root:
+    dependencies:
+      dep:
+        specifier: workspace:*
+        version: link:../dep/out
+
+  packages/root/out:
+    devDependencies:
+      root-sbsources:
+        specifier: workspace:*
+        version: link:..

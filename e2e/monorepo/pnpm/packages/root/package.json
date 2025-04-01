@@ -3,10 +3,10 @@
   "version": "0.0.0",
   "private": true,
   "dependencies": {
-    "dep": "workspace:*"
+    "dep-sbsources": "workspace:*"
   },
   "scripts": {
-    "build": "smartbundle --outputDir ./out"
+    "build": "smartbundle"
   },
   "exports": "./index.js"
 }

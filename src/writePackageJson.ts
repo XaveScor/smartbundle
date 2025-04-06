@@ -115,7 +115,7 @@ export async function writePackageJson(
 
     // add the sources to the devDeps to create a wire between source and dist
     parsed.devDependencies = parsed.devDependencies ?? {};
-    parsed.devDependencies[originalName] = "workspace:*";
+    parsed.devDependencies[originalName] = "*";
   }
   const res = {
     name: parsed.name,

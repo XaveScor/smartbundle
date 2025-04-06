@@ -34,6 +34,34 @@ function extractValue(value?: ExportsPackageJsonObj) {
   return value.default;
 }
 
+const monorepoPostfix = "-sbsources";
+const monorepoPostfixRegex = new RegExp(`${monorepoPostfix}$`);
+
+function walkOverMonorepoDepsToRemovePostfix(
+  deps: Record<string, string> | undefined,
+) {
+  if (!deps) {
+    return undefined;
+  }
+
+  const res: Record<string, string> = {};
+  for (const [key, value] of Object.entries(deps)) {
+    if (key.endsWith(monorepoPostfix)) {
+      res[key.replace(monorepoPostfixRegex, "")] = value;
+    } else {
+      res[key] = value;
+    }
+  }
+  return res;
+}
+
+const allDepsClauses = [
+  "dependencies",
+  "optionalDependencies",
+  "peerDependencies",
+  "devDependencies",
+] as const;
+
 export async function writePackageJson(
   outDir: string,
   parsed: PackageJson,
@@ -74,6 +102,21 @@ export async function writePackageJson(
 
   const rootExport =
     typeof allExports["."] === "object" ? allExports["."] : undefined;
+
+  if (parsed.name.endsWith(monorepoPostfix)) {
+    const originalName = parsed.name;
+    parsed.name = parsed.name.replace(monorepoPostfix, "");
+
+    for (const depClause of allDepsClauses) {
+      parsed[depClause] = walkOverMonorepoDepsToRemovePostfix(
+        parsed[depClause],
+      );
+    }
+
+    // add the sources to the devDeps to create a wire between source and dist
+    parsed.devDependencies = parsed.devDependencies ?? {};
+    parsed.devDependencies[originalName] = "*";
+  }
   const res = {
     name: parsed.name,
     type: "commonjs",

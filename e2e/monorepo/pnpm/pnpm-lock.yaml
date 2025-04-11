@@ -14,8 +14,24 @@ importers:
 
   packages/dep: {}
 
+  packages/dep/dist:
+    devDependencies:
+      dep-sbsources:
+        specifier: workspace:*
+        version: link:..
+
   packages/root:
     dependencies:
       dep-sbsources:
         specifier: workspace:*
         version: link:../dep
+
+  packages/root/dist:
+    dependencies:
+      dep:
+        specifier: workspace:*
+        version: link:../../dep/dist
+    devDependencies:
+      root-sbsources:
+        specifier: workspace:*
+        version: link:..

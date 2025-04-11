@@ -3,7 +3,10 @@
   "private": true,
   "version": "0.15.0-alpha.0",
   "description": "zero-config bundler for npm packages",
-  "bin": "./src/run.ts",
+  "bin": {
+    "smartbundle": "./src/run.ts",
+    "smartbundle-monorepo-init": "./src/monorepo/initBin.ts"
+  },
   "type": "module",
   "scripts": {
     "test": "vitest src",

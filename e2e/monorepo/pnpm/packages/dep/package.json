@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
+    "smartbundle:monorepo-init": "smartbundle-monorepo-init",
     "build": "smartbundle"
   },
   "exports": "./index.js"

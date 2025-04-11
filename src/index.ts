@@ -10,12 +10,14 @@ import { BuildError } from "./error.js";
 import { jsFilesTask } from "./tasks/jsFilesTask.js";
 import { binsTask } from "./tasks/binsTask.js";
 import { detectModules } from "./detectModules.js";
-import { disableLog, lineLog, log, okLog } from "./log.js";
+import { disableLog, lineLog, log } from "./log.js";
 import { runSettled } from "./pipeline.js";
 import { type Args } from "./args.js";
 import { viteTask } from "./tasks/viteTask.js";
 import { promiseSettledResultErrors } from "./promiseSettledResultErrors.js";
 import { PrettyError } from "./PrettyErrors.js";
+import { isMonorepo } from "./monorepo/isMonorepo.js";
+import { initMonorepo } from "./monorepo/init.js";
 
 function setExports(
   exportsMap: Map<string, ExportsObject>,
@@ -31,6 +33,7 @@ export async function defineViteConfig(args: Args = {}) {
   const dirs = resolveDirs(args);
   const { sourceDir, outDir, packagePath } = dirs;
 
+  const monorepo = await isMonorepo(outDir);
   await rm(outDir, { recursive: true, force: true });
   await mkdir(outDir, { recursive: true });
   const packageJson = await parsePackageJson({ sourceDir, packagePath });
@@ -38,6 +41,10 @@ export async function defineViteConfig(args: Args = {}) {
   if (Array.isArray(packageJson)) {
     console.error(packageJson);
     throw new Error("Failed to parse package.json");
+  }
+
+  if (monorepo) {
+    await initMonorepo(dirs, packageJson);
   }
 
   const modulesResult = await detectModules(packageJson, dirs);

@@ -6,6 +6,7 @@
     "dep-sbsources": "workspace:*"
   },
   "scripts": {
+    "smartbundle:monorepo-init": "smartbundle-monorepo-init",
     "build": "smartbundle"
   },
   "exports": "./index.js"

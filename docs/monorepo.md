@@ -59,16 +59,29 @@ After running `smartbundle-monorepo-link`, package `a` can depend on package `b`
 
 ### Commands
 
-SmartBundle provides a dedicated command for monorepo linking:
+SmartBundle provides two dedicated commands for monorepo projects:
+
+#### `smartbundle`
+
+For information about the `smartbundle` command, please refer to the [main README](../README.md#getting-started) documentation.
+
+#### `smartbundle-monorepo-link`
 
 ```bash
-smartbundle-monorepo-link
+smartbundle-monorepo-link [options]
 ```
 
 This command:
 1. Identifies all packages with the `-sbsources` suffix
 2. Creates link packages for each one
 3. Updates the dependency tree to use the correct references
+
+Options:
+- `--sourceDir`, `-s`: Path to the project directory (default: current working directory)
+- `--packagePath`, `-p`: Path to the package.json file (default: cwd()/package.json)
+- `--outputDir`, `-o`: Path to the output directory (default: cwd()/dist)
+- `--seq`: Run internal tasks sequentially (for debugging, not recommended for production)
+- `--ci`: Validation mode that fails if any linked package was changed after generation
 
 > [!WARNING]
 > You must run `smartbundle-monorepo-link && pnpm install` after any package.json editing to ensure proper dependency resolution.

@@ -5,7 +5,7 @@
   "description": "zero-config bundler for npm packages",
   "bin": {
     "smartbundle": "./src/run.ts",
-    "smartbundle-monorepo-init": "./src/monorepo/initBin.ts"
+    "smartbundle-monorepo-link": "./src/monorepo/initBin.ts"
   },
   "type": "module",
   "scripts": {

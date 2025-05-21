@@ -58,5 +58,12 @@ Below is a sample configuration. SmartBundle auto-detects React and applies the 
 }
 ```
 
+For more details on package.json configuration, see our [Package.json Configuration Guide](./package-json.md).
+
 In this example, using React 17 triggers the new JSX runtime.
 
+## Related Documentation
+
+- [Package.json Configuration Guide](./package-json.md)
+- [TypeScript Integration Guide](./ts-guide.md)
+- [Monorepo Support Guide](./monorepo.md)

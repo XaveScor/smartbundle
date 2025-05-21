@@ -18,6 +18,8 @@ This guide explains how SmartBundle supports monorepo projects, allowing you to 
 
 SmartBundle provides specialized tooling for monorepos that creates link packages for bundled components, enabling seamless integration within your dependency tree.
 
+For information about package.json configuration, see our [package.json guide](./package-json.md).
+
 ## Supported Package Managers
 
 > [!IMPORTANT]
@@ -103,6 +105,12 @@ pnpm publish
 ```
 
 This pipeline ensures all dependencies are properly linked and bundled before publishing.
+
+## Related Documentation
+
+- [Package.json Configuration Guide](./package-json.md)
+- [TypeScript Integration Guide](./ts-guide.md)
+- [React Integration Guide](./react.md)
 
 ### Community and Support
 If you need assistance or wish to contribute, please check out our [discussion forum](https://github.com/your-org/smartbundle/discussions) and [issue tracker](https://github.com/your-org/smartbundle/issues).

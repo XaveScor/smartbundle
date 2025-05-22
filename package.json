@@ -5,7 +5,7 @@
   "description": "zero-config bundler for npm packages",
   "bin": {
     "smartbundle": "./src/run.ts",
-    "smartbundle-monorepo-link": "./src/monorepo/initBin.ts"
+    "smartbundle-monorepo-link": "./src/monorepo/link.ts"
   },
   "type": "module",
   "scripts": {
@@ -48,8 +48,10 @@
     "zx": "^8.5.4"
   },
   "dependencies": {
+    "glob": "^11.0.2",
     "semver": "^7.7.2",
     "vite": "^6.3.5",
+    "yaml": "^2.8.0",
     "yargs": "^17.7.2",
     "youch": "4.1.0-beta.7",
     "zod": "^3.25.20"

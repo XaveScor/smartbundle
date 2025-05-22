@@ -25,6 +25,10 @@ const argsSchema = yargs()
     describe:
       "run internal tasks sequentially. It is useful for performance testing and debugging. This option is unstable and not recommended for production use.",
   })
+  .option("ci", {
+    type: "boolean",
+    describe: "run in CI mode",
+  })
   .help("help");
 
 export const args = argsSchema.parseSync(hideBin(process.argv));

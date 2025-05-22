@@ -28,6 +28,34 @@ describe("parseMonorepo", () => {
     });
   });
 
+  describe("Multi-glob pnpm monorepo", () => {
+    test("returns project paths for SmartBundle-bundled projects from multiple globs", async () => {
+      const multiGlobMonorepoDir = path.join(FIXTURES_DIR, "multi-glob-pnpm-monorepo");
+
+      const result = await parseMonorepo({
+        dirs: {
+          sourceDir: multiGlobMonorepoDir,
+          packagePath: path.join(multiGlobMonorepoDir, "package.json"),
+          outDir: path.join(multiGlobMonorepoDir, "dist"),
+          outBinsDir: path.join(multiGlobMonorepoDir, "dist/__bin__"),
+          cjsOutDir: path.join(multiGlobMonorepoDir, "dist/__compiled__/cjs"),
+          esmOutDir: path.join(multiGlobMonorepoDir, "dist/__compiled__/esm"),
+        },
+      });
+
+      // Should find all packages with names ending in -sbsources from all globs
+      expect(result.projectPaths).toHaveLength(3);
+
+      // Check that packages from each glob are found
+      expect(result.projectPaths.some(p => p.includes("packages/package2-sbsources"))).toBe(true);
+      expect(result.projectPaths.some(p => p.includes("apps/package2-sbsources"))).toBe(true);
+      expect(result.projectPaths.some(p => p.includes("libs/package2-sbsources"))).toBe(true);
+
+      // Check that regular packages are not found
+      expect(result.projectPaths.some(p => p.includes("regular-package2"))).toBe(false);
+    });
+  });
+
   describe("Non-monorepo", () => {
     test("returns empty array for non-monorepo directory", async () => {
       const nonMonorepoDir = path.join(FIXTURES_DIR, "non-monorepo");

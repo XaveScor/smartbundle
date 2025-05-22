@@ -1,0 +1,6 @@
+{
+  "name": "lib-package-sbsources",
+  "version": "1.0.0",
+  "description": "Test lib package for SmartBundle monorepo tests",
+  "main": "index.js"
+}

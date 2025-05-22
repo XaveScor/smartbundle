@@ -9,7 +9,7 @@ type ParseMonorepoArgs = {
 };
 
 type DetectMonorepoTypeResult = {
-  projectPaths: Array<string>; // list of absolute `smartbundle-bundled` project paths
+  projectPaths: Array<string>; // list of relative `smartbundle-bundled` project paths
 };
 
 /**
@@ -97,7 +97,9 @@ async function findSmartBundleBundledProjects(dir: string): Promise<string[]> {
       const isSmartBundleProject = await isSmartBundleBundledProject(match);
 
       if (isSmartBundleProject) {
-        projectPaths.push(match);
+        // Convert absolute path to relative path
+        const relativePath = path.relative(dir, match);
+        projectPaths.push(relativePath);
       }
     }
   }

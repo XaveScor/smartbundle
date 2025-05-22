@@ -23,8 +23,8 @@ describe("parseMonorepo", () => {
 
       // Should find the package1-sbsources package but not the regular-package
       expect(result.projectPaths).toHaveLength(1);
-      expect(result.projectPaths[0]).toContain("package1-sbsources");
-      expect(result.projectPaths.some(p => p.includes("regular-package"))).toBe(false);
+      expect(result.projectPaths[0]).toBe("packages/package1-sbsources");
+      expect(result.projectPaths.some(p => p === "packages/regular-package")).toBe(false);
     });
   });
 
@@ -47,12 +47,12 @@ describe("parseMonorepo", () => {
       expect(result.projectPaths).toHaveLength(3);
 
       // Check that packages from each glob are found
-      expect(result.projectPaths.some(p => p.includes("packages/package2-sbsources"))).toBe(true);
-      expect(result.projectPaths.some(p => p.includes("apps/package2-sbsources"))).toBe(true);
-      expect(result.projectPaths.some(p => p.includes("libs/package2-sbsources"))).toBe(true);
+      expect(result.projectPaths.some(p => p === "packages/package2-sbsources")).toBe(true);
+      expect(result.projectPaths.some(p => p === "apps/package2-sbsources")).toBe(true);
+      expect(result.projectPaths.some(p => p === "libs/package2-sbsources")).toBe(true);
 
       // Check that regular packages are not found
-      expect(result.projectPaths.some(p => p.includes("regular-package2"))).toBe(false);
+      expect(result.projectPaths.some(p => p === "packages/regular-package2" || p === "apps/regular-package2" || p === "libs/regular-package2")).toBe(false);
     });
   });
 
@@ -169,7 +169,7 @@ describe("parseMonorepo", () => {
 
       // Should find the my-app package
       expect(result.projectPaths).toHaveLength(1);
-      expect(result.projectPaths[0]).toContain("my-app");
+      expect(result.projectPaths[0]).toBe("my-app");
     });
   });
 
@@ -190,8 +190,8 @@ describe("parseMonorepo", () => {
 
       // Should find the included package but not the excluded test package
       expect(result.projectPaths).toHaveLength(1);
-      expect(result.projectPaths[0]).toContain("included-package-sbsources");
-      expect(result.projectPaths.some(p => p.includes("test-package-sbsources"))).toBe(false);
+      expect(result.projectPaths[0]).toBe("packages/included-package-sbsources");
+      expect(result.projectPaths.some(p => p === "packages/regular-package/test/test-package-sbsources")).toBe(false);
     });
   });
 });

@@ -64,16 +64,31 @@ async function findSmartBundleBundledProjects(dir: string): Promise<string[]> {
 
   const projectPaths: string[] = [];
 
-  // Process each package pattern in the workspace config
-  for (const pattern of workspaceConfig.packages) {
+  // Separate include and exclude patterns
+  const includePatterns = workspaceConfig.packages.filter(
+    (pattern) => !pattern.startsWith("!"),
+  );
+  const excludePatterns = workspaceConfig.packages
+    .filter((pattern) => pattern.startsWith("!"))
+    .map((pattern) => pattern.substring(1)); // Remove the leading '!'
+
+  // Process each include pattern in the workspace config
+  for (const pattern of includePatterns) {
+    // For direct subdirectory patterns (without wildcards), we need to check if it's a directory
+    const isDirectSubdir = !pattern.includes("*");
+
     // Use glob to find all directories matching the pattern
     const matches = await glob(
-      // end with a slash to match directories only, not files
-      pattern.endsWith("/") ? pattern : `${pattern}/`,
+      // For direct subdirectories, we don't need to append a slash
+      isDirectSubdir
+        ? pattern
+        : pattern.endsWith("/")
+          ? pattern
+          : `${pattern}/`,
       {
         cwd: dir,
         absolute: true,
-        ignore: ["**/node_modules/**"],
+        ignore: ["**/node_modules/**", ...excludePatterns],
       },
     );
 
@@ -125,7 +140,7 @@ async function isSmartBundleBundledProject(dir: string): Promise<boolean> {
     const content = await fs.readFile(packageJsonPath, "utf-8");
     const packageJson = JSON.parse(content);
 
-    // Check if the package name ends with -sbsources
+    // Check if the package name ends with -sbsources (case-sensitive)
     return (
       typeof packageJson.name === "string" &&
       packageJson.name.endsWith("-sbsources")

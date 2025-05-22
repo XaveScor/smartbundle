@@ -93,4 +93,105 @@ describe("parseMonorepo", () => {
       expect(result.projectPaths).toEqual([]);
     });
   });
+
+  describe("Missing package.json", () => {
+    test("skips directories without package.json", async () => {
+      const missingPackageJsonDir = path.join(FIXTURES_DIR, "missing-package-json");
+
+      const result = await parseMonorepo({
+        dirs: {
+          sourceDir: missingPackageJsonDir,
+          packagePath: path.join(missingPackageJsonDir, "package.json"),
+          outDir: path.join(missingPackageJsonDir, "dist"),
+          outBinsDir: path.join(missingPackageJsonDir, "dist/__bin__"),
+          cjsOutDir: path.join(missingPackageJsonDir, "dist/__compiled__/cjs"),
+          esmOutDir: path.join(missingPackageJsonDir, "dist/__compiled__/esm"),
+        },
+      });
+
+      expect(result.projectPaths).toEqual([]);
+    });
+  });
+
+  describe("Malformed package.json", () => {
+    test("skips directories with malformed package.json", async () => {
+      const malformedPackageJsonDir = path.join(FIXTURES_DIR, "malformed-package-json");
+
+      const result = await parseMonorepo({
+        dirs: {
+          sourceDir: malformedPackageJsonDir,
+          packagePath: path.join(malformedPackageJsonDir, "package.json"),
+          outDir: path.join(malformedPackageJsonDir, "dist"),
+          outBinsDir: path.join(malformedPackageJsonDir, "dist/__bin__"),
+          cjsOutDir: path.join(malformedPackageJsonDir, "dist/__compiled__/cjs"),
+          esmOutDir: path.join(malformedPackageJsonDir, "dist/__compiled__/esm"),
+        },
+      });
+
+      expect(result.projectPaths).toEqual([]);
+    });
+  });
+
+  describe("Case sensitivity", () => {
+    test("handles case sensitivity in package name suffix correctly", async () => {
+      const caseSensitivityDir = path.join(FIXTURES_DIR, "case-sensitivity");
+
+      const result = await parseMonorepo({
+        dirs: {
+          sourceDir: caseSensitivityDir,
+          packagePath: path.join(caseSensitivityDir, "package.json"),
+          outDir: path.join(caseSensitivityDir, "dist"),
+          outBinsDir: path.join(caseSensitivityDir, "dist/__bin__"),
+          cjsOutDir: path.join(caseSensitivityDir, "dist/__compiled__/cjs"),
+          esmOutDir: path.join(caseSensitivityDir, "dist/__compiled__/esm"),
+        },
+      });
+
+      // Should NOT find the mixed-case-SBSources package because the check is now case-sensitive
+      expect(result.projectPaths).toHaveLength(0);
+    });
+  });
+
+  describe("Direct subdirectory pattern", () => {
+    test("finds packages in direct subdirectories of the root", async () => {
+      const directSubdirDir = path.join(FIXTURES_DIR, "direct-subdir-pnpm-monorepo");
+
+      const result = await parseMonorepo({
+        dirs: {
+          sourceDir: directSubdirDir,
+          packagePath: path.join(directSubdirDir, "package.json"),
+          outDir: path.join(directSubdirDir, "dist"),
+          outBinsDir: path.join(directSubdirDir, "dist/__bin__"),
+          cjsOutDir: path.join(directSubdirDir, "dist/__compiled__/cjs"),
+          esmOutDir: path.join(directSubdirDir, "dist/__compiled__/esm"),
+        },
+      });
+
+      // Should find the my-app package
+      expect(result.projectPaths).toHaveLength(1);
+      expect(result.projectPaths[0]).toContain("my-app");
+    });
+  });
+
+  describe("Exclude patterns", () => {
+    test("excludes packages in test directories", async () => {
+      const excludePatternDir = path.join(FIXTURES_DIR, "exclude-pattern-pnpm-monorepo");
+
+      const result = await parseMonorepo({
+        dirs: {
+          sourceDir: excludePatternDir,
+          packagePath: path.join(excludePatternDir, "package.json"),
+          outDir: path.join(excludePatternDir, "dist"),
+          outBinsDir: path.join(excludePatternDir, "dist/__bin__"),
+          cjsOutDir: path.join(excludePatternDir, "dist/__compiled__/cjs"),
+          esmOutDir: path.join(excludePatternDir, "dist/__compiled__/esm"),
+        },
+      });
+
+      // Should find the included package but not the excluded test package
+      expect(result.projectPaths).toHaveLength(1);
+      expect(result.projectPaths[0]).toContain("included-package-sbsources");
+      expect(result.projectPaths.some(p => p.includes("test-package-sbsources"))).toBe(false);
+    });
+  });
 });

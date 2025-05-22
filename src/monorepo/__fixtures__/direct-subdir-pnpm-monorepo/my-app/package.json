@@ -1,0 +1,6 @@
+{
+  "name": "my-app-sbsources",
+  "version": "1.0.0",
+  "description": "Test package in a direct subdirectory of the root",
+  "main": "index.js"
+}

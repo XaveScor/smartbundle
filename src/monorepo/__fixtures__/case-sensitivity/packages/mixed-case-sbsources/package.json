@@ -1,0 +1,6 @@
+{
+  "name": "mixed-case-SBSources",
+  "version": "1.0.0",
+  "description": "Test package with mixed case in the name suffix",
+  "main": "index.js"
+}

@@ -1,0 +1,7 @@
+{
+  "name": "malformed-package-json-sbsources",
+  "version": "1.0.0",
+  "description": "This package.json is malformed",
+  "main": "index.js",
+  "invalid": "
+}

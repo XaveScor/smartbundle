@@ -1,0 +1,6 @@
+{
+  "name": "excluded-test-package-sbsources",
+  "version": "1.0.0",
+  "description": "Test package that should be excluded because it's in a test directory",
+  "main": "index.js"
+}

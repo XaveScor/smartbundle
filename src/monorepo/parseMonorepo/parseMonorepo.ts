@@ -2,7 +2,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { parse as parseYaml } from "yaml";
 import { glob } from "glob";
-import { type Dirs } from "../resolveDirs.js";
+import { type Dirs } from "../../resolveDirs.js";
 
 type ParseMonorepoArgs = {
   dirs: Dirs;

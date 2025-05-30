@@ -1,7 +1,10 @@
 {
   "name": "pnpm-monorepo",
   "private": true,
+  "scripts": {
+    "smartbundle:link": "smartbundle-monorepo-link"
+  },
   "devDependencies": {
-    "smartbundle": "link:../../../dist"
+    "smartbundle": "file:/smartbundle"
   }
 }

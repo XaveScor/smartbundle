@@ -1,0 +1,88 @@
+import { type Dirs } from "../../resolveDirs.js";
+import { parsePackageJson } from "../../packageJson.js";
+import { parseMonorepo } from "../parseMonorepo/parseMonorepo.js";
+import path from "node:path";
+import fs from "node:fs/promises";
+
+/**
+ * Creates link packages for all SmartBundle-bundled projects in a monorepo
+ * A link package is a reference package that points to the bundled output
+ */
+export async function createLinkPackages(dirs: Dirs) {
+  // Find all SmartBundle-bundled projects in the monorepo
+  const { projectPaths } = await parseMonorepo({ dirs });
+
+  if (projectPaths.length === 0) {
+    console.log("No SmartBundle-bundled projects found in the monorepo");
+    return;
+  }
+
+  // Create link packages for each SmartBundle-bundled project
+  for (const projectPath of projectPaths) {
+    const projectDir = path.join(dirs.sourceDir, projectPath);
+    const projectPackageJsonPath = path.join(projectDir, "package.json");
+
+    try {
+      const projectPackageJson = await parsePackageJson({
+        sourceDir: projectDir,
+        packagePath: projectPackageJsonPath,
+      });
+
+      if (Array.isArray(projectPackageJson)) {
+        console.error(
+          `Failed to parse package.json for ${projectPath}:`,
+          projectPackageJson,
+        );
+        continue;
+      }
+
+      // Create the link package directory
+      const linkPackageName = projectPackageJson.name.replace(
+        /-sbsources$/,
+        "",
+      );
+      const linkPackageDir = path.join(
+        dirs.outDir,
+        projectPath.replace(/-sbsources$/, ""),
+      );
+
+      // Ensure the directory exists
+      await fs.mkdir(linkPackageDir, { recursive: true });
+
+      // Create a package.json for the link package
+      const linkPackageJson = {
+        name: linkPackageName,
+        version: projectPackageJson.version ?? "0.0.0",
+        description: `Link package for ${projectPackageJson.name}`,
+        // Add a devDependency on the source package to create a wire between source and dist
+        devDependencies: {
+          [projectPackageJson.name]: "workspace:*",
+        },
+      };
+
+      // Write the package.json for the link package
+      await fs.writeFile(
+        path.join(linkPackageDir, "package.json"),
+        JSON.stringify(linkPackageJson, null, 2),
+      );
+
+      // Create a .gitignore file to ignore everything except package.json
+      const gitignoreContent = `# Ignore all files
+*
+# Unignore the following files
+!.gitignore
+!package.json
+`;
+      await fs.writeFile(
+        path.join(linkPackageDir, ".gitignore"),
+        gitignoreContent,
+      );
+
+      console.log(
+        `Created link package for ${projectPackageJson.name} at ${linkPackageDir}`,
+      );
+    } catch (error) {
+      console.error(`Error creating link package for ${projectPath}:`, error);
+    }
+  }
+}

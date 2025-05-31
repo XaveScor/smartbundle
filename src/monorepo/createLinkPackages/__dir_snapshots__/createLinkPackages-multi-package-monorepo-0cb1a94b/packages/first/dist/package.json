@@ -1,0 +1,8 @@
+{
+  "name": "first",
+  "version": "2.1.0",
+  "description": "Link package for first-sbsources",
+  "devDependencies": {
+    "first-sbsources": "workspace:*"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "name": "lib",
+  "version": "1.0.0",
+  "description": "Link package for lib-sbsources",
+  "devDependencies": {
+    "lib-sbsources": "workspace:*"
+  }
+}

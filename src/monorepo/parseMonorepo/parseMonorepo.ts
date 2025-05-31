@@ -2,10 +2,9 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { parse as parseYaml } from "yaml";
 import { glob } from "glob";
-import { type Dirs } from "../../resolveDirs.js";
 
 type ParseMonorepoArgs = {
-  dirs: Dirs;
+  sourceDir: string;
 };
 
 type DetectMonorepoTypeResult = {
@@ -17,10 +16,8 @@ type DetectMonorepoTypeResult = {
  * Currently only supports pnpm monorepos as per documentation
  */
 export async function detectMonorepoType(
-  dirs: Dirs,
+  sourceDir: string,
 ): Promise<DetectMonorepoTypeResult> {
-  const { sourceDir } = dirs;
-
   // Check if it's a pnpm monorepo by looking for pnpm-workspace.yaml
   const isPnpmMonorepo = await isPnpmWorkspace(sourceDir);
 
@@ -153,7 +150,7 @@ async function isSmartBundleBundledProject(dir: string): Promise<boolean> {
 }
 
 export async function parseMonorepo({
-  dirs,
+  sourceDir,
 }: ParseMonorepoArgs): Promise<DetectMonorepoTypeResult> {
-  return await detectMonorepoType(dirs);
+  return await detectMonorepoType(sourceDir);
 }

@@ -1,0 +1,6 @@
+# Allow dist directory to be committed
+!dist/
+
+# Ignore build artifacts in source directory
+*.js.map
+*.d.ts.map

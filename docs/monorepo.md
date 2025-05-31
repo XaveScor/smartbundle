@@ -49,7 +49,7 @@ Example monorepo structure:
 ```
 --packages
  |--a                  // name: "a"
- |--b-sbsources        // name: "b-sbsources"
+ |--b                  // name: "b-sbsources"
    |--dist             // linked package here named "b"
 ```
 

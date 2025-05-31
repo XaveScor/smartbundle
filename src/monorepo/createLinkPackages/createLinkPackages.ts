@@ -1,16 +1,21 @@
-import { type Dirs } from "../../resolveDirs.js";
 import { parsePackageJson } from "../../packageJson.js";
 import { parseMonorepo } from "../parseMonorepo/parseMonorepo.js";
 import path from "node:path";
 import fs from "node:fs/promises";
 
+type CreateLinkPackagesArgs = {
+  sourceDir: string;
+};
+
 /**
  * Creates link packages for all SmartBundle-bundled projects in a monorepo
  * A link package is a reference package that points to the bundled output
  */
-export async function createLinkPackages(dirs: Dirs) {
+export async function createLinkPackages({
+  sourceDir,
+}: CreateLinkPackagesArgs) {
   // Find all SmartBundle-bundled projects in the monorepo
-  const { projectPaths } = await parseMonorepo({ dirs });
+  const { projectPaths } = await parseMonorepo({ sourceDir });
 
   if (projectPaths.length === 0) {
     console.log("No SmartBundle-bundled projects found in the monorepo");
@@ -19,7 +24,7 @@ export async function createLinkPackages(dirs: Dirs) {
 
   // Create link packages for each SmartBundle-bundled project
   for (const projectPath of projectPaths) {
-    const projectDir = path.join(dirs.sourceDir, projectPath);
+    const projectDir = path.join(sourceDir, projectPath);
     const projectPackageJsonPath = path.join(projectDir, "package.json");
 
     try {
@@ -36,15 +41,12 @@ export async function createLinkPackages(dirs: Dirs) {
         continue;
       }
 
-      // Create the link package directory
+      // Create the link package directory inside the source package
       const linkPackageName = projectPackageJson.name.replace(
         /-sbsources$/,
         "",
       );
-      const linkPackageDir = path.join(
-        dirs.outDir,
-        projectPath.replace(/-sbsources$/, ""),
-      );
+      const linkPackageDir = path.join(sourceDir, projectPath, "dist");
 
       // Ensure the directory exists
       await fs.mkdir(linkPackageDir, { recursive: true });
@@ -64,18 +66,6 @@ export async function createLinkPackages(dirs: Dirs) {
       await fs.writeFile(
         path.join(linkPackageDir, "package.json"),
         JSON.stringify(linkPackageJson, null, 2),
-      );
-
-      // Create a .gitignore file to ignore everything except package.json
-      const gitignoreContent = `# Ignore all files
-*
-# Unignore the following files
-!.gitignore
-!package.json
-`;
-      await fs.writeFile(
-        path.join(linkPackageDir, ".gitignore"),
-        gitignoreContent,
       );
 
       console.log(

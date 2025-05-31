@@ -55,8 +55,8 @@ importers:
         specifier: ^3.1.4
         version: 3.1.4(@types/node@22.15.21)(terser@5.31.3)(yaml@2.8.0)
       vitest-directory-snapshot:
-        specifier: ^0.5.0
-        version: 0.5.0(vitest@3.1.4(@types/node@22.15.21)(terser@5.31.3)(yaml@2.8.0))
+        specifier: ^0.6.1
+        version: 0.6.1(vitest@3.1.4(@types/node@22.15.21)(terser@5.31.3)(yaml@2.8.0))
       zx:
         specifier: ^8.5.4
         version: 8.5.4
@@ -901,8 +901,8 @@ packages:
       yaml:
         optional: true
 
-  vitest-directory-snapshot@0.5.0:
-    resolution: {integrity: sha512-A54/Jdy9H4KDFaZwmOcuz3cQuoCIwfoB2XDQ+SGhbdBsmSj9Cc2Hp2cIXw29H+4ENTOPP8C5lgAo405OLzpLkQ==}
+  vitest-directory-snapshot@0.6.1:
+    resolution: {integrity: sha512-pDFBHO8qfIMu/6umOjZXzFEiqLuEa+tD5cHEFHboHB9tHebXGH0d+1nZQBNytiDHvTpfzFtiD9xr25PuDPFkRg==}
     peerDependencies:
       vitest: ^2.0.0 || ^3.0.0
 
@@ -1720,7 +1720,7 @@ snapshots:
       terser: 5.31.3
       yaml: 2.8.0
 
-  vitest-directory-snapshot@0.5.0(vitest@3.1.4(@types/node@22.15.21)(terser@5.31.3)(yaml@2.8.0)):
+  vitest-directory-snapshot@0.6.1(vitest@3.1.4(@types/node@22.15.21)(terser@5.31.3)(yaml@2.8.0)):
     dependencies:
       vitest: 3.1.4(@types/node@22.15.21)(terser@5.31.3)(yaml@2.8.0)
 

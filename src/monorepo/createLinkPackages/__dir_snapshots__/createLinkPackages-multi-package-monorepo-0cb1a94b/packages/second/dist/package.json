@@ -1,0 +1,8 @@
+{
+  "name": "second",
+  "version": "1.5.0",
+  "description": "Link package for second-sbsources",
+  "devDependencies": {
+    "second-sbsources": "workspace:*"
+  }
+}

@@ -11,14 +11,7 @@ describe("parseMonorepo", () => {
       const validMonorepoDir = path.join(FIXTURES_DIR, "valid-pnpm-monorepo");
 
       const result = await parseMonorepo({
-        dirs: {
-          sourceDir: validMonorepoDir,
-          packagePath: path.join(validMonorepoDir, "package.json"),
-          outDir: path.join(validMonorepoDir, "dist"),
-          outBinsDir: path.join(validMonorepoDir, "dist/__bin__"),
-          cjsOutDir: path.join(validMonorepoDir, "dist/__compiled__/cjs"),
-          esmOutDir: path.join(validMonorepoDir, "dist/__compiled__/esm"),
-        },
+        sourceDir: validMonorepoDir,
       });
 
       // Should find the package1-sbsources package but not the regular-package
@@ -33,14 +26,7 @@ describe("parseMonorepo", () => {
       const multiGlobMonorepoDir = path.join(FIXTURES_DIR, "multi-glob-pnpm-monorepo");
 
       const result = await parseMonorepo({
-        dirs: {
-          sourceDir: multiGlobMonorepoDir,
-          packagePath: path.join(multiGlobMonorepoDir, "package.json"),
-          outDir: path.join(multiGlobMonorepoDir, "dist"),
-          outBinsDir: path.join(multiGlobMonorepoDir, "dist/__bin__"),
-          cjsOutDir: path.join(multiGlobMonorepoDir, "dist/__compiled__/cjs"),
-          esmOutDir: path.join(multiGlobMonorepoDir, "dist/__compiled__/esm"),
-        },
+        sourceDir: multiGlobMonorepoDir,
       });
 
       // Should find all packages with names ending in -sbsources from all globs
@@ -61,14 +47,7 @@ describe("parseMonorepo", () => {
       const nonMonorepoDir = path.join(FIXTURES_DIR, "non-monorepo");
 
       const result = await parseMonorepo({
-        dirs: {
-          sourceDir: nonMonorepoDir,
-          packagePath: path.join(nonMonorepoDir, "package.json"),
-          outDir: path.join(nonMonorepoDir, "dist"),
-          outBinsDir: path.join(nonMonorepoDir, "dist/__bin__"),
-          cjsOutDir: path.join(nonMonorepoDir, "dist/__compiled__/cjs"),
-          esmOutDir: path.join(nonMonorepoDir, "dist/__compiled__/esm"),
-        },
+        sourceDir: nonMonorepoDir,
       });
 
       expect(result.projectPaths).toEqual([]);
@@ -80,14 +59,7 @@ describe("parseMonorepo", () => {
       const invalidConfigDir = path.join(FIXTURES_DIR, "invalid-workspace-config");
 
       const result = await parseMonorepo({
-        dirs: {
-          sourceDir: invalidConfigDir,
-          packagePath: path.join(invalidConfigDir, "package.json"),
-          outDir: path.join(invalidConfigDir, "dist"),
-          outBinsDir: path.join(invalidConfigDir, "dist/__bin__"),
-          cjsOutDir: path.join(invalidConfigDir, "dist/__compiled__/cjs"),
-          esmOutDir: path.join(invalidConfigDir, "dist/__compiled__/esm"),
-        },
+        sourceDir: invalidConfigDir,
       });
 
       expect(result.projectPaths).toEqual([]);
@@ -99,14 +71,7 @@ describe("parseMonorepo", () => {
       const missingPackageJsonDir = path.join(FIXTURES_DIR, "missing-package-json");
 
       const result = await parseMonorepo({
-        dirs: {
-          sourceDir: missingPackageJsonDir,
-          packagePath: path.join(missingPackageJsonDir, "package.json"),
-          outDir: path.join(missingPackageJsonDir, "dist"),
-          outBinsDir: path.join(missingPackageJsonDir, "dist/__bin__"),
-          cjsOutDir: path.join(missingPackageJsonDir, "dist/__compiled__/cjs"),
-          esmOutDir: path.join(missingPackageJsonDir, "dist/__compiled__/esm"),
-        },
+        sourceDir: missingPackageJsonDir,
       });
 
       expect(result.projectPaths).toEqual([]);
@@ -118,14 +83,7 @@ describe("parseMonorepo", () => {
       const malformedPackageJsonDir = path.join(FIXTURES_DIR, "malformed-package-json");
 
       const result = await parseMonorepo({
-        dirs: {
-          sourceDir: malformedPackageJsonDir,
-          packagePath: path.join(malformedPackageJsonDir, "package.json"),
-          outDir: path.join(malformedPackageJsonDir, "dist"),
-          outBinsDir: path.join(malformedPackageJsonDir, "dist/__bin__"),
-          cjsOutDir: path.join(malformedPackageJsonDir, "dist/__compiled__/cjs"),
-          esmOutDir: path.join(malformedPackageJsonDir, "dist/__compiled__/esm"),
-        },
+        sourceDir: malformedPackageJsonDir,
       });
 
       expect(result.projectPaths).toEqual([]);
@@ -137,14 +95,7 @@ describe("parseMonorepo", () => {
       const caseSensitivityDir = path.join(FIXTURES_DIR, "case-sensitivity");
 
       const result = await parseMonorepo({
-        dirs: {
-          sourceDir: caseSensitivityDir,
-          packagePath: path.join(caseSensitivityDir, "package.json"),
-          outDir: path.join(caseSensitivityDir, "dist"),
-          outBinsDir: path.join(caseSensitivityDir, "dist/__bin__"),
-          cjsOutDir: path.join(caseSensitivityDir, "dist/__compiled__/cjs"),
-          esmOutDir: path.join(caseSensitivityDir, "dist/__compiled__/esm"),
-        },
+        sourceDir: caseSensitivityDir,
       });
 
       // Should NOT find the mixed-case-SBSources package because the check is now case-sensitive
@@ -157,14 +108,7 @@ describe("parseMonorepo", () => {
       const directSubdirDir = path.join(FIXTURES_DIR, "direct-subdir-pnpm-monorepo");
 
       const result = await parseMonorepo({
-        dirs: {
-          sourceDir: directSubdirDir,
-          packagePath: path.join(directSubdirDir, "package.json"),
-          outDir: path.join(directSubdirDir, "dist"),
-          outBinsDir: path.join(directSubdirDir, "dist/__bin__"),
-          cjsOutDir: path.join(directSubdirDir, "dist/__compiled__/cjs"),
-          esmOutDir: path.join(directSubdirDir, "dist/__compiled__/esm"),
-        },
+        sourceDir: directSubdirDir,
       });
 
       // Should find the my-app package
@@ -178,14 +122,7 @@ describe("parseMonorepo", () => {
       const excludePatternDir = path.join(FIXTURES_DIR, "exclude-pattern-pnpm-monorepo");
 
       const result = await parseMonorepo({
-        dirs: {
-          sourceDir: excludePatternDir,
-          packagePath: path.join(excludePatternDir, "package.json"),
-          outDir: path.join(excludePatternDir, "dist"),
-          outBinsDir: path.join(excludePatternDir, "dist/__bin__"),
-          cjsOutDir: path.join(excludePatternDir, "dist/__compiled__/cjs"),
-          esmOutDir: path.join(excludePatternDir, "dist/__compiled__/esm"),
-        },
+        sourceDir: excludePatternDir,
       });
 
       // Should find the included package but not the excluded test package

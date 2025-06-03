@@ -2,146 +2,233 @@
 
 ## Overview
 
-The monorepo support in SmartBundle allows the library to work seamlessly within pnpm workspace environments. It provides a mechanism to create "link packages" that reference the source code during development while still allowing proper bundling for distribution.
+SmartBundle provides seamless monorepo support for pnpm workspaces, enabling efficient development and bundling of TypeScript/JavaScript packages. It solves the fundamental challenge of working with source files during development while distributing optimized bundles for production.
 
-## The Problem
+## The Core Problem
 
-In a monorepo setup, packages often need to reference each other during development. However, when using a bundler like SmartBundle, you want to:
+In monorepo development, we face conflicting requirements:
 
-1. Work with the original source files during development (for hot reloading, debugging, etc.)
-2. Bundle and distribute optimized packages for production
-3. Avoid manually managing multiple package.json files for the same package
+1. **Development needs**:
+   - Direct source file editing with hot reloading
+   - TypeScript type checking without compilation
+   - Fast iteration cycles
 
-## Prerequisites
+2. **Production needs**:
+   - Optimized, bundled code
+   - Dual format support (ESM/CJS)
+   - Proper dependency resolution
 
-SmartBundle monorepo support requires:
-- A pnpm workspace configuration (`pnpm-workspace.yaml`)
-- Package.json files with names ending in `-sbsources` for packages that need bundling
-- The workspace configuration should include both source packages and their dist directories:
-  ```yaml
-  packages:
-    - 'packages/*'
-    - 'packages/*/dist'
-  ```
-
-## The Solution: `-sbsources` Convention
-
-SmartBundle introduces a naming convention where packages with names ending in `-sbsources` (in their package.json) are treated as source packages that need to be bundled. The monorepo link system then creates corresponding "link packages" (without the suffix) that:
-
-- Point to the source package during development
-- Get replaced with bundled output during the build process
-- Maintain proper package.json exports for both scenarios
+Traditional approaches force you to choose between development experience and production optimization. SmartBundle solves this with its link package system.
 
 ## How It Works
 
-### 1. Package Structure
+### The `-sbsources` Convention
 
-**Important**: The `-sbsources` suffix is in the package name (inside package.json), NOT in the folder name.
+SmartBundle uses a naming convention to identify packages that need bundling:
+
+- **Source packages**: Named with `-sbsources` suffix (e.g., `my-package-sbsources`)
+- **Link packages**: Automatically generated without suffix (e.g., `my-package`)
+- **Folder names**: Can be anything - only the package.json name matters
+
+### Package Structure
 
 ```
 packages/
-  my-package/               # Regular folder name (no suffix)
+  my-lib/                      # Folder name (can be anything)
     src/
-      index.ts
-    package.json            # Contains "name": "my-package-sbsources"
-    dist/                   # Link package directory (auto-generated)
-      package.json          # Contains "name": "my-package" (without suffix)
+      index.ts                 # Source code
+      utils.ts
+    package.json               # name: "@company/my-lib-sbsources"
+    dist/                      # Auto-generated link package
+      package.json             # name: "@company/my-lib"
+      index.ts                 # Re-exports from source
+      utils.ts                 # Re-exports from source
 ```
 
-Example package.json in the source directory:
-```json
-{
-  "name": "my-package-sbsources",  // Note: suffix is here, not in folder
-  "version": "1.0.0",
-  "exports": "./src/index.ts"
-}
+### The Link Package System
+
+Link packages serve as a stable interface between development and production:
+
+1. **During Development**:
+   - Link packages contain re-export files
+   - Re-exports import from the `-sbsources` package
+   - TypeScript resolves types directly from source
+   - Changes are immediately reflected
+
+2. **After Build**:
+   - SmartBundle compiles source to `__compiled__/`
+   - Generates proper package.json with exports
+   - Creates both ESM and CJS formats
+   - Ready for npm publishing
+
+## Why This Design?
+
+### Why `-sbsources` Suffix?
+
+The suffix is essential for several reasons:
+
+1. **Package Identification**: Clearly marks which packages need bundling in mixed monorepos
+2. **Unique Names**: pnpm requires unique package names in workspaces
+3. **Source Preservation**: Prevents build output from overwriting source files
+4. **Developer Clarity**: Explicit distinction between source and consumable packages
+
+### Why Re-exports?
+
+Re-exports solve the entry point mismatch problem:
+
+```typescript
+// Source package.json
+"exports": "./src/index.ts"
+
+// Built package.json
+"exports": "./__compiled__/esm/index.mjs"
 ```
 
-### 2. The Link Process
+Without re-exports, consumers would need different import paths for development vs production. Re-exports provide consistent entry points that work in both scenarios.
 
-The `smartbundle-monorepo-link` command:
+## Setup and Configuration
 
-1. **Scans** the workspace for packages with names ending in `-sbsources` (checks package.json files)
-2. **Creates** a `dist/` directory inside each matching package directory
-3. **Generates** a minimal package.json in the `dist/` directory that:
-   - Has the name without the `-sbsources` suffix
-   - Includes the version from the source package
-   - Adds a devDependency on the source package using `workspace:*`
-   - Creates a wire between source and dist for pnpm workspace resolution
+### Prerequisites
 
-### 3. Build Integration
+1. **pnpm workspace** with `pnpm-workspace.yaml`:
+   ```yaml
+   packages:
+     - 'packages/*'
+     - 'packages/*/dist'  # Include link packages
+   ```
 
-When SmartBundle builds a `-sbsources` package:
-- Output goes to `__compiled__/` directory within the source package
-- TypeScript definitions are generated
-- Both ESM and CJS formats are created
-- The built package.json is placed in the output directory with proper exports pointing to the compiled files
+2. **Source packages** with `-sbsources` suffix in package.json
+
+### Commands
+
+```bash
+# Create/update link packages
+smartbundle-monorepo-link
+
+# Build all -sbsources packages
+smartbundle
+
+# CI validation (fails if links are outdated)
+smartbundle-monorepo-link --ci
+```
+
+### Workflow
+
+1. **Initial Setup**:
+   ```bash
+   # Create your source package
+   mkdir packages/my-lib
+   echo '{"name": "@company/my-lib-sbsources"}' > packages/my-lib/package.json
+   
+   # Generate link packages
+   smartbundle-monorepo-link
+   
+   # Install dependencies
+   pnpm install
+   ```
+
+2. **Development**:
+   - Edit source files directly
+   - Other packages import from `@company/my-lib`
+   - TypeScript and hot reloading work seamlessly
+
+3. **Build & Publish**:
+   ```bash
+   # Build all packages
+   smartbundle
+   
+   # Publish (from output directory)
+   cd packages/my-lib/dist
+   npm publish
+   ```
 
 ## Implementation Details
 
-### Key Components
+### Key Files
 
-- **`parseMonorepo.ts`** - Detects and parses pnpm workspace configurations
-- **`createLinkPackages.ts`** - Generates link packages for `-sbsources` packages
-- **`convertPackageJson.ts`** - Transforms package.json for link packages
-- **`link.ts`** - CLI entry point for the monorepo link command
+- **`parseMonorepo.ts`**: Finds packages with `-sbsources` suffix
+- **`createLinkPackages.ts`**: Generates link packages with re-exports
+- **`convertPackageJson.ts`**: Transforms package.json for output
+- **`link.ts`**: CLI command implementation
 
-### Package.json Transformation
+### Re-export Example
 
-The monorepo link process creates two types of package.json files:
+Source: `packages/my-lib/src/index.ts`
+```typescript
+export const hello = () => "Hello from source!";
+```
 
-1. **Link Package** (in `dist/` directory during development):
-   - Minimal package.json with name (without `-sbsources`), version, and description
-   - Contains `devDependencies` pointing to the source package: `"package-sbsources": "workspace:*"`
-   - Creates a pnpm workspace link between the source and dist packages
+Link: `packages/my-lib/dist/index.ts`
+```typescript
+export * from "@company/my-lib-sbsources";
+```
 
-2. **Built Package** (created by SmartBundle during build):
-   - Full package.json with all necessary fields
-   - Name without the `-sbsources` suffix
-   - Proper exports pointing to the compiled output in `__compiled__/`
-   - All dependencies with `-sbsources` suffixes are renamed to their dist names
+Consumer: `packages/app/index.ts`
+```typescript
+import { hello } from "@company/my-lib";  // Works in dev & prod
+```
 
 ### Edge Cases Handled
 
-- Packages without exports in the source package.json
+- Multiple export paths (`./utils`, `./components`, etc.)
 - Binary executables (bin field)
-- TypeScript type definitions
-- Nested export paths (e.g., `./sub-path`)
-- Folder names don't need to match package names (only the package.json name matters)
+- TypeScript declaration files
+- Dependencies with `-sbsources` suffix (automatically renamed)
+- Packages without explicit exports
 
 ## Benefits
 
-1. **Development Experience** - Work directly with source files
-2. **Build Optimization** - Automatic bundling without manual configuration
-3. **Type Safety** - TypeScript definitions are properly generated and linked
-4. **Monorepo Compatible** - Works with pnpm workspaces out of the box
-5. **Zero Configuration** - No need to manually manage link packages
+1. **Zero Configuration**: No complex build configs needed
+2. **Fast Development**: Work directly with TypeScript source
+3. **Production Ready**: Automatic dual-format bundling
+4. **Type Safety**: Full TypeScript support throughout
+5. **Monorepo Native**: Designed for pnpm workspaces
 
-## Usage
+## Common Patterns
 
-In a monorepo root:
-```bash
-smartbundle-monorepo-link
+### React Component Library
+```json
+{
+  "name": "@company/ui-sbsources",
+  "exports": {
+    ".": "./src/index.ts",
+    "./button": "./src/Button.tsx",
+    "./form": "./src/Form.tsx"
+  }
+}
 ```
 
-This command should be run:
-- After adding new `-sbsources` packages
-- As part of the postinstall script
-- Before building packages that depend on `-sbsources` packages
+### Shared Utilities
+```json
+{
+  "name": "@company/utils-sbsources",
+  "exports": "./src/index.ts",
+  "dependencies": {
+    "@company/types-sbsources": "workspace:*"
+  }
+}
+```
 
-## Workflow
+### CLI Tool
+```json
+{
+  "name": "@company/cli-sbsources",
+  "bin": {
+    "my-cli": "./src/cli.ts"
+  }
+}
+```
 
-1. **Development Phase**:
-   - Work on source code in `packages/my-package/` (with `"name": "my-package-sbsources"` in package.json)
-   - Run `smartbundle-monorepo-link` to create `dist/` directories with link packages
-   - Other packages can import from `my-package` (which pnpm resolves to the dist directory)
+## Troubleshooting
 
-2. **Build Phase**:
-   - Run `smartbundle` on the `-sbsources` package
-   - Creates `__compiled__/` directory with bundled ESM/CJS output
-   - Generates a complete package.json in the output directory
-   - The output directory becomes the publishable package
+### "No SmartBundle-bundled projects found"
+- Check that package.json names end with `-sbsources`
+- Verify pnpm-workspace.yaml includes your packages
 
-3. **Publishing**:
-   - The contents of the output directory (with transformed package.json) are published to npm
-   - Consumers install the package without the `-sbsources` suffix
+### TypeScript can't find types
+- Run `smartbundle-monorepo-link` after package changes
+- Ensure `pnpm install` was run after linking
+
+### Build fails with "module not found"
+- Check that dependencies use the non-suffixed names
+- Verify link packages were created in dist/ directories

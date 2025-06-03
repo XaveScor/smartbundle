@@ -1,7 +1,11 @@
 {
   "name": "lib",
   "version": "1.0.0",
+  "type": "module",
   "description": "Link package for lib-sbsources",
+  "exports": {
+    ".": "./index.js"
+  },
   "devDependencies": {
     "lib-sbsources": "workspace:*"
   }

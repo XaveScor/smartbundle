@@ -3,7 +3,6 @@ import { createLinkPackages } from "./createLinkPackages.js";
 import { test } from "vitest-directory-snapshot";
 import { disableLog } from "../../log.js";
 import fs from "node:fs/promises";
-import path from "node:path";
 
 disableLog();
 
@@ -65,6 +64,24 @@ describe("createLinkPackages", () => {
 
     expect(consoleSpy).toHaveBeenCalledWith(
       "No SmartBundle-bundled projects found in the monorepo",
+    );
+    expect(tmpDir).toMatchDirSnapshot();
+  });
+
+  test("reexports-test", async ({ tmpDir }: { tmpDir: string }) => {
+    // Copy fixture to tmpDir so we can modify it
+    await fs.cp(
+      "./src/monorepo/createLinkPackages/__fixtures__/reexports-test",
+      tmpDir,
+      { recursive: true },
+    );
+
+    await createLinkPackages({
+      sourceDir: tmpDir,
+    });
+
+    expect(consoleSpy).toHaveBeenCalledWith(
+      expect.stringContaining("Created link package for @test/utils-sbsources"),
     );
     expect(tmpDir).toMatchDirSnapshot();
   });

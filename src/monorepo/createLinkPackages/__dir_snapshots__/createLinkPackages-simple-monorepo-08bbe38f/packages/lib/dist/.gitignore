@@ -1,0 +1,6 @@
+# Ignore all files
+*
+# Unignore the following files
+!.gitignore
+!package.json
+!index.js

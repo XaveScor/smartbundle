@@ -1,7 +1,11 @@
 {
   "name": "second",
   "version": "1.5.0",
+  "type": "module",
   "description": "Link package for second-sbsources",
+  "exports": {
+    ".": "./index.js"
+  },
   "devDependencies": {
     "second-sbsources": "workspace:*"
   }

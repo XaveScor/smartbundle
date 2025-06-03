@@ -28,56 +28,27 @@ SmartBundle uses a simple naming convention to give you the best of both worlds:
 2. **Run `smartbundle-monorepo-link`** to set up the magic
 3. **Use clean names** (no suffix) in dependencies and imports
 
-### Visual Overview
+### How It Works
 
-```mermaid
-graph LR
-    subgraph "You Create"
-        A[Package with<br/>name: my-ui-sbsources]
-    end
-    
-    subgraph "SmartBundle Creates"
-        B[Link package<br/>name: my-ui]
-    end
-    
-    subgraph "Others Use"
-        C[import from 'my-ui'<br/>depends on 'my-ui']
-    end
-    
-    A -->|smartbundle-monorepo-link| B
-    C -->|uses| B
-    B -.->|points to| A
-    
-    style A fill:#e1f5fe
-    style B fill:#fff3e0,stroke:#ff6b6b,stroke-width:3px
-    style C fill:#f3e5f5
-```
+**You create:**
+- Package with `name: "@company/ui-sbsources"`
+
+**SmartBundle creates:**
+- Link package with `name: "@company/ui"` (automatically!)
+
+**Others use:**
+- `import { Button } from '@company/ui'`
+- `"dependencies": { "@company/ui": "workspace:*" }`
 
 ### Development vs Production
 
-```mermaid
-graph TB
-    subgraph "Development Mode"
-        Dev1[import from '@company/ui']
-        Dev2[→ TypeScript source files]
-        Dev3[→ Hot reloading ✨]
-        Dev1 --> Dev2 --> Dev3
-    end
-    
-    subgraph "Production Mode"
-        Prod1[import from '@company/ui']
-        Prod2[→ Optimized bundles]
-        Prod3[→ ESM + CommonJS 📦]
-        Prod1 --> Prod2 --> Prod3
-    end
-    
-    style Dev1 fill:#e8f5e9
-    style Dev2 fill:#e8f5e9
-    style Dev3 fill:#e8f5e9
-    style Prod1 fill:#fff3e0
-    style Prod2 fill:#fff3e0
-    style Prod3 fill:#fff3e0
-```
+**In Development:**
+- `import from '@company/ui'` → TypeScript source files → Hot reloading ✨
+
+**In Production:**
+- `import from '@company/ui'` → Optimized bundles → ESM + CommonJS 📦
+
+Same import, different behavior - that's the magic!
 
 ## Getting Started
 

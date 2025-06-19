@@ -55,50 +55,53 @@ export async function createLinkPackages({
       const linkExports: Record<string, string> = {};
       const reexportFiles: string[] = [];
       const reexportDirs = new Set<string>();
-      
+
       if (projectPackageJson.exports) {
         for (const [exportKey, exportPath] of projectPackageJson.exports) {
           // Get the file extension from the source file
           const sourceExt = path.extname(exportPath);
-          
+
           // Create the re-export file path based on the export key
           let reexportFileName: string;
           if (exportKey === ".") {
             reexportFileName = `index${sourceExt}`;
           } else {
             // Remove "./" prefix and add the source extension
-            const cleanKey = exportKey.startsWith("./") ? exportKey.slice(2) : exportKey;
+            const cleanKey = exportKey.startsWith("./")
+              ? exportKey.slice(2)
+              : exportKey;
             reexportFileName = `${cleanKey}${sourceExt}`;
           }
-          
+
           const reexportFilePath = path.join(linkPackageDir, reexportFileName);
-          
+
           // Create directory for the re-export file if needed
           const reexportDir = path.dirname(reexportFilePath);
           if (reexportDir !== linkPackageDir) {
             await fs.mkdir(reexportDir, { recursive: true });
             // Track all parent directories
             let currentDir = path.relative(linkPackageDir, reexportDir);
-            while (currentDir && currentDir !== '.') {
+            while (currentDir && currentDir !== ".") {
               reexportDirs.add(currentDir);
               currentDir = path.dirname(currentDir);
-              if (currentDir === '.') break;
+              if (currentDir === ".") break;
             }
           }
-          
+
           // Create the re-export content
-          const importPath = exportKey === "." 
-            ? projectPackageJson.name 
-            : `${projectPackageJson.name}/${exportKey.slice(2)}`;
-          
+          const importPath =
+            exportKey === "."
+              ? projectPackageJson.name
+              : `${projectPackageJson.name}/${exportKey.slice(2)}`;
+
           const reexportContent = `export * from "${importPath}";\n`;
-          
+
           // Write the re-export file
           await fs.writeFile(reexportFilePath, reexportContent);
-          
+
           // Track the file for gitignore
           reexportFiles.push(reexportFileName);
-          
+
           // Add to link package exports
           linkExports[exportKey] = `./${reexportFileName}`;
         }
@@ -121,33 +124,6 @@ export async function createLinkPackages({
       await fs.writeFile(
         path.join(linkPackageDir, "package.json"),
         JSON.stringify(linkPackageJson, null, 2),
-      );
-
-      // Create .gitignore file with specific files
-      const gitignoreLines = [
-        "# Ignore all files",
-        "*",
-        "# Unignore the following files",
-        "!.gitignore",
-        "!package.json",
-      ];
-      
-      // Add directories first (sorted)
-      const sortedDirs = Array.from(reexportDirs).sort();
-      for (const dir of sortedDirs) {
-        gitignoreLines.push(`!${dir}/`);
-      }
-      
-      // Add each re-export file to gitignore
-      for (const file of reexportFiles) {
-        gitignoreLines.push(`!${file}`);
-      }
-      
-      const gitignoreContent = gitignoreLines.join("\n") + "\n";
-      
-      await fs.writeFile(
-        path.join(linkPackageDir, ".gitignore"),
-        gitignoreContent,
       );
 
       console.log(

@@ -150,6 +150,19 @@ smartbundle-monorepo-link
 pnpm install
 ```
 
+### Automatic Setup with Preinstall
+
+Add to your root `package.json`:
+```json
+{
+  "scripts": {
+    "preinstall": "smartbundle-monorepo-link"
+  }
+}
+```
+
+This ensures link packages exist before dependency installation.
+
 ### Building for Production
 
 ```bash
@@ -270,6 +283,7 @@ Creates and updates link packages for all `-sbsources` packages.
 - After creating new packages with the suffix
 - After cloning the repository
 - When you see import errors
+- In your root `package.json` preinstall script for automatic setup
 
 ## Troubleshooting
 

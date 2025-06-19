@@ -399,8 +399,6 @@ describe("e2e", () => {
 
          BUNDLE  ./test.js 
 
-        Writing bundle output to: ./test.bundle.js
-        Done writing bundle output
         cjs root default import: root/default
         cjs root named import: root/named
         cjs subroute default import: subroute/default

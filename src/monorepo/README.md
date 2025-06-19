@@ -232,3 +232,26 @@ import { hello } from "@company/my-lib";  // Works in dev & prod
 ### Build fails with "module not found"
 - Check that dependencies use the non-suffixed names
 - Verify link packages were created in dist/ directories
+
+### Cannot install SmartBundle due to renamed packages
+If you've already renamed your packages to use `-sbsources` suffix but haven't created link packages yet, you may encounter a catch-22 where `pnpm install` fails because the non-suffixed packages don't exist. To resolve this:
+
+1. Install SmartBundle globally:
+   ```bash
+   pnpm add -g smartbundle
+   ```
+
+2. Create the link packages:
+   ```bash
+   smartbundle-monorepo-link
+   ```
+
+3. Now install dependencies locally:
+   ```bash
+   pnpm install
+   ```
+
+4. (Optional) Uninstall the global version and use the local one:
+   ```bash
+   pnpm remove -g smartbundle
+   ```

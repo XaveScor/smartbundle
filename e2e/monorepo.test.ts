@@ -26,30 +26,24 @@ describe("monorepo e2e", () => {
   });
 
   describe("pnpm", () => {
-    test(
-      "typescript-types",
-      async () => {
-        const testDirPath = path.resolve(
-          import.meta.dirname,
-          "monorepo",
-          "pnpm",
-          "typescript-types",
-        );
+    test("typescript-types", { timeout: 60000 }, async () => {
+      const testDirPath = path.resolve(
+        import.meta.dirname,
+        "monorepo",
+        "pnpm",
+        "typescript-types",
+      );
 
-        const dockerHash = buildBaseImage(testDirPath);
+      const dockerHash = buildBaseImage(testDirPath);
 
-        const result = $.sync`docker run -v ${smartbundleDir}:/smartbundle ${dockerHash}`;
+      const result = $.sync`docker run -v ${smartbundleDir}:/smartbundle ${dockerHash}`;
 
-        expect(result.exitCode).toBe(0);
-        expect(removePnpmUnstableLog(result.text())).toMatchInlineSnapshot(`
+      expect(result.exitCode).toBe(0);
+      expect(removePnpmUnstableLog(result.text())).toMatchInlineSnapshot(`
           "
 
           "
         `);
-      },
-      {
-        timeout: 60000,
-      },
-    );
+    });
   });
 });

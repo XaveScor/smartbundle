@@ -9,6 +9,7 @@ import { buildTypesTask } from "./tasks/buildTypesTask/buildTypesTask.js";
 import { BuildError } from "./error.js";
 import { jsFilesTask } from "./tasks/jsFilesTask.js";
 import { binsTask } from "./tasks/binsTask.js";
+import { gitignoreTask } from "./tasks/gitignoreTask.js";
 import { detectModules } from "./detectModules.js";
 import { disableLog, lineLog, log } from "./log.js";
 import { runSettled } from "./pipeline.js";
@@ -159,6 +160,10 @@ export async function run(args: Args): Promise<RunResult> {
   await writePackageJson(outDir, packageJson, {
     exportsMap,
     binsMap,
+  });
+
+  await gitignoreTask({
+    dirs,
   });
 
   lineLog();

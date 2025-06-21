@@ -176,6 +176,21 @@ import { hello } from "@company/my-lib";  // Works in dev & prod
 - Dependencies with `-sbsources` suffix (automatically renamed)
 - Packages without explicit exports
 
+## Version Control Strategy
+
+### Committing Link Packages
+
+You should commit the `dist/` folders containing link packages to version control. SmartBundle automatically manages this for you:
+
+1. **Link packages** (package.json, re-export files) - Should be committed
+2. **Bundled output** - Automatically excluded from version control
+
+When you run `smartbundle` to build your packages, it automatically creates `.gitignore` files in dist folders to prevent bundled output from being committed. This gives you:
+
+- Link packages in version control for better IDE support and developer experience
+- Bundled JavaScript/TypeScript output automatically ignored
+- No manual `.gitignore` configuration needed
+
 ## Benefits
 
 1. **Zero Configuration**: No complex build configs needed

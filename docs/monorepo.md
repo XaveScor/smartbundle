@@ -334,10 +334,12 @@ Regular packages work normally:
 
 ### Do I commit the dist folders?
 
-No. Add to `.gitignore`:
-```gitignore
-**/dist
-```
+Yes. Commit the `dist/` folders that contain linked packages.
+
+SmartBundle automatically manages version control for you:
+- The linked packages (package.json, re-export files) should be committed
+- When you run `smartbundle` to build, it automatically prevents bundled output from being committed by managing `.gitignore` files
+- You get linked packages in version control for better development experience, while bundled output stays ignored
 
 ### How do I migrate an existing monorepo?
 

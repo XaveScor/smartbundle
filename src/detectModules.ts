@@ -92,8 +92,10 @@ async function detectReact(
 async function detectTypescript(
   packageJson: PackageJson,
   dirs: Dirs,
+  monorepoType?: "pnpm" | null,
 ): Promise<TS | undefined> {
   const typescriptVersion = getMinVersion(packageJson, "typescript", []);
+  
   if (!typescriptVersion) {
     errorLog("typescript");
     return;
@@ -104,8 +106,22 @@ async function detectTypescript(
     // ts <=4.3 has no named exports. The all methods is located in the default export
     ts = (await import("typescript")).default;
   } catch {
-    errorLog("typescript");
-    return;
+    if (monorepoType === "pnpm") {
+      throw new Error(
+        "smartbundle found the .ts entrypoint but required \"typescript\" to build .d.ts files. " +
+        "Please install the \"typescript\" dependency. " +
+        "In pnpm workspaces, you may need to either:\n" +
+        "1. Add \"hoist-workspace-packages=true\" to your pnpm-workspace.yaml file (recommended), or\n" +
+        "2. Add \"public-hoist-pattern[]=[\\\"typescript\\\"]\" to your pnpm-workspace.yaml file, or\n" +
+        "3. Add \"typescript\" as a devDependency in each package's package.json\n" +
+        "See https://pnpm.io/settings#dependency-hoisting-settings for more details."
+      );
+    } else {
+      throw new Error(
+        "smartbundle found the .ts entrypoint but required \"typescript\" to build .d.ts files. " +
+        "Please install the \"typescript\" dependency."
+      );
+    }
   }
 
   okLog("typescript, version:", ts.version);
@@ -159,6 +175,7 @@ async function detectTypescript(
 export async function detectModules(
   packageJson: PackageJson,
   dirs: Dirs,
+  monorepoType?: "pnpm" | null,
 ): Promise<
   | { error: false; modules: DetectedModules }
   | { error: true; errors: Array<string> }
@@ -167,7 +184,7 @@ export async function detectModules(
     const result: DetectedModules = {};
     log("Detecting modules");
 
-    result.ts = await detectTypescript(packageJson, dirs);
+    result.ts = await detectTypescript(packageJson, dirs, monorepoType);
     result.babel = await detectBabel(packageJson);
     result.react = await detectReact(packageJson);
 

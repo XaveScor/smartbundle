@@ -1,0 +1,14 @@
+{
+  "name": "@test/utils-sbsources",
+  "version": "1.0.0",
+  "description": "Utility functions for testing",
+  "type": "module",
+  "private": true,
+  "exports": {
+    ".": "./src/index.ts",
+    "./math": "./src/math.ts"
+  },
+  "scripts": {
+    "test-import": "node dist/index.mjs"
+  }
+}

@@ -47,4 +47,7 @@ type ConvertUndefinedToOptional<T> = {
 
 export type Args = ConvertUndefinedToOptional<
   Omit<OmitUnknown<typeof args>, "_" | "$0">
->;
+> & {
+  monorepoDevDeps?: Record<string, string>; // Record<depName, depVersion>. It is usefull for monorepo. We can provide monorepo deps into each package
+  monorepoType?: "pnpm" | null; // Type of monorepo detected (pnpm, yarn, lerna, etc.)
+};

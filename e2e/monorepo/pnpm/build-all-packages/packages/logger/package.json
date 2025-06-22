@@ -1,0 +1,13 @@
+{
+  "name": "@test/logger-sbsources",
+  "version": "1.0.0",
+  "description": "Logger utility for testing",
+  "type": "module",
+  "private": true,
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "test-import": "node dist/index.mjs"
+  }
+}

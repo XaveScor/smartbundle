@@ -3,7 +3,7 @@ import { run } from "./index.js";
 import { $ } from "zx";
 import { test } from "vitest-directory-snapshot";
 import { disableLog } from "./log.js";
-import { errors } from "./errors";
+import { errors } from "./errors.js";
 
 disableLog();
 
@@ -14,6 +14,7 @@ describe("build", () => {
       sourceDir: "./src/fixtures/simple-build",
     });
 
+    console.log(res);
     expect(res.error).toBeFalsy();
     expect(tmpDir).toMatchDirSnapshot();
   });

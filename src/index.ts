@@ -41,8 +41,8 @@ export async function defineViteConfig(args: Args = {}) {
     throw new Error("Failed to parse package.json");
   }
 
-  const modulesResult = await detectModules(packageJson, dirs);
-  if (modulesResult.error) {
+  const modulesResult = await detectModules(packageJson, dirs, args.monorepo);
+  if (!modulesResult.success) {
     return { error: true, errors: modulesResult.errors };
   }
   const { modules } = modulesResult;
@@ -71,14 +71,14 @@ export async function run(args: Args): Promise<RunResult> {
 
   await rm(outDir, { recursive: true, force: true });
   await mkdir(outDir, { recursive: true });
-  const packageJson = await parsePackageJson({ sourceDir, packagePath });
+  let packageJson = await parsePackageJson({ sourceDir, packagePath });
 
   if (Array.isArray(packageJson)) {
     return { error: true, errors: packageJson };
   }
 
-  const modulesResult = await detectModules(packageJson, dirs);
-  if (modulesResult.error) {
+  const modulesResult = await detectModules(packageJson, dirs, args.monorepo);
+  if (!modulesResult.success) {
     return { error: true, errors: modulesResult.errors };
   }
   const { modules } = modulesResult;

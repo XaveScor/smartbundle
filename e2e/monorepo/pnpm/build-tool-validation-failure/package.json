@@ -1,0 +1,7 @@
+{
+  "name": "build-tool-validation-failure-monorepo",  
+  "version": "1.0.0",
+  "description": "Test monorepo for build tool validation failure",
+  "type": "module",
+  "private": true
+}

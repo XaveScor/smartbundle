@@ -63,3 +63,5 @@ The main build function orchestrates a pipeline of tasks:
 - `vitest.config.ts` - Uses the same Vite config as the library for consistency
 - `tsconfig.json` - TypeScript configuration
 - `buildTsconfig.json` - Separate config for building type definitions
+
+Read all the md files before doing anything

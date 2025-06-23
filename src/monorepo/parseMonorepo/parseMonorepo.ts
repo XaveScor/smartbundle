@@ -2,12 +2,14 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { parse as parseYaml } from "yaml";
 import { glob } from "glob";
+import type { Monorepo } from "../../args.js";
 
 type ParseMonorepoArgs = {
   sourceDir: string;
 };
 
 type DetectMonorepoTypeResult = {
+  monorepo: Monorepo | null;
   projectPaths: Array<string>; // list of relative `smartbundle-bundled` project paths
 };
 
@@ -23,13 +25,27 @@ export async function detectMonorepoType(
 
   if (!isPnpmMonorepo) {
     // Not a supported monorepo type (only pnpm is supported)
-    return { projectPaths: [] };
+    return { monorepo: null, projectPaths: [] };
   }
 
   // Find all SmartBundle-bundled projects (packages with names ending in -sbsources)
   const projectPaths = await findSmartBundleBundledProjects(sourceDir);
+  const devDeps = await readDevDeps(sourceDir);
 
-  return { projectPaths };
+  return {
+    monorepo: {
+      type: "pnpm",
+      devDeps,
+    },
+    projectPaths,
+  };
+}
+
+async function readDevDeps(sourceDir: string): Promise<Record<string, string>> {
+  const packageJsonPath = path.join(sourceDir, "package.json");
+  const content = await fs.readFile(packageJsonPath, "utf-8");
+  const packageJson = JSON.parse(content);
+  return packageJson.devDependencies ?? {};
 }
 
 /**
@@ -154,3 +170,5 @@ export async function parseMonorepo({
 }: ParseMonorepoArgs): Promise<DetectMonorepoTypeResult> {
   return await detectMonorepoType(sourceDir);
 }
+
+export type { DetectMonorepoTypeResult };

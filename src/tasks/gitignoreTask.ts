@@ -14,4 +14,8 @@ export async function gitignoreTask({ dirs }: GitignoreTaskArg) {
 
   const gitignorePath = path.join(outDir, ".gitignore");
   await fs.writeFile(gitignorePath, gitignoreContent);
+
+  // We need to have empty .npmignore to avoid reading .gitignore in pnpm publishing
+  const npmignorePath = path.join(outDir, ".npmignore");
+  await fs.writeFile(npmignorePath, "");
 }

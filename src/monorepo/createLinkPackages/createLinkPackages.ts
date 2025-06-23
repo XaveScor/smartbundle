@@ -15,7 +15,7 @@ export async function createLinkPackages({
   sourceDir,
 }: CreateLinkPackagesArgs) {
   // Find all SmartBundle-bundled projects in the monorepo
-  const { projectPaths } = await parseMonorepo({ sourceDir });
+  const { isMonorepo, projectPaths } = await parseMonorepo({ sourceDir });
 
   if (projectPaths.length === 0) {
     console.log("No SmartBundle-bundled projects found in the monorepo");

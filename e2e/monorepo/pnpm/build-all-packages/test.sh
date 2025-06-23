@@ -8,25 +8,27 @@ npm install -g /smartbundle
 cd /app
 
 smartbundle-monorepo-link
+npm uninstall -g smartbundle
+
 pnpm install
-smartbundle
+pnpm build
 
 # Check that both packages were built
 echo "Checking utils package build..."
-if [ ! -f "packages/utils-sbsources/dist/index.mjs" ]; then
+if [ ! -f "packages/utils/dist/index.mjs" ]; then
   echo "ERROR: utils package was not built"
   exit 1
 fi
 
 echo "Checking logger package build..."
-if [ ! -f "packages/logger-sbsources/dist/index.mjs" ]; then
+if [ ! -f "packages/logger/dist/index.mjs" ]; then
   echo "ERROR: logger package was not built"
   exit 1
 fi
 
 # Test that the built packages work
 echo "Testing utils package..."
-cd packages/utils-sbsources
+cd packages/utils
 node -e "
 import { MESSAGE, greet, add } from './dist/index.mjs';
 console.log('utils:', MESSAGE);
@@ -35,7 +37,7 @@ console.log('add:', add(2, 3));
 "
 
 echo "Testing logger package..."
-cd ../logger-sbsources
+cd ../logger
 node -e "
 import { log, error, VERSION } from './dist/index.mjs';
 log('Test message');

@@ -1,0 +1,13 @@
+{
+  "name": "@test/validation-failure-sbsources",
+  "version": "1.0.0",
+  "description": "Test package with TypeScript in package.json (should fail)",
+  "type": "module",
+  "private": true,
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  }
+}

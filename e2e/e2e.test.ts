@@ -380,4 +380,37 @@ describe("e2e", () => {
       `);
     });
   });
+
+  test("gitignore", async () => {
+    const gitignoreTestLibDir = await fs.mkdtemp(
+      path.join(tmpdir(), "smartbundle-gitignore-test-lib"),
+    );
+    await run({
+      sourceDir: path.resolve(import.meta.dirname, "gitignore"),
+      outputDir: gitignoreTestLibDir,
+    });
+
+    const testDirPath = path.resolve(import.meta.dirname, "gitignore");
+    const dockerHash = buildBaseImage(testDirPath);
+
+    expect(
+      $.sync`docker run -v ${gitignoreTestLibDir}:/test-lib ${dockerHash}`.text(),
+    ).toMatchInlineSnapshot(`
+        "=== Gitignore Plugin E2E Test ===
+        Phase 1: Verifying built files
+        ✓ .gitignore contains '*'
+        ✓ .npmignore is empty
+        Phase 2: Testing git behavior
+        ✓ Git ignores all files
+        Phase 3: Testing pnpm pack
+        ✓ pnpm pack created tarball
+        Phase 4: Comparing files
+        ✓ Essential files verified
+        === All tests passed! ===
+        ✓ .gitignore ignores all files from git
+        ✓ .npmignore allows all files for npm packaging
+        ✓ Tarball matches built files exactly
+        "
+      `);
+  });
 });

@@ -5,14 +5,14 @@ import {
   inlineExtensionsCjs,
 } from "./inlineExtensions.js";
 import { type PackageJson } from "../../packageJson.js";
-import { getMinVersion, type TS } from "../../detectModules.js";
+import { getMinVersion, type TSModule } from "../../detectModules.js";
 import { BuildError } from "../../error.js";
 import { findTypingsPackages } from "./findTypingsPackages.js";
 import { findTypingsNames } from "./findTypingsNames.js";
 import { type Dirs } from "../../resolveDirs.js";
 
 type BuildTypesOptions = {
-  ts: TS;
+  ts: TSModule;
   dirs: Dirs;
   packageJson: PackageJson;
   tsEntrypoints: string[];

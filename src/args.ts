@@ -54,4 +54,5 @@ export type Args = ConvertUndefinedToOptional<
   Omit<OmitUnknown<typeof args>, "_" | "$0">
 > & {
   monorepo?: Monorepo;
+  skipGitignore?: boolean;
 };

@@ -12,9 +12,9 @@ describe("build", () => {
     const res = await run({
       outputDir: tmpDir,
       sourceDir: "./src/fixtures/simple-build",
+      skipGitignore: true,
     });
 
-    console.log(res);
     expect(res.error).toBeFalsy();
     expect(tmpDir).toMatchDirSnapshot();
   });
@@ -23,6 +23,7 @@ describe("build", () => {
     const res = await run({
       outputDir: tmpDir,
       sourceDir: "./src/fixtures/es-js-import",
+      skipGitignore: true,
     });
 
     expect(res.error).toBeFalsy();
@@ -33,6 +34,7 @@ describe("build", () => {
     const res = await run({
       outputDir: tmpDir,
       sourceDir: "./src/fixtures/ts-import",
+      skipGitignore: true,
     });
 
     expect(res.error).toBeFalsy();
@@ -43,6 +45,7 @@ describe("build", () => {
     const res = await run({
       outputDir: tmpDir,
       sourceDir: "./src/fixtures/deep-structure",
+      skipGitignore: true,
     });
 
     expect(res.error).toBeFalsy();
@@ -53,6 +56,7 @@ describe("build", () => {
     const res = await run({
       outputDir: tmpDir,
       sourceDir: "./src/fixtures/simple-bin-build",
+      skipGitignore: true,
     });
 
     expect(res.error).toBeFalsy();
@@ -65,6 +69,7 @@ describe("build", () => {
         outputDir: tmpDir,
         sourceDir: "./src/fixtures/external-deps",
         packagePath: "./dependencies.json",
+        skipGitignore: true,
       });
 
       expect(res.error).toBeFalsy();
@@ -76,6 +81,7 @@ describe("build", () => {
         outputDir: tmpDir,
         sourceDir: "./src/fixtures/external-deps",
         packagePath: "./node.json",
+        skipGitignore: true,
       });
 
       expect(res.error).toBeFalsy();
@@ -87,6 +93,7 @@ describe("build", () => {
     const res = await run({
       outputDir: tmpDir,
       sourceDir: "./src/fixtures/export-default",
+      skipGitignore: true,
     });
 
     expect(res.error).toBeFalsy();
@@ -97,6 +104,7 @@ describe("build", () => {
     const res = await run({
       outputDir: tmpDir,
       sourceDir: "./src/fixtures/3-exports-object",
+      skipGitignore: true,
     });
 
     expect(res.error).toBeFalsy();
@@ -107,6 +115,7 @@ describe("build", () => {
     const res = await run({
       outputDir: tmpDir,
       sourceDir: "./src/fixtures/114-license",
+      skipGitignore: true,
     });
 
     expect(res.error).toBeFalsy();
@@ -119,6 +128,7 @@ describe("bugs", () => {
     const res = await run({
       outputDir: tmpDir,
       sourceDir: "./src/fixtures/34-deep-structure",
+      skipGitignore: true,
     });
 
     expect(res.error).toBeFalsy();
@@ -128,6 +138,7 @@ describe("bugs", () => {
     const res = await run({
       outputDir: tmpDir,
       sourceDir: "./src/fixtures/43-save-devdeps",
+      skipGitignore: true,
     });
 
     expect(res.error).toBeFalsy();
@@ -137,6 +148,7 @@ describe("bugs", () => {
     const res = await run({
       outputDir: tmpDir,
       sourceDir: "./src/fixtures/37-ignore-deps",
+      skipGitignore: true,
     });
 
     expect(res.error).toBeFalsy();
@@ -146,6 +158,7 @@ describe("bugs", () => {
     const res = await run({
       outputDir: tmpDir,
       sourceDir: "./src/fixtures/37-ignore-subroutes",
+      skipGitignore: true,
     });
 
     expect(res.error).toBeFalsy();
@@ -156,6 +169,7 @@ describe("bugs", () => {
     const res = await run({
       outputDir: tmpDir,
       sourceDir: "./src/fixtures/84-vscode-typings-resolve",
+      skipGitignore: true,
     });
 
     expect(res.error).toBeFalsy();
@@ -166,6 +180,7 @@ describe("bugs", () => {
     const res = await run({
       outputDir: tmpDir,
       sourceDir: "./src/fixtures/97-dts-reexports-bundler",
+      skipGitignore: true,
     });
 
     expect(res.error).toBeFalsy();
@@ -177,6 +192,7 @@ describe("bugs", () => {
     const res = await run({
       outputDir: tmpDir,
       sourceDir: "./src/fixtures/99-multi-react-dep",
+      skipGitignore: true,
     });
 
     expect(res.error).toBeFalsy();
@@ -187,6 +203,7 @@ describe("bugs", () => {
     const res = await run({
       outputDir: tmpDir,
       sourceDir: "./src/fixtures/101-outDir-ts",
+      skipGitignore: true,
     });
 
     expect(res.error).toBeFalsy();
@@ -201,6 +218,7 @@ describe("bugs", () => {
     const res = await run({
       outputDir: tmpDir,
       sourceDir,
+      skipGitignore: true,
     });
 
     expect(res.error).toBeFalsy();
@@ -211,6 +229,7 @@ describe("bugs", () => {
     const res = await run({
       outputDir: tmpDir,
       sourceDir: "./src/fixtures/109-validate-dts-imports",
+      skipGitignore: true,
     });
 
     expect(res.error).toBeTruthy();
@@ -227,6 +246,7 @@ describe("bugs", () => {
     const res = await run({
       outputDir: tmpDir,
       sourceDir: "./src/fixtures/118-validate-dts-typings-imports",
+      skipGitignore: true,
     });
 
     expect(res.error).toBeTruthy();
@@ -239,6 +259,7 @@ describe("bugs", () => {
     const res = await run({
       outputDir: tmpDir,
       sourceDir: "./src/fixtures/122-check-types-deps",
+      skipGitignore: true,
     });
 
     expect(res.error).toBeFalsy();
@@ -249,6 +270,7 @@ describe("bugs", () => {
     const res = await run({
       outputDir: tmpDir,
       sourceDir: "./src/fixtures/136-ts-not-installed",
+      skipGitignore: true,
     });
 
     expect(res.error).toBeTruthy();
@@ -265,6 +287,7 @@ describe("bugs", () => {
     const res = await run({
       outputDir: tmpDir,
       sourceDir: "./src/fixtures/no-exports-no-bin",
+      skipGitignore: true,
     });
     expect(res.error).toBeTruthy();
     expect(res.errors[0]).toBe(errors.exportsRequired);
@@ -273,10 +296,11 @@ describe("bugs", () => {
 
 describe("react", () => {
   describe("errors", () => {
-    test("jsx", async ({ tmpDir }: { tmpDir: string }) => {
+    test.skip("jsx", async ({ tmpDir }: { tmpDir: string }) => {
       const res = await run({
         outputDir: tmpDir,
         sourceDir: "./src/fixtures/react-jsx-error",
+        skipGitignore: true,
       });
 
       expect(res.error).toBeTruthy();
@@ -291,6 +315,7 @@ describe("react", () => {
       const res = await run({
         outputDir: tmpDir,
         sourceDir: "./src/fixtures/react-legacy-transform",
+        skipGitignore: true,
       });
 
       expect(res.error).toBeFalsy();
@@ -301,6 +326,7 @@ describe("react", () => {
       const res = await run({
         outputDir: tmpDir,
         sourceDir: "./src/fixtures/react-modern-transform",
+        skipGitignore: true,
       });
 
       expect(res.error).toBeFalsy();

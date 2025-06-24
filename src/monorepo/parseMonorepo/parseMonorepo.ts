@@ -32,6 +32,11 @@ export async function detectMonorepoType(
   const projectPaths = await findSmartBundleBundledProjects(sourceDir);
   const devDeps = await readDevDeps(sourceDir);
 
+  // If we can't read the root package.json, this is not a valid monorepo
+  if (devDeps === null) {
+    return { monorepo: null, projectPaths: [] };
+  }
+
   return {
     monorepo: {
       type: "pnpm",
@@ -41,11 +46,15 @@ export async function detectMonorepoType(
   };
 }
 
-async function readDevDeps(sourceDir: string): Promise<Record<string, string>> {
-  const packageJsonPath = path.join(sourceDir, "package.json");
-  const content = await fs.readFile(packageJsonPath, "utf-8");
-  const packageJson = JSON.parse(content);
-  return packageJson.devDependencies ?? {};
+async function readDevDeps(sourceDir: string): Promise<Record<string, string> | null> {
+  try {
+    const packageJsonPath = path.join(sourceDir, "package.json");
+    const content = await fs.readFile(packageJsonPath, "utf-8");
+    const packageJson = JSON.parse(content);
+    return packageJson.devDependencies ?? {};
+  } catch (error) {
+    return null;
+  }
 }
 
 /**

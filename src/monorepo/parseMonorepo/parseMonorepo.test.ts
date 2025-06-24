@@ -15,7 +15,10 @@ describe("parseMonorepo", () => {
       });
 
       // Should find the package1-sbsources package but not the regular-package
-      expect(result.monorepoType).toBe("pnpm");
+      expect(result.monorepo).toEqual({
+        type: "pnpm",
+        devDeps: { "typescript": "^5.0.0" }
+      });
       expect(result.projectPaths).toHaveLength(1);
       expect(result.projectPaths[0]).toBe("packages/package1-sbsources");
       expect(result.projectPaths.some(p => p === "packages/regular-package")).toBe(false);
@@ -31,7 +34,10 @@ describe("parseMonorepo", () => {
       });
 
       // Should find all packages with names ending in -sbsources from all globs
-      expect(result.monorepoType).toBe("pnpm");
+      expect(result.monorepo).toEqual({
+        type: "pnpm",
+        devDeps: {}
+      });
       expect(result.projectPaths).toHaveLength(3);
 
       // Check that packages from each glob are found
@@ -52,7 +58,7 @@ describe("parseMonorepo", () => {
         sourceDir: nonMonorepoDir,
       });
 
-      expect(result.monorepoType).toBe(null);
+      expect(result.monorepo).toBe(null);
       expect(result.projectPaths).toEqual([]);
     });
   });
@@ -65,7 +71,10 @@ describe("parseMonorepo", () => {
         sourceDir: invalidConfigDir,
       });
 
-      expect(result.monorepoType).toBe("pnpm");
+      expect(result.monorepo).toEqual({
+        type: "pnpm",
+        devDeps: {}
+      });
       expect(result.projectPaths).toEqual([]);
     });
   });
@@ -78,7 +87,10 @@ describe("parseMonorepo", () => {
         sourceDir: missingPackageJsonDir,
       });
 
-      expect(result.monorepoType).toBe("pnpm");
+      expect(result.monorepo).toEqual({
+        type: "pnpm",
+        devDeps: {}
+      });
       expect(result.projectPaths).toEqual([]);
     });
   });
@@ -91,7 +103,10 @@ describe("parseMonorepo", () => {
         sourceDir: malformedPackageJsonDir,
       });
 
-      expect(result.monorepoType).toBe("pnpm");
+      expect(result.monorepo).toEqual({
+        type: "pnpm",
+        devDeps: {}
+      });
       expect(result.projectPaths).toEqual([]);
     });
   });
@@ -105,7 +120,10 @@ describe("parseMonorepo", () => {
       });
 
       // Should NOT find the mixed-case-SBSources package because the check is now case-sensitive
-      expect(result.monorepoType).toBe("pnpm");
+      expect(result.monorepo).toEqual({
+        type: "pnpm",
+        devDeps: {}
+      });
       expect(result.projectPaths).toHaveLength(0);
     });
   });
@@ -119,7 +137,10 @@ describe("parseMonorepo", () => {
       });
 
       // Should find the my-app package
-      expect(result.monorepoType).toBe("pnpm");
+      expect(result.monorepo).toEqual({
+        type: "pnpm",
+        devDeps: {}
+      });
       expect(result.projectPaths).toHaveLength(1);
       expect(result.projectPaths[0]).toBe("my-app");
     });
@@ -134,10 +155,27 @@ describe("parseMonorepo", () => {
       });
 
       // Should find the included package but not the excluded test package
-      expect(result.monorepoType).toBe("pnpm");
+      expect(result.monorepo).toEqual({
+        type: "pnpm",
+        devDeps: {}
+      });
       expect(result.projectPaths).toHaveLength(1);
       expect(result.projectPaths[0]).toBe("packages/included-package-sbsources");
       expect(result.projectPaths.some(p => p === "packages/regular-package/test/test-package-sbsources")).toBe(false);
+    });
+  });
+
+  describe("Missing root package.json", () => {
+    test("returns null for monorepo missing root package.json", async () => {
+      const missingRootPackageJsonDir = path.join(FIXTURES_DIR, "missing-root-package-json");
+
+      const result = await parseMonorepo({
+        sourceDir: missingRootPackageJsonDir,
+      });
+
+      // Should return null monorepo because root package.json is missing
+      expect(result.monorepo).toBe(null);
+      expect(result.projectPaths).toEqual([]);
     });
   });
 });

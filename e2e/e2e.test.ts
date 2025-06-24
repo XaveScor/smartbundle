@@ -17,6 +17,7 @@ describe("e2e", () => {
     await run({
       sourceDir: path.resolve(import.meta.dirname, "test-lib"),
       outputDir: testLibDir,
+      skipGitignore: true,
     });
   });
 

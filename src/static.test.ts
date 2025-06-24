@@ -9,6 +9,7 @@ describe("static files", () => {
     const res = await run({
       outputDir: tmpDir,
       sourceDir: "./src/fixtures/readme-md-copied",
+      skipGitignore: true,
     });
 
     expect(res.error).toBeFalsy();

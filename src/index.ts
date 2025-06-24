@@ -162,9 +162,11 @@ export async function run(args: Args): Promise<RunResult> {
     binsMap,
   });
 
-  await gitignoreTask({
-    dirs,
-  });
+  if (!args.skipGitignore) {
+    await gitignoreTask({
+      dirs,
+    });
+  }
 
   lineLog();
   log(`Build finished: ./${relative(sourceDir, outDir)}`);

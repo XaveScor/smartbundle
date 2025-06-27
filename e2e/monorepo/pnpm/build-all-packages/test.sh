@@ -3,14 +3,14 @@ set -e
 
 cd /smartbundle
 npm install --silent --production
-npm install -g /smartbundle
+npm install --silent -g /smartbundle
 
 cd /app
 
-smartbundle-monorepo-link
-npm uninstall -g smartbundle
+smartbundle-monorepo-link > /dev/null 2>&1
+npm uninstall --silent -g smartbundle
 
-pnpm install
+pnpm install > /dev/null 2>&1
 pnpm build
 
 # Check that both packages were built

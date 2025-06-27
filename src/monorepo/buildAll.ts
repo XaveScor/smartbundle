@@ -51,7 +51,7 @@ export async function buildMonorepo(args: Args): Promise<MonorepoBuildResult> {
       ...args,
       sourceDir: packageSourceDir,
       packagePath: join(packageSourceDir, "package.json"),
-      outputDir: join(packageSourceDir, "dist"),
+      outputDir: join(packageSourceDir, "sb-dist"),
       monorepo,
     };
 

@@ -1,11 +1,11 @@
-FROM node:22.11.0-alpine3.20 as CJS
+FROM node:22.17.0-alpine3.21 as CJS
 
 WORKDIR /app
 COPY ./cjs/package.json ./package.json
 
 RUN npm install
 
-FROM node:22.11.0-alpine3.20
+FROM node:22.17.0-alpine3.21
 
 WORKDIR /app
 COPY ./cjs ./cjs

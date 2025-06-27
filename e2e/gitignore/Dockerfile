@@ -1,4 +1,4 @@
-FROM node:18.20.4-alpine3.20
+FROM node:22.17.0-alpine3.21
 
 # Install git and pnpm for gitignore testing
 RUN apk add --no-cache git

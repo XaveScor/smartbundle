@@ -51,7 +51,7 @@ npm install --save-dev smartbundle@latest
 ```bash
 npm run build
 ```
-4) Your built files (including an auto-generated package.json) will be in the ./dist folder
+4) Your built files (including an auto-generated package.json) will be in the ./sb-dist folder
 
 ## Features
 
@@ -68,14 +68,14 @@ npm run build
 Every bundled package is tested in real environments - from Node.js and Bun to Webpack and Metro - to ensure it just works.
 
 ### Runtimes
-| Runtime    | Version   | Supported | E2E Tests |
-|------------|-----------|:---------:|:---------:|
-| Node.js    | ^18.0.0   | ✔        | ✔        |
-|            | ^20.0.0   | ✔        | ✔        |
-|            | ^22.0.0   | ✔        | ✔        |
-|            | ^23.0.0   | ✔        | ✔        |
-| Bun        | ^1.0.0    | ✔        | ✔        |
-| Deno       | ^2.0.0    | ✔        | -        |
+| Runtime    | Version | Supported | E2E Tests |
+|------------|---------|:---------:|:---------:|
+| Node.js    | ^18.0.0 | ✔        | ✔        |
+|            | ^20.0.0 | ✔        | ✔        |
+|            | ^22.0.0 | ✔        | ✔        |
+|            | ^24.0.0 | ✔        | ✔        |
+| Bun        | ^1.0.0  | ✔        | ✔        |
+| Deno       | ^2.0.0  | ✔        | -        |
 
 ### Bundlers
 | Bundler           | Version   | Supported | E2E Tests |

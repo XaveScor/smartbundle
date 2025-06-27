@@ -15,7 +15,7 @@ export async function createLinkPackages({
   sourceDir,
 }: CreateLinkPackagesArgs) {
   // Find all SmartBundle-bundled projects in the monorepo
-  const { isMonorepo, projectPaths } = await parseMonorepo({ sourceDir });
+  const { monorepo, projectPaths } = await parseMonorepo({ sourceDir });
 
   if (projectPaths.length === 0) {
     console.log("No SmartBundle-bundled projects found in the monorepo");
@@ -46,7 +46,7 @@ export async function createLinkPackages({
         /-sbsources$/,
         "",
       );
-      const linkPackageDir = path.join(sourceDir, projectPath, "dist");
+      const linkPackageDir = path.join(sourceDir, projectPath, "sb-dist");
 
       // Ensure the directory exists
       await fs.mkdir(linkPackageDir, { recursive: true });
@@ -110,6 +110,7 @@ export async function createLinkPackages({
       // Create a package.json for the link package
       const linkPackageJson = {
         name: linkPackageName,
+        private: true,
         version: projectPackageJson.version ?? "0.0.0",
         type: "module" as const,
         description: `Link package for ${projectPackageJson.name}`,

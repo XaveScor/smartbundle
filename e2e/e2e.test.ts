@@ -174,8 +174,8 @@ describe("e2e", () => {
       `);
     });
 
-    test("v23", async () => {
-      const testDirPath = path.resolve(import.meta.dirname, "node23");
+    test("v24", async () => {
+      const testDirPath = path.resolve(import.meta.dirname, "node24");
       const dockerHash = buildBaseImage(testDirPath);
 
       expect($.sync`docker run -v ${testLibDir}:/test-lib ${dockerHash}`.text())
@@ -208,12 +208,6 @@ describe("e2e", () => {
           esm only dynamic named import: onlyNamed/named
           esm only side effect import
           esm only dynamic side effect import
-          (node:8) ExperimentalWarning: CommonJS module /usr/local/lib/node_modules/npm/node_modules/debug/src/node.js is loading ES Module /usr/local/lib/node_modules/npm/node_modules/supports-color/index.js using require().
-          Support for loading ES Module in require() is an experimental feature and might change at any time
-          (Use \`node --trace-warnings ...\` to show where the warning was created)
-          (node:27) ExperimentalWarning: CommonJS module /usr/local/lib/node_modules/npm/node_modules/debug/src/node.js is loading ES Module /usr/local/lib/node_modules/npm/node_modules/supports-color/index.js using require().
-          Support for loading ES Module in require() is an experimental feature and might change at any time
-          (Use \`node --trace-warnings ...\` to show where the warning was created)
           "
         `);
     });

@@ -1,4 +1,4 @@
-FROM node:22.11.0-alpine
+FROM node:22.17.0-alpine3.21
 
 # Install pnpm
 RUN npm install -g pnpm@10.11.1

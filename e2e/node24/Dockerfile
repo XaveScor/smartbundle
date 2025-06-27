@@ -1,4 +1,4 @@
-FROM node:23.1.0-alpine3.20
+FROM node:24.3.0-alpine3.21
 
 WORKDIR /app
 COPY ./esm ./esm

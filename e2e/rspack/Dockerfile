@@ -1,18 +1,18 @@
-FROM node:22.11.0-alpine3.20 as ESM
+FROM node:22.17.0-alpine3.21 as ESM
 
 WORKDIR /app
 COPY ./esm/package.json ./package.json
 
 RUN npm install
 
-FROM node:22.11.0-alpine3.20 as CJS
+FROM node:22.17.0-alpine3.21 as CJS
 
 WORKDIR /app
 COPY ./cjs/package.json ./package.json
 
 RUN npm install
 
-FROM node:22.11.0-alpine3.20
+FROM node:22.17.0-alpine3.21
 
 WORKDIR /app
 COPY ./esm ./esm

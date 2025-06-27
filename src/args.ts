@@ -17,7 +17,7 @@ const argsSchema = yargs()
   .option("outputDir", {
     alias: "o",
     type: "string",
-    describe: "path to the output directory. Default: cwd()/dist",
+    describe: "path to the output directory. Default: cwd()/sb-dist",
   })
   // Do not cover this option in tests because it is unstable
   .option("seq", {

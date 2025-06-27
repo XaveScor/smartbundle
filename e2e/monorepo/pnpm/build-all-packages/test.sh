@@ -15,13 +15,13 @@ pnpm build
 
 # Check that both packages were built
 echo "Checking utils package build..."
-if [ ! -f "packages/utils/dist/index.mjs" ]; then
+if [ ! -f "packages/utils/sb-dist/index.mjs" ]; then
   echo "ERROR: utils package was not built"
   exit 1
 fi
 
 echo "Checking logger package build..."
-if [ ! -f "packages/logger/dist/index.mjs" ]; then
+if [ ! -f "packages/logger/sb-dist/index.mjs" ]; then
   echo "ERROR: logger package was not built"
   exit 1
 fi
@@ -30,7 +30,7 @@ fi
 echo "Testing utils package..."
 cd packages/utils
 node -e "
-import { MESSAGE, greet, add } from './dist/index.mjs';
+import { MESSAGE, greet, add } from './sb-dist/index.mjs';
 console.log('utils:', MESSAGE);
 console.log('greet:', greet('World'));
 console.log('add:', add(2, 3));
@@ -39,7 +39,7 @@ console.log('add:', add(2, 3));
 echo "Testing logger package..."
 cd ../logger
 node -e "
-import { log, error, VERSION } from './dist/index.mjs';
+import { log, error, VERSION } from './sb-dist/index.mjs';
 log('Test message');
 error('Test error');
 console.log('version:', VERSION);

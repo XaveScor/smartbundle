@@ -85,4 +85,30 @@ describe("createLinkPackages", () => {
     );
     expect(tmpDir).toMatchDirSnapshot();
   });
+
+  test("removes-existing-sb-dist", async ({ tmpDir }: { tmpDir: string }) => {
+    await fs.cp(
+      "./src/monorepo/createLinkPackages/__fixtures__/sb-dist-removal",
+      tmpDir,
+      { recursive: true },
+    );
+
+    const sbDistPath = `${tmpDir}/packages/my-package/sb-dist`;
+
+    // Verify the old files exist before running createLinkPackages
+    const filesBefore = await fs.readdir(sbDistPath);
+    expect(filesBefore).toContain("old-file.js");
+    expect(filesBefore).toContain("__compiled__");
+
+    await createLinkPackages({
+      sourceDir: tmpDir,
+    });
+
+    // Verify the old files were removed
+    const filesAfter = await fs.readdir(sbDistPath);
+    expect(filesAfter).not.toContain("old-file.js");
+    expect(filesAfter).not.toContain("__compiled__");
+
+    expect(tmpDir).toMatchDirSnapshot();
+  });
 });

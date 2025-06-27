@@ -48,7 +48,9 @@ export async function createLinkPackages({
       );
       const linkPackageDir = path.join(sourceDir, projectPath, "sb-dist");
 
-      // Ensure the directory exists
+      try {
+        await fs.rm(linkPackageDir, { recursive: true, force: true });
+      } catch (error) {}
       await fs.mkdir(linkPackageDir, { recursive: true });
 
       // Create re-export files for each export entry

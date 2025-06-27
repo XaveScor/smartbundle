@@ -144,5 +144,10 @@ const mainPkg = require('your-package');
 mainPkg.default();
 ```
 
-For additional TypeScript-related setup and best practices, please refer to our [TS Guide](./docs/ts-guide.md).
+For additional TypeScript-related setup and best practices, please refer to our [TS Guide](./ts-guide.md).
 
+## Related Documentation
+
+- [TypeScript Integration Guide](./ts-guide.md)
+- [React Integration Guide](./react.md)
+- [Monorepo Support Guide](./monorepo.md)

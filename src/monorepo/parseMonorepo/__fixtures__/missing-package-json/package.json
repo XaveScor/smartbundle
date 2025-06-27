@@ -1,0 +1,6 @@
+{
+  "name": "missing-package-json",
+  "version": "1.0.0",
+  "description": "Test monorepo with a package directory missing package.json",
+  "private": true
+}

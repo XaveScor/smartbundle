@@ -13,7 +13,8 @@ const errorJsxMessage =
 export function reactPlugin({ modules }: ReactPluginArg): Plugin {
   const pluginName = "smartbundle:react";
 
-  if (modules.react == null) {
+  const reactModule = modules.react;
+  if (reactModule == null) {
     return {
       name: pluginName,
       transform(code, id) {
@@ -48,7 +49,7 @@ export function reactPlugin({ modules }: ReactPluginArg): Plugin {
         id,
         {
           loader: isJs || isJsx ? "jsx" : "tsx",
-          jsx: modules.react === "legacy" ? "transform" : "automatic",
+          jsx: reactModule.transform === "legacy" ? "transform" : "automatic",
           sourcemap: true,
         },
         this.getCombinedSourcemap(),

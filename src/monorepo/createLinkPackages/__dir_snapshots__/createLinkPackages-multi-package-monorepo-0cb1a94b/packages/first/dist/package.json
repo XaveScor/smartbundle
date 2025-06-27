@@ -1,0 +1,12 @@
+{
+  "name": "first",
+  "version": "2.1.0",
+  "type": "module",
+  "description": "Link package for first-sbsources",
+  "exports": {
+    ".": "./index.js"
+  },
+  "devDependencies": {
+    "first-sbsources": "workspace:*"
+  }
+}

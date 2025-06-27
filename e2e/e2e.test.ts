@@ -1,36 +1,13 @@
 import * as path from "node:path";
 import * as fs from "node:fs/promises";
-import * as fss from "node:fs";
 import { tmpdir } from "node:os";
 import { describe, test, expect, beforeAll } from "vitest";
 import { $ } from "zx";
 import { run } from "../src/index.js";
-import { existsSync } from "node:fs";
 
 function buildBaseImage(path: string) {
   const dockerOutput = $.sync`docker build -q ${path} | sed 's/^.*://'`.text();
   return dockerOutput.trim();
-}
-
-// We need to copy the files only if they don't exist in the destination directory
-function copyDirectory(srcDir: string, destDir: string) {
-  fss.mkdirSync(destDir, { recursive: true });
-
-  for (const file of fss.readdirSync(srcDir)) {
-    const srcFile = path.join(srcDir, file);
-    const destFile = path.join(destDir, file);
-
-    if (fss.statSync(srcFile).isDirectory()) {
-      copyDirectory(srcFile, destFile);
-    } else if (!existsSync(destFile)) {
-      fss.copyFileSync(srcFile, destFile);
-    }
-  }
-}
-
-async function prepareTestDir(testDirPath: string) {
-  $.sync`git checkout -- ${testDirPath}`;
-  await copyDirectory(path.resolve(import.meta.dirname, "common"), testDirPath);
 }
 
 describe("e2e", () => {
@@ -40,12 +17,12 @@ describe("e2e", () => {
     await run({
       sourceDir: path.resolve(import.meta.dirname, "test-lib"),
       outputDir: testLibDir,
+      skipGitignore: true,
     });
   });
 
   test("bun", async () => {
     const testDirPath = path.resolve(import.meta.dirname, "bun");
-    await prepareTestDir(testDirPath);
     const dockerHash = buildBaseImage(testDirPath);
 
     expect($.sync`docker run -v ${testLibDir}:/test-lib ${dockerHash}`.text())
@@ -85,7 +62,6 @@ describe("e2e", () => {
   describe("node", () => {
     test("v18", async () => {
       const testDirPath = path.resolve(import.meta.dirname, "node18");
-      await prepareTestDir(testDirPath);
       const dockerHash = buildBaseImage(testDirPath);
 
       expect($.sync`docker run -v ${testLibDir}:/test-lib ${dockerHash}`.text())
@@ -124,7 +100,6 @@ describe("e2e", () => {
 
     test("v20", async () => {
       const testDirPath = path.resolve(import.meta.dirname, "node20");
-      await prepareTestDir(testDirPath);
       const dockerHash = buildBaseImage(testDirPath);
 
       expect($.sync`docker run -v ${testLibDir}:/test-lib ${dockerHash}`.text())
@@ -163,7 +138,6 @@ describe("e2e", () => {
 
     test("v22", async () => {
       const testDirPath = path.resolve(import.meta.dirname, "node22");
-      await prepareTestDir(testDirPath);
       const dockerHash = buildBaseImage(testDirPath);
 
       expect($.sync`docker run -v ${testLibDir}:/test-lib ${dockerHash}`.text())
@@ -202,7 +176,6 @@ describe("e2e", () => {
 
     test("v23", async () => {
       const testDirPath = path.resolve(import.meta.dirname, "node23");
-      await prepareTestDir(testDirPath);
       const dockerHash = buildBaseImage(testDirPath);
 
       expect($.sync`docker run -v ${testLibDir}:/test-lib ${dockerHash}`.text())
@@ -249,7 +222,6 @@ describe("e2e", () => {
   describe("webpack", () => {
     test("v4", async () => {
       const testDirPath = path.resolve(import.meta.dirname, "webpack4");
-      await prepareTestDir(testDirPath);
       const dockerHash = buildBaseImage(testDirPath);
 
       expect($.sync`docker run -v ${testLibDir}:/test-lib ${dockerHash}`.text())
@@ -291,7 +263,6 @@ describe("e2e", () => {
 
     test("v5", async () => {
       const testDirPath = path.resolve(import.meta.dirname, "webpack5");
-      await prepareTestDir(testDirPath);
       const dockerHash = buildBaseImage(testDirPath);
 
       expect($.sync`docker run -v ${testLibDir}:/test-lib ${dockerHash}`.text())
@@ -339,7 +310,6 @@ describe("e2e", () => {
 
   test("rspack", async () => {
     const testDirPath = path.resolve(import.meta.dirname, "rspack");
-    await prepareTestDir(testDirPath);
     const dockerHash = buildBaseImage(testDirPath);
 
     expect($.sync`docker run  -v ${testLibDir}:/test-lib ${dockerHash}`.text())
@@ -387,7 +357,6 @@ describe("e2e", () => {
   describe("metro", () => {
     test("v0.81", async () => {
       const testDirPath = path.resolve(import.meta.dirname, "metro0_81");
-      await prepareTestDir(testDirPath);
       const dockerHash = buildBaseImage(testDirPath);
 
       expect(
@@ -399,8 +368,6 @@ describe("e2e", () => {
 
          BUNDLE  ./test.js 
 
-        Writing bundle output to: ./test.bundle.js
-        Done writing bundle output
         cjs root default import: root/default
         cjs root named import: root/named
         cjs subroute default import: subroute/default
@@ -415,63 +382,36 @@ describe("e2e", () => {
     });
   });
 
-  describe("typescript", () => {
-    function linkTestLib(testDirPath: string, testLibPath: string) {
-      $.sync`pnpm link --silent --dir ${testDirPath} ${testLibPath}`;
-    }
-
-    function runTsCheck(testDirPath: string) {
-      return $.sync`pnpm run --silent --dir ${testDirPath} test-types`.text();
-    }
-
-    describe("moduleResolution", () => {
-      test("node10", () => {
-        const testDirPath = path.resolve(
-          import.meta.dirname,
-          "typescript",
-          "node10",
-        );
-
-        linkTestLib(testDirPath, testLibDir);
-
-        expect(runTsCheck(testDirPath)).toMatchInlineSnapshot(`""`);
-      });
-
-      test("bundler", () => {
-        const testDirPath = path.resolve(
-          import.meta.dirname,
-          "typescript",
-          "bundler",
-        );
-
-        linkTestLib(testDirPath, testLibDir);
-
-        expect(runTsCheck(testDirPath)).toMatchInlineSnapshot(`""`);
-      });
-
-      test("node16cjs", () => {
-        const testDirPath = path.resolve(
-          import.meta.dirname,
-          "typescript",
-          "node16cjs",
-        );
-
-        linkTestLib(testDirPath, testLibDir);
-
-        expect(runTsCheck(testDirPath)).toMatchInlineSnapshot(`""`);
-      });
-
-      test("node16es", () => {
-        const testDirPath = path.resolve(
-          import.meta.dirname,
-          "typescript",
-          "node16es",
-        );
-
-        linkTestLib(testDirPath, testLibDir);
-
-        expect(runTsCheck(testDirPath)).toMatchInlineSnapshot(`""`);
-      });
+  test("gitignore", async () => {
+    const gitignoreTestLibDir = await fs.mkdtemp(
+      path.join(tmpdir(), "smartbundle-gitignore-test-lib"),
+    );
+    await run({
+      sourceDir: path.resolve(import.meta.dirname, "gitignore"),
+      outputDir: gitignoreTestLibDir,
     });
+
+    const testDirPath = path.resolve(import.meta.dirname, "gitignore");
+    const dockerHash = buildBaseImage(testDirPath);
+
+    expect(
+      $.sync`docker run -v ${gitignoreTestLibDir}:/test-lib ${dockerHash}`.text(),
+    ).toMatchInlineSnapshot(`
+        "=== Gitignore Plugin E2E Test ===
+        Phase 1: Verifying built files
+        ✓ .gitignore contains '*'
+        ✓ .npmignore is empty
+        Phase 2: Testing git behavior
+        ✓ Git ignores all files
+        Phase 3: Testing pnpm pack
+        ✓ pnpm pack created tarball
+        Phase 4: Comparing files
+        ✓ Essential files verified
+        === All tests passed! ===
+        ✓ .gitignore ignores all files from git
+        ✓ .npmignore allows all files for npm packaging
+        ✓ Tarball matches built files exactly
+        "
+      `);
   });
 });

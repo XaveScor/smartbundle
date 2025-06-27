@@ -1,0 +1,14 @@
+{
+  "name": "build-all-packages-monorepo",
+  "version": "1.0.0",
+  "description": "Test monorepo for build-all functionality",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build": "smartbundle"
+  },
+  "devDependencies": {
+    "smartbundle": "file:/smartbundle",
+    "typescript": "^5.0.0"
+  }
+}

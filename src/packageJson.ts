@@ -87,6 +87,8 @@ function createPackageJsonSchema(sourceDir: string) {
   const pathValidator = createPathValidator(sourceDir);
 
   const schema = z.object({
+    // We don't care about this field. It is makes sense only for monorepo
+    scripts: z.any().optional(),
     exports: z
       .union(
         [

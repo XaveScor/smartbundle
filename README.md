@@ -2,7 +2,7 @@
 
 <div align="center">
   <h3>The Library Bundler That Respects Your Time</h3>
-  
+
   <p>
     <a href="#getting-started">Getting Started</a> •
     <a href="#features">Features</a> •
@@ -122,8 +122,13 @@ SmartBundle enforces certain package.json conventions to ensure reliable builds.
 - Required and banned fields
 - Configuration limitations
 - Package.json best practices
+- [Monorepo support](./docs/monorepo.md)
 
 See our [package.json guide](./docs/package-json.md).
+
+## Monorepo Support
+
+SmartBundle provides specialized tooling for monorepo projects. For detailed information about setting up and managing monorepos with SmartBundle, see our [monorepo guide](./docs/monorepo.md).
 
 ## FAQ
 ### SmartBundle have an issue

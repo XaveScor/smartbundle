@@ -1,9 +1,9 @@
 import type * as ts from "typescript";
 import { join, relative } from "node:path";
 import { readdirSync, statSync } from "node:fs";
-import type { TS } from "../../detectModules.js";
+import type { TSModule } from "../../detectModules.js";
 
-function createCompilerHostWithVirtualSource(ts: TS["ts"], sourceDir: string) {
+function createCompilerHostWithVirtualSource(ts: TSModule["ts"], sourceDir: string) {
   return ts.createCompilerHost({
     target: ts.ScriptTarget.ESNext,
     moduleResolution: ts.ModuleResolutionKind.NodeNext,
@@ -35,7 +35,7 @@ function collectAllFilesInDir(sourceDir: string, ext: string) {
 }
 
 export function findTypingsNames(
-  { ts }: TS,
+  { ts }: TSModule,
   entrypoint: string,
   sourceDir: string,
   ext: string,

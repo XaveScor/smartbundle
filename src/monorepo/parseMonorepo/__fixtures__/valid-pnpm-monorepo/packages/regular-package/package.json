@@ -1,0 +1,6 @@
+{
+  "name": "regular-package",
+  "version": "1.0.0",
+  "description": "Regular package without -sbsources suffix",
+  "main": "index.js"
+}

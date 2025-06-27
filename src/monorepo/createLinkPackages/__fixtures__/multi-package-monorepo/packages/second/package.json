@@ -1,0 +1,7 @@
+{
+  "name": "second-sbsources",
+  "version": "1.5.0",
+  "private": true,
+  "description": "A second package for testing",
+  "exports": "./index.js"
+}

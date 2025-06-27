@@ -1,0 +1,6 @@
+{
+  "name": "included-package-sbsources",
+  "version": "1.0.0",
+  "description": "Test package that should be included",
+  "main": "index.js"
+}

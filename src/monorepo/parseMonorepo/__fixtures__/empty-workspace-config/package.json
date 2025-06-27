@@ -1,0 +1,6 @@
+{
+  "name": "empty-workspace-config",
+  "version": "1.0.0",
+  "description": "Test monorepo with empty packages array in pnpm-workspace.yaml",
+  "private": true
+}

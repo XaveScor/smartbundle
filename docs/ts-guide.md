@@ -83,6 +83,8 @@ These configurations work similarly to JavaScript setups, allowing SmartBundle t
 
 It is possible to mix both TypeScript and JavaScript entrypoints within your package.json. This allows you to maintain TS-based entry points (which include type definitions) alongside legacy or selectively provided JavaScript entry points. Note that JavaScript entrypoints do not have associated type definitions, so consumers will not benefit from TypeScript type checking when importing them.
 
+For TypeScript React projects, see our [React Integration Guide](./react.md).
+
 #### Example Combining Both Entry Types
 
 ```json
@@ -108,3 +110,9 @@ This configuration demonstrates:
 - Bin commands support both formats:
   - TypeScript-based command (`my-command`)
   - JavaScript-based command (`old-command`)
+
+## Related Documentation
+
+- [Package.json Configuration Guide](./package-json.md)
+- [React Integration Guide](./react.md)
+- [Monorepo Support Guide](./monorepo.md)

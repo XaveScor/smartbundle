@@ -1,0 +1,6 @@
+{
+  "name": "exclude-pattern-pnpm-monorepo",
+  "version": "1.0.0",
+  "description": "Test monorepo with exclude patterns",
+  "private": true
+}

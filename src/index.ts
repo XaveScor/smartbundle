@@ -9,8 +9,9 @@ import { buildTypesTask } from "./tasks/buildTypesTask/buildTypesTask.js";
 import { BuildError } from "./error.js";
 import { jsFilesTask } from "./tasks/jsFilesTask.js";
 import { binsTask } from "./tasks/binsTask.js";
+import { gitignoreTask } from "./tasks/gitignoreTask.js";
 import { detectModules } from "./detectModules.js";
-import { disableLog, lineLog, log, okLog } from "./log.js";
+import { disableLog, lineLog, log } from "./log.js";
 import { runSettled } from "./pipeline.js";
 import { type Args } from "./args.js";
 import { viteTask } from "./tasks/viteTask.js";
@@ -40,8 +41,8 @@ export async function defineViteConfig(args: Args = {}) {
     throw new Error("Failed to parse package.json");
   }
 
-  const modulesResult = await detectModules(packageJson, dirs);
-  if (modulesResult.error) {
+  const modulesResult = await detectModules(packageJson, dirs, args.monorepo);
+  if (!modulesResult.success) {
     return { error: true, errors: modulesResult.errors };
   }
   const { modules } = modulesResult;
@@ -70,14 +71,14 @@ export async function run(args: Args): Promise<RunResult> {
 
   await rm(outDir, { recursive: true, force: true });
   await mkdir(outDir, { recursive: true });
-  const packageJson = await parsePackageJson({ sourceDir, packagePath });
+  let packageJson = await parsePackageJson({ sourceDir, packagePath });
 
   if (Array.isArray(packageJson)) {
     return { error: true, errors: packageJson };
   }
 
-  const modulesResult = await detectModules(packageJson, dirs);
-  if (modulesResult.error) {
+  const modulesResult = await detectModules(packageJson, dirs, args.monorepo);
+  if (!modulesResult.success) {
     return { error: true, errors: modulesResult.errors };
   }
   const { modules } = modulesResult;
@@ -160,6 +161,12 @@ export async function run(args: Args): Promise<RunResult> {
     exportsMap,
     binsMap,
   });
+
+  if (!args.skipGitignore) {
+    await gitignoreTask({
+      dirs,
+    });
+  }
 
   lineLog();
   log(`Build finished: ./${relative(sourceDir, outDir)}`);

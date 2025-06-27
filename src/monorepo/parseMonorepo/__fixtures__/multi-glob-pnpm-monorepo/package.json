@@ -1,0 +1,6 @@
+{
+  "name": "multi-glob-pnpm-monorepo",
+  "version": "1.0.0",
+  "description": "Test monorepo with multiple globs in pnpm-workspace.yaml",
+  "private": true
+}

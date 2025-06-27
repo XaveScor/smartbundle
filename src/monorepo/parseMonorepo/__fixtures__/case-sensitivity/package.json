@@ -1,0 +1,6 @@
+{
+  "name": "case-sensitivity",
+  "version": "1.0.0",
+  "description": "Test monorepo with a package having mixed case in the name suffix",
+  "private": true
+}

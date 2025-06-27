@@ -3,7 +3,10 @@
   "private": true,
   "version": "0.15.0-alpha.0",
   "description": "zero-config bundler for npm packages",
-  "bin": "./src/run.ts",
+  "bin": {
+    "smartbundle": "./src/run.ts",
+    "smartbundle-monorepo-link": "./src/monorepo/link.ts"
+  },
   "type": "module",
   "scripts": {
     "test": "vitest src",
@@ -35,21 +38,23 @@
   "license": "MIT",
   "devDependencies": {
     "@types/babel__core": "^7.20.5",
-    "@types/node": "^22.13.14",
+    "@types/node": "^22.15.32",
     "@types/semver": "^7.7.0",
     "@types/yargs": "^17.0.33",
     "prettier": "^3.5.3",
-    "typescript": "^5.8.2",
-    "vitest": "^3.1.1",
-    "vitest-directory-snapshot": "^0.5.0",
-    "zx": "^8.4.1"
+    "typescript": "^5.8.3",
+    "vitest": "^3.2.4",
+    "vitest-directory-snapshot": "^0.6.1",
+    "zx": "^8.5.5"
   },
   "dependencies": {
-    "semver": "^7.7.1",
-    "vite": "^6.2.4",
+    "glob": "^11.0.3",
+    "semver": "^7.7.2",
+    "vite": "^6.3.5",
+    "yaml": "^2.8.0",
     "yargs": "^17.7.2",
-    "youch": "4.1.0-beta.6",
-    "zod": "^3.24.2"
+    "youch": "4.1.0-beta.8",
+    "zod": "^3.25.67"
   },
   "peerDependencies": {
     "@babel/core": "^7.26.0",
@@ -67,5 +72,8 @@
       "optional": true
     }
   },
-  "exports": "./src/index.ts"
+  "exports": "./src/index.ts",
+  "engines": {
+    "pnpm": "^10.11.0"
+  }
 }

@@ -47,7 +47,7 @@ export function babelPlugin({
 
       const map = this.getCombinedSourcemap();
 
-      const result = await modules.babel.transformAsync(code, {
+      const result = await modules.babel.babel.transformAsync(code, {
         filename: id,
         sourceMaps: true,
         inputSourceMap: map,

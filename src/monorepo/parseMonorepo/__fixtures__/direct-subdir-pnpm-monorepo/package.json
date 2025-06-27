@@ -1,0 +1,6 @@
+{
+  "name": "direct-subdir-pnpm-monorepo",
+  "version": "1.0.0",
+  "description": "Test monorepo with a direct subdirectory pattern",
+  "private": true
+}

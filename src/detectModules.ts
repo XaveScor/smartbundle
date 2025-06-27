@@ -251,10 +251,6 @@ async function detectTypescript(
     {
       declaration: true,
       emitDeclarationOnly: true,
-      strict: false,
-      strictNullChecks: false,
-      strictFunctionTypes: false,
-      strictPropertyInitialization: false,
       skipLibCheck: true,
       skipDefaultLibCheck: true,
       outDir: "",

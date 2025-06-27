@@ -1,0 +1,16 @@
+{
+  "name": "@test/utils",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Link package for @test/utils-sbsources",
+  "exports": {
+    ".": "./index.ts",
+    "./math": "./math.js",
+    "./helpers/string": "./helpers/string.mjs",
+    "./components/Button": "./components/Button.tsx"
+  },
+  "devDependencies": {
+    "@test/utils-sbsources": "workspace:*"
+  }
+}

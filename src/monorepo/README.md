@@ -94,7 +94,7 @@ Without re-exports, consumers would need different import paths for development 
    ```yaml
    packages:
      - 'packages/*'
-     - 'packages/*/dist'  # Include link packages
+     - 'packages/*/sb-dist'  # Include link packages
    ```
 
 2. **Source packages** with `-sbsources` suffix in package.json
@@ -138,7 +138,7 @@ smartbundle-monorepo-link --ci
    smartbundle
    
    # Publish (from output directory)
-   cd packages/my-lib/dist
+   cd packages/my-lib/sb-dist
    npm publish
    ```
 
@@ -158,7 +158,7 @@ Source: `packages/my-lib/src/index.ts`
 export const hello = () => "Hello from source!";
 ```
 
-Link: `packages/my-lib/dist/index.ts`
+Link: `packages/my-lib/sb-dist/index.ts`
 ```typescript
 export * from "@company/my-lib-sbsources";
 ```

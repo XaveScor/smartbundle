@@ -5,7 +5,7 @@ cd /smartbundle
 npm install --silent --production
 
 cd /app
-npm install -g /smartbundle
+npm install --silent -g /smartbundle
 
 smartbundle-monorepo-link > /dev/null 2>&1
 

@@ -59,7 +59,7 @@ Create a `pnpm-workspace.yaml` in your monorepo root:
 ```yaml
 packages:
   - 'packages/*'
-  - 'packages/*/dist'  # Include link packages
+  - 'packages/*/sb-dist'  # Include link packages
 ```
 
 > [!IMPORTANT]
@@ -188,7 +188,7 @@ smartbundle
 pnpm test
 
 # Publish packages
-cd packages/my-lib/dist && npm publish
+cd packages/my-lib/sb-dist && npm publish
 ```
 
 ## Configuration Examples

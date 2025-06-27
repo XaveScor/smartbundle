@@ -90,7 +90,7 @@ For TypeScript React projects, see our [React Integration Guide](./react.md).
 ```json
 {
   "exports": {
-    ".": "./dist/index.ts",
+    ".": "./sb-dist/index.ts",
     "./legacy": "./src/legacy-entry.js"
   },
   "bin": {

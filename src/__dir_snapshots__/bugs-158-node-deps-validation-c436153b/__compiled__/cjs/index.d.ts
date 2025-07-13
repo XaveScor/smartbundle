@@ -1,0 +1,14 @@
+import { writeFile } from "node:fs/promises";
+import { Readable, Writable } from "node:stream";
+import { dirname } from "node:path";
+import { promisify } from "node:util";
+import { spawn } from "node:child_process";
+import { createServer } from "node:http";
+import { URL } from "node:url";
+import { Buffer } from "node:buffer";
+export declare function readFileSync(path: string): Buffer;
+export declare function readFileAsync(path: string): Promise<Buffer>;
+export declare function hashData(data: string): string;
+export declare function getFilePath(dir: string, file: string): string;
+export declare function createReadStream(): Readable;
+export { writeFile, dirname, promisify, spawn, createServer, URL, Buffer, Writable };

@@ -64,4 +64,26 @@ The main build function orchestrates a pipeline of tasks:
 - `tsconfig.json` - TypeScript configuration
 - `buildTsconfig.json` - Separate config for building type definitions
 
-Read all the md files before doing anything
+## Documentation Files
+
+Read relevant documentation files based on the task at hand:
+
+### Core Documentation
+- [`README.md`](./README.md) - Project overview, quick start guide, features, and compatibility matrix. Reference for initial setup and understanding SmartBundle's value proposition.
+- [`CLAUDE.md`](./CLAUDE.md) - This file. Instructions for AI assistants working with the codebase.
+
+### Feature-Specific Guides
+- [`docs/monorepo.md`](./docs/monorepo.md) - Comprehensive monorepo support guide with pnpm workspaces, `-sbsources` naming convention, and link package system. Essential for monorepo setup and troubleshooting.
+- [`docs/package-json.md`](./docs/package-json.md) - Strict package.json requirements including banned fields (files, main, module) and required fields (private: true, type: module). Critical for package configuration.
+- [`docs/react.md`](./docs/react.md) - React integration with automatic JSX transformation detection (React < 17 uses createElement, >= 17 uses new runtime). Reference for React library builds.
+- [`docs/ts-guide.md`](./docs/ts-guide.md) - TypeScript integration requirements, especially mandatory `verbatimModuleSyntax: true` setting. Essential for TypeScript project setup.
+
+### Troubleshooting
+- [`docs/issues.md`](./docs/issues.md) - Known issues documentation, specifically @babel/core installation problems in versions < v0.11.1. Reference when users report issues.
+
+### Development Guidelines
+- [`prompts/docs.md`](./prompts/docs.md) - Documentation writing guidelines for consistent SmartBundle documentation with specific structure and GitHub Markdown formatting.
+- [`prompts/test.md`](./prompts/test.md) - Testing guidelines using Vitest with vitest-directory-snapshot, fixture structure, and SmartBundle compliance requirements.
+
+### Implementation Details
+- [`src/monorepo/README.md`](./src/monorepo/README.md) - Technical documentation for monorepo implementation including re-export system, version control strategy, and troubleshooting. Reference for understanding or extending monorepo functionality.

@@ -279,6 +279,18 @@ describe("bugs", () => {
     );
   });
 
+  test("158-node-deps-validation", async ({ tmpDir }: { tmpDir: string }) => {
+    const res = await run({
+      outputDir: tmpDir,
+      sourceDir: "./src/fixtures/158-node-deps-validation",
+      skipGitignore: true,
+    });
+
+    console.error(res);
+    expect(res.error).toBeFalsy();
+    expect(tmpDir).toMatchDirSnapshot();
+  });
+
   test("135-should error when package.json lacks both exports and bin", async ({
     tmpDir,
   }: {

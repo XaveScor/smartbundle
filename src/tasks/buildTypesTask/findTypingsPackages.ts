@@ -94,9 +94,21 @@ export function findTypingsPackages(
   packages: Set<string>,
   sourceDir: string,
 ) {
+  // Check if any Node.js built-in modules are used
+  const hasNodeModules = [...packages].some(pkg => pkg.startsWith("node:"));
+  
+  // Filter out node: modules for resolution, but add @types/node if any are used
+  const filteredPackages = new Set(
+    [...packages].filter(pkg => !pkg.startsWith("node:"))
+  );
+  
+  if (hasNodeModules) {
+    filteredPackages.add("@types/node");
+  }
+
   const { host, virtualFilePath } = createCompilerHostWithVirtualSource(
     ts,
-    packages,
+    filteredPackages,
     sourceDir,
   );
 

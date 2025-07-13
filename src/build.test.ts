@@ -286,7 +286,6 @@ describe("bugs", () => {
       skipGitignore: true,
     });
 
-    console.error(res);
     expect(res.error).toBeFalsy();
     expect(tmpDir).toMatchDirSnapshot();
   });

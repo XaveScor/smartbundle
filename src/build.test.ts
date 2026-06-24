@@ -244,6 +244,23 @@ describe("bugs", () => {
     expect(tmpDir).toMatchDirSnapshot();
   });
 
+  test("storybook internal types subpath import", async ({
+    tmpDir,
+  }: {
+    tmpDir: string;
+  }) => {
+    const res = await run({
+      outputDir: tmpDir,
+      sourceDir: "./src/fixtures/storybook-internal-types-subpath",
+    });
+
+    expect(
+      res.error,
+      res.error ? String(res.errors[0]) : undefined,
+    ).toBeFalsy();
+    expect(tmpDir).toMatchDirSnapshot();
+  });
+
   test("136-ts-not-installed", async ({ tmpDir }: { tmpDir: string }) => {
     const res = await run({
       outputDir: tmpDir,

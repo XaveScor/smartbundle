@@ -1,5 +1,6 @@
 import type * as ts from "typescript";
 import * as path from "node:path";
+import * as fs from "node:fs";
 import type { TS } from "../../detectModules.js";
 
 type HostFunctions = {
@@ -54,14 +55,9 @@ function createCompilerHostWithVirtualSource(
   packages: Set<string>,
   sourceDir: string,
 ) {
-  const virtualSourceContent =
-    [...packages].map((p) => `import "${p}";`).join("\n") +
-    // for ignoring the `Generated an empty chunk: "."` error
-    "export const a = 1;\n";
-  const virtualFilePath = path.join(sourceDir, "virtual.ts");
-
-  const originalHost = ts.createCompilerHost({
+  const compilerOptions = {
     target: ts.ScriptTarget.ESNext,
+    module: ts.ModuleKind.NodeNext,
     moduleResolution: ts.ModuleResolutionKind.NodeNext,
     baseUrl: ".",
     sourceRoot: sourceDir,
@@ -71,7 +67,14 @@ function createCompilerHostWithVirtualSource(
     paths: {
       "*": ["node_modules/*"],
     },
-  });
+  };
+  const virtualSourceContent =
+    [...packages].map((p) => `import "${p}";`).join("\n") +
+    // for ignoring the `Generated an empty chunk: "."` error
+    "export const a = 1;\n";
+  const virtualFilePath = path.join(sourceDir, "virtual.ts");
+
+  const originalHost = ts.createCompilerHost(compilerOptions);
   const virtualFunctions = createVirtualHostFunctions(
     ts,
     virtualFilePath,
@@ -86,7 +89,40 @@ function createCompilerHostWithVirtualSource(
       },
     }),
     virtualFilePath,
+    compilerOptions,
   };
+}
+
+function findPackageNameForResolvedFile(
+  resolvedFileName: string,
+  sourceDir: string,
+) {
+  let currentDir = path.dirname(resolvedFileName);
+  const sourcePackageJsonPath = path.join(sourceDir, "package.json");
+
+  while (true) {
+    const packageJsonPath = path.join(currentDir, "package.json");
+    if (fs.existsSync(packageJsonPath)) {
+      if (packageJsonPath === sourcePackageJsonPath) {
+        return null;
+      }
+
+      try {
+        const packageJson = JSON.parse(
+          fs.readFileSync(packageJsonPath, "utf-8"),
+        );
+        return typeof packageJson.name === "string" ? packageJson.name : null;
+      } catch {
+        return null;
+      }
+    }
+
+    const parentDir = path.dirname(currentDir);
+    if (parentDir === currentDir) {
+      return null;
+    }
+    currentDir = parentDir;
+  }
 }
 
 export function findTypingsPackages(
@@ -94,15 +130,12 @@ export function findTypingsPackages(
   packages: Set<string>,
   sourceDir: string,
 ) {
-  const { host, virtualFilePath } = createCompilerHostWithVirtualSource(
-    ts,
-    packages,
-    sourceDir,
-  );
+  const { host, virtualFilePath, compilerOptions } =
+    createCompilerHostWithVirtualSource(ts, packages, sourceDir);
 
   const program = ts.createProgram({
     rootNames: [virtualFilePath],
-    options: {},
+    options: compilerOptions,
     host: host,
   });
 
@@ -122,16 +155,24 @@ export function findTypingsPackages(
         const moduleResolution = ts.resolveModuleName(
           moduleSpecifier.text,
           virtualFilePath,
-          {},
+          compilerOptions,
           host,
         );
 
-        if (!moduleResolution?.resolvedModule?.packageId) {
+        const resolvedModule = moduleResolution?.resolvedModule;
+
+        if (!resolvedModule) {
           missingTypings.add(moduleSpecifier.text);
         } else {
-          existingTypingPackages.add(
-            moduleResolution.resolvedModule.packageId.name,
+          const packageName = findPackageNameForResolvedFile(
+            resolvedModule.resolvedFileName,
+            sourceDir,
           );
+          if (packageName) {
+            existingTypingPackages.add(packageName);
+          } else {
+            missingTypings.add(moduleSpecifier.text);
+          }
         }
       }
     }

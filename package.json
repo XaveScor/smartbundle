@@ -6,6 +6,7 @@
   "bin": "./src/run.ts",
   "type": "module",
   "scripts": {
+    "build": "bun src/run.ts",
     "test": "vitest src",
     "test:update-snapshots": "pnpm test -- -u",
     "test:e2e": "vitest e2e",
@@ -33,6 +34,13 @@
     "url": "https://github.com/xavescor/smartbundle/issues"
   },
   "license": "MIT",
+  "devEngines": {
+    "packageManager": {
+      "name": "pnpm",
+      "version": "^11.5.2",
+      "onFail": "download"
+    }
+  },
   "devDependencies": {
     "@types/babel__core": "^7.20.5",
     "@types/node": "^22.10.7",

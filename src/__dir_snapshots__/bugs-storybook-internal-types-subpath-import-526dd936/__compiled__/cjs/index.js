@@ -1,2 +1,2 @@
 "use strict";
-//# sourceMappingURL=index.js.map
+Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" });

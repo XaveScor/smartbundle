@@ -1,8 +1,10 @@
 "use strict";
 Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" });
-const dep1 = require("../dep1.js");
+//#region src/fixtures/deep-structure/level1/level2/entrypoint1.ts
 function foo() {
-  console.log(dep1.a);
+	console.log(1);
 }
+//#endregion
 exports.foo = foo;
+
 //# sourceMappingURL=entrypoint1.js.map

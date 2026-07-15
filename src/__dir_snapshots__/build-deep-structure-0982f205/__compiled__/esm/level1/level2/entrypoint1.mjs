@@ -1,8 +1,8 @@
-import { a } from "../dep1.mjs";
+//#region src/fixtures/deep-structure/level1/level2/entrypoint1.ts
 function foo() {
-  console.log(a);
+	console.log(1);
 }
-export {
-  foo
-};
+//#endregion
+export { foo };
+
 //# sourceMappingURL=entrypoint1.mjs.map

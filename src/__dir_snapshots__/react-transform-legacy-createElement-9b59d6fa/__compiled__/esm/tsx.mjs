@@ -1,6 +1,7 @@
 import React from "react";
-const Component = () => /* @__PURE__ */ React.createElement("div", null, "jsx");
-export {
-  Component
-};
+//#region src/fixtures/react-legacy-transform/tsx.tsx
+var Component = () => /* @__PURE__ */ React.createElement("div", null, "jsx");
+//#endregion
+export { Component };
+
 //# sourceMappingURL=tsx.mjs.map

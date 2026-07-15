@@ -1,5 +1,6 @@
-const entrypoint = 1;
-export {
-  entrypoint as default
-};
+//#region src/fixtures/export-default/entrypoint.ts
+var entrypoint_default = 1;
+//#endregion
+export { entrypoint_default as default };
+
 //# sourceMappingURL=entrypoint.mjs.map

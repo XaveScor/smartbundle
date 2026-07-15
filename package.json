@@ -8,6 +8,7 @@
   "scripts": {
     "build": "bun src/run.ts",
     "test": "vitest src",
+    "test:vitest-compat": "node scripts/test-vitest-compat.js",
     "test:update-snapshots": "pnpm test -- -u",
     "test:e2e": "vitest e2e",
     "test:e2e-update-snapshots": "pnpm test:e2e -- -u"
@@ -34,6 +35,9 @@
     "url": "https://github.com/xavescor/smartbundle/issues"
   },
   "license": "MIT",
+  "engines": {
+    "node": "^20.19.0 || >=22.12.0"
+  },
   "devEngines": {
     "packageManager": {
       "name": "pnpm",
@@ -43,19 +47,19 @@
   },
   "devDependencies": {
     "@types/babel__core": "^7.20.5",
-    "@types/node": "^22.10.7",
+    "@types/node": "^22.20.0",
     "@types/semver": "^7.5.8",
     "@types/yargs": "^17.0.33",
     "@typescript/typescript6": "^6.0.2",
     "prettier": "^3.4.2",
     "typescript": "^6.0.3",
-    "vitest": "^3.0.2",
-    "vitest-directory-snapshot": "^0.4.0",
+    "vitest": "^4.1.10",
+    "vitest-directory-snapshot": "^0.6.1",
     "zx": "^8.3.0"
   },
   "dependencies": {
     "semver": "^7.6.3",
-    "vite": "^6.0.7",
+    "vite": "^8.1.4",
     "yargs": "^17.7.2",
     "youch": "4.1.0-beta.5",
     "zod": "^3.24.1"
@@ -64,7 +68,7 @@
     "@babel/core": "^7.26.0",
     "@typescript/typescript6": "^6.0.2",
     "typescript": ">=5.0.0 <8.0.0",
-    "vitest": "^3.0.0"
+    "vitest": "^3.0.0 || ^4.0.0"
   },
   "peerDependenciesMeta": {
     "@babel/core": {

@@ -1,2 +1,5 @@
 allowBuilds:
   esbuild: true
+peerDependencyRules:
+  allowedVersions:
+    "vitest-directory-snapshot>vitest": "4"

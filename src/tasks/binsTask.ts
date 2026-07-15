@@ -1,11 +1,11 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import { join, relative } from "node:path";
-import type { Rollup } from "vite";
+import type { Rolldown } from "vite";
 import { reverseMap } from "./utils.js";
 import { okLog } from "../log.js";
 
 type BinsTaskOption = {
-  buildOutput: Rollup.OutputChunk[];
+  buildOutput: Rolldown.OutputChunk[];
   bins: Map<string, string>;
   outBinsDir: string;
   outDir: string;

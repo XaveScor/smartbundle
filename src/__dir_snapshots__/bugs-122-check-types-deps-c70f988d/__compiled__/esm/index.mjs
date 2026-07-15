@@ -1,8 +1,9 @@
 import { a } from "dep";
-const f = () => {
-  console.log(a);
+//#region src/fixtures/122-check-types-deps/index.ts
+var f = () => {
+	console.log(a);
 };
-export {
-  f
-};
+//#endregion
+export { f };
+
 //# sourceMappingURL=index.mjs.map

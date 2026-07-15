@@ -1,8 +1,9 @@
 import React from "react";
-const App = () => {
-  return /* @__PURE__ */ React.createElement("div", null, "Hello, World!");
+//#region src/fixtures/99-multi-react-dep/entry.tsx
+var App = () => {
+	return /* @__PURE__ */ React.createElement("div", null, "Hello, World!");
 };
-export {
-  App
-};
+//#endregion
+export { App };
+
 //# sourceMappingURL=entry.mjs.map

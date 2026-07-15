@@ -1,5 +1,8 @@
 "use strict";
 Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" });
-const a = "first";
+//#region src/fixtures/3-exports-object/first.js
+var a = "first";
+//#endregion
 exports.a = a;
+
 //# sourceMappingURL=first.js.map

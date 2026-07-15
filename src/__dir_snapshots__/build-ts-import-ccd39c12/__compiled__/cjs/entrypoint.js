@@ -1,9 +1,12 @@
 "use strict";
 Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" });
-const a = require("./a.js");
+const require_a = require("./a.js");
+//#region src/fixtures/ts-import/entrypoint.ts
 function helloWorld() {
-  console.log("Hello, world!" + a.a);
+	console.log("Hello, world!1");
 }
-exports.a = a.a;
+//#endregion
+exports.a = require_a.a;
 exports.helloWorld = helloWorld;
+
 //# sourceMappingURL=entrypoint.js.map

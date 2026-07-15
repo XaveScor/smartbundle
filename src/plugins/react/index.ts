@@ -1,5 +1,5 @@
 import type { Plugin } from "vite";
-import { transformWithEsbuild } from "vite";
+import { transformWithOxc } from "vite";
 import { type DetectedModules } from "../../detectModules.js";
 import { okLog } from "../../log.js";
 
@@ -12,6 +12,7 @@ const errorJsxMessage =
 
 export function reactPlugin({ modules }: ReactPluginArg): Plugin {
   const pluginName = "smartbundle:react";
+  const emittedWarnings = new Set<string>();
 
   if (modules.react == null) {
     return {
@@ -43,16 +44,30 @@ export function reactPlugin({ modules }: ReactPluginArg): Plugin {
         return null;
       }
 
-      return await transformWithEsbuild(
+      const result = await transformWithOxc(
         code,
         id,
         {
-          loader: isJs || isJsx ? "jsx" : "tsx",
-          jsx: modules.react === "legacy" ? "transform" : "automatic",
+          lang: isJs || isJsx ? "jsx" : "tsx",
+          jsx: {
+            runtime: modules.react === "legacy" ? "classic" : "automatic",
+          },
           sourcemap: true,
         },
         this.getCombinedSourcemap(),
       );
+      for (const warning of result.warnings) {
+        const key = `${warning.code}\0${warning.message}`;
+        if (!emittedWarnings.has(key)) {
+          emittedWarnings.add(key);
+          this.warn(warning);
+        }
+      }
+      return {
+        code: result.code,
+        map: result.map,
+        moduleType: "js",
+      };
     },
     buildEnd(err) {
       if (!err) {

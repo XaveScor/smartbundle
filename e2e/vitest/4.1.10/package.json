@@ -1,0 +1,15 @@
+{
+  "name": "smartbundle-vitest-4-1-10",
+  "private": true,
+  "type": "module",
+  "version": "0.0.0",
+  "exports": "./index.ts",
+  "dependencies": {
+    "smartbundle": "file:../../../dist"
+  },
+  "devDependencies": {
+    "@types/node": "22.20.1",
+    "typescript": "6.0.3",
+    "vitest": "4.1.10"
+  }
+}

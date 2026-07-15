@@ -1,5 +1,6 @@
-const a = 1;
-export {
-  a
-};
+//#region src/fixtures/4-babel-support/entrypoint.ts
+var a = 1;
+//#endregion
+export { a };
+
 //# sourceMappingURL=entrypoint.mjs.map

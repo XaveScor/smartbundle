@@ -16,8 +16,10 @@ type CreateViteConfigParam = {
 
 function mapToObject(map: Map<string, string>) {
   const obj: Record<string, string> = {};
-  for (const [key, value] of map) {
-    obj[key] = value;
+  let entryIndex = 0;
+  for (const value of new Set(map.values())) {
+    const entryName = `entry${entryIndex++}`;
+    obj[entryName] = value;
   }
   return obj;
 }
@@ -46,6 +48,7 @@ export function createViteConfig({
   }
 
   const mergedEntries = new Map([...entrypoints, ...bins]);
+  const viteEntries = mapToObject(mergedEntries);
 
   const esmRelativeOutPath = relative(outDir, esmOutDir);
   const cjsRelativeOutPath = relative(outDir, cjsOutDir);
@@ -70,10 +73,10 @@ export function createViteConfig({
         mangle: false,
       },
       lib: {
-        entry: mapToObject(mergedEntries),
+        entry: viteEntries,
         formats: ["es", "cjs"],
         fileName: (format, entryName) => {
-          const entrypoint = mergedEntries.get(entryName);
+          const entrypoint = viteEntries[entryName];
           if (!entrypoint) {
             const noExt = entryName.replace(/\.[^.]+$/, "");
             if (format === "es") {
@@ -96,11 +99,12 @@ export function createViteConfig({
           }
         },
       },
-      rollupOptions: {
+      rolldownOptions: {
         output: {
           preserveModulesRoot: sourceDir,
           exports: "named",
           preserveModules: true,
+          strict: true,
         },
       },
     },

@@ -1,8 +1,8 @@
-import { a } from "./level2/a.mjs";
-const entrypoint = () => {
-  console.log(a);
+//#region src/fixtures/34-deep-structure/level1/entrypoint.ts
+var entrypoint_default = () => {
+	console.log(1);
 };
-export {
-  entrypoint as default
-};
+//#endregion
+export { entrypoint_default as default };
+
 //# sourceMappingURL=entrypoint.mjs.map

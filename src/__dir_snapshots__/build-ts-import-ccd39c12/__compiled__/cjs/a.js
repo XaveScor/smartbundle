@@ -1,5 +1,7 @@
 "use strict";
-Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" });
-const a = 1;
+//#region src/fixtures/ts-import/a.ts
+var a = 1;
+//#endregion
 exports.a = a;
+
 //# sourceMappingURL=a.js.map

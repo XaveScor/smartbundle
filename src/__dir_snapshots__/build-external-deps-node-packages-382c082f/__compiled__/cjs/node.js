@@ -1,21 +1,10 @@
 "use strict";
-const all = require("node:fs");
-function _interopNamespaceDefault(e) {
-  const n = Object.create(null, { [Symbol.toStringTag]: { value: "Module" } });
-  if (e) {
-    for (const k in e) {
-      if (k !== "default") {
-        const d = Object.getOwnPropertyDescriptor(e, k);
-        Object.defineProperty(n, k, d.get ? d : {
-          enumerable: true,
-          get: () => e[k]
-        });
-      }
-    }
-  }
-  n.default = e;
-  return Object.freeze(n);
-}
-const all__namespace = /* @__PURE__ */ _interopNamespaceDefault(all);
-console.log(all__namespace);
+Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" });
+const require_runtime = require("./_virtual/_rolldown/runtime.js");
+let node_fs = require("node:fs");
+node_fs = require_runtime.__toESM(node_fs, 1);
+//#region src/fixtures/external-deps/node.mjs
+console.log(node_fs);
+//#endregion
+
 //# sourceMappingURL=node.js.map

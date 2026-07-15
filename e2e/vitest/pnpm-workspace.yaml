@@ -1,0 +1,5 @@
+packages:
+  - "3.2.7"
+  - "4.1.10"
+allowBuilds:
+  esbuild: true

@@ -1,16 +1,16 @@
-import type { Rollup } from "vite";
+import type { Rolldown } from "vite";
 import { dirname, join, relative } from "node:path";
 import { mkdir, writeFile } from "node:fs/promises";
 import { okLog } from "../log.js";
 
 type JsFilesTaskOption = {
-  buildOutput: Rollup.OutputChunk[];
+  buildOutput: Rolldown.OutputChunk[];
   entrypoints: Map<string, string>;
   outDir: string;
 };
 
 function findCompiledPath(
-  buildOutput: Rollup.OutputChunk[],
+  buildOutput: Rolldown.OutputChunk[],
   originalFile: string,
   type: "js" | "mjs",
 ) {

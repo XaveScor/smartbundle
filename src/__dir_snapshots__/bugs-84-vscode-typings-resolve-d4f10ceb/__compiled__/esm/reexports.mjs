@@ -1,7 +1,7 @@
 import { a } from "./export.mjs";
-const reexports = import("./export.mjs");
-export {
-  a,
-  reexports as default
-};
+//#region src/fixtures/84-vscode-typings-resolve/reexports.ts
+var reexports_default = import("./export.mjs");
+//#endregion
+export { a, reexports_default as default };
+
 //# sourceMappingURL=reexports.mjs.map

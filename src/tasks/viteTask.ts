@@ -1,4 +1,4 @@
-import { build, type UserConfig, type Rollup } from "vite";
+import { build, type UserConfig, type Rolldown } from "vite";
 import { errors } from "../errors.js";
 import { okLog } from "../log.js";
 import { BuildError } from "../error.js";
@@ -10,7 +10,7 @@ type ViteTaskParams = {
 
 type BuildSuccess = {
   error: false;
-  output: Rollup.OutputChunk[];
+  output: Rolldown.OutputChunk[];
 };
 type BuildErrorType = {
   error: true;
@@ -18,6 +18,28 @@ type BuildErrorType = {
 };
 
 type BuildResult = BuildSuccess | BuildErrorType;
+
+type NestedBuildError = Error & {
+  frame?: string;
+  loc?: { column?: number; file?: string; line?: number };
+  plugin?: string;
+};
+
+function formatBuildError(error: NestedBuildError) {
+  const details = [
+    `${error.plugin ? `[${error.plugin}] ` : ""}${error.message}`,
+  ];
+  if (error.loc) {
+    const position = [error.loc.line, error.loc.column]
+      .filter((value) => value != null)
+      .join(":");
+    details.push(`${error.loc.file ?? ""}${position ? `:${position}` : ""}`);
+  }
+  if (error.frame) {
+    details.push(error.frame);
+  }
+  return details.join("\n");
+}
 
 async function buildVite({ viteConfig }: ViteTaskParams): Promise<BuildResult> {
   try {
@@ -43,6 +65,19 @@ async function buildVite({ viteConfig }: ViteTaskParams): Promise<BuildResult> {
       };
     }
     if (e instanceof Error) {
+      const nestedErrors = (e as Error & { errors?: unknown[] }).errors;
+      if (
+        nestedErrors &&
+        nestedErrors.length > 0 &&
+        nestedErrors.every((error) => error instanceof Error)
+      ) {
+        return {
+          error: true,
+          errors: nestedErrors.map((error) =>
+            formatBuildError(error as NestedBuildError),
+          ),
+        };
+      }
       return {
         error: true,
         errors: [e.message],

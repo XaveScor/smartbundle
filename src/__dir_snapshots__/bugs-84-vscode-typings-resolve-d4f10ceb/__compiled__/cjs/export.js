@@ -1,5 +1,7 @@
 "use strict";
-Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" });
-const a = 1;
+//#region src/fixtures/84-vscode-typings-resolve/export.ts
+var a = 1;
+//#endregion
 exports.a = a;
+
 //# sourceMappingURL=export.js.map

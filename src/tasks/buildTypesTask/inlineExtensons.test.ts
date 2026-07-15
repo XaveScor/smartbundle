@@ -4,7 +4,10 @@ import {
   inlineExtensionsCjs,
   inlineExtensionsMjs,
 } from "./inlineExtensions.js";
-import ts from "typescript";
+import { loadTypescriptApi } from "../../detectModules.js";
+import { createRequire } from "node:module";
+
+const { ts } = loadTypescriptApi(createRequire(import.meta.url));
 
 const exts = [{ ext: ".cjs" }, { ext: ".mjs" }, { ext: ".js" }];
 

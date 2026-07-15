@@ -1,5 +1,6 @@
 {
   "include": ["types.ts", "src"],
+  "exclude": ["src/fixtures"],
   "compilerOptions": {
     "rootDir": ".",
     "target": "ESNext",

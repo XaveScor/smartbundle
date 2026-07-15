@@ -61,7 +61,7 @@ async function fileExists(filePath: string) {
 
 function dependencies(errorText: string) {
   return z
-    .record(z.string({ message: errorText }), { message: errorText })
+    .record(z.string(), z.string({ error: errorText }), { error: errorText })
     .optional();
 }
 
@@ -91,16 +91,18 @@ function createPackageJsonSchema(sourceDir: string) {
       .union(
         [
           z.string().transform((path) => new Map([[".", path]])),
-          z.record(z.string()).transform((obj) => new Map(Object.entries(obj))),
+          z
+            .record(z.string(), z.string())
+            .transform((obj) => new Map(Object.entries(obj))),
         ],
         {
-          errorMap() {
-            return { message: errors.exportsRequired };
+          error() {
+            return errors.exportsRequired;
           },
         },
       )
       .refine(async (obj) => {
-        for (const [key, value] of obj.entries()) {
+        for (const [, value] of obj.entries()) {
           if (!(await pathValidator(value))) {
             return false;
           }
@@ -109,18 +111,18 @@ function createPackageJsonSchema(sourceDir: string) {
       }, errors.exportsInvalid)
       .optional(),
     name: z
-      .string({ message: errors.nameRequired })
+      .string({ error: errors.nameRequired })
       .min(1, errors.nameMinLength)
       .max(214, errors.nameMaxLength)
       .refine(
         (name) => ["_", "."].every((start) => !name.startsWith(start)),
         errors.nameStartsIllegalChars,
       ),
-    version: z.string({ message: errors.versionRequired }),
+    version: z.string({ error: errors.versionRequired }),
     private: z
-      .boolean({ message: errors.privateIsTrue })
+      .boolean({ error: errors.privateIsTrue })
       .refine((value) => value, errors.privateIsTrue),
-    description: z.string({ message: errors.descriptionString }).optional(),
+    description: z.string({ error: errors.descriptionString }).optional(),
     dependencies: dependencies(errors.dependenciesInvalid),
     optionalDependencies: dependencies(errors.optionalDependenciesInvalid),
     bin: z
@@ -130,38 +132,38 @@ function createPackageJsonSchema(sourceDir: string) {
             .string()
             .transform((value) => new Map([[PackageJsonNameField, value]])),
           z
-            .record(z.string())
+            .record(z.string(), z.string())
             .transform((record) => new Map(Object.entries(record))),
         ],
         {
-          errorMap() {
-            return { message: errors.binFiled };
+          error() {
+            return errors.binFiled;
           },
         },
       )
       .refine(
         async (map) => {
-          for (const [key, value] of map.entries()) {
+          for (const [, value] of map.entries()) {
             if (!(await pathValidator(value))) {
               return false;
             }
           }
           return true;
         },
-        { message: errors.binFiled },
+        { error: errors.binFiled },
       )
       .optional(),
     repository: z.any().optional(),
     keywords: z
-      .array(z.string(), { message: errors.keywordsInvalid })
+      .array(z.string(), { error: errors.keywordsInvalid })
       .optional(),
     author: z.any().optional(),
     maintainers: z.any().optional(),
     contributors: z
       .array(
         z.union([
-          z.string({ message: errors.contributorsInvalid }),
-          z.object({}, { message: errors.contributorsInvalid }),
+          z.string({ error: errors.contributorsInvalid }),
+          z.object({}, { error: errors.contributorsInvalid }),
         ]),
       )
       .optional(),
@@ -169,23 +171,23 @@ function createPackageJsonSchema(sourceDir: string) {
     devDependencies: dependencies(errors.devDependenciesInvalid),
     peerDependencies: dependencies(errors.peerDependenciesInvalid),
     engines: z
-      .record(z.string(), { message: errors.enginesInvalid })
+      .record(z.string(), z.string(), { error: errors.enginesInvalid })
       .optional(),
     browser: z
       .union([
-        z.string({ message: errors.browserInvalid }),
-        z.record(z.string(), { message: errors.browserInvalid }),
+        z.string({ error: errors.browserInvalid }),
+        z.record(z.string(), z.string(), { error: errors.browserInvalid }),
       ])
       .optional(),
     bugs: z.any().optional(),
     funding: z
       .union([
-        z.string({ message: errors.fundingInvalid }),
-        z.object({}, { message: errors.fundingInvalid }),
+        z.string({ error: errors.fundingInvalid }),
+        z.object({}, { error: errors.fundingInvalid }),
       ])
       .optional(),
-    os: z.array(z.string(), { message: errors.osInvalid }).optional(),
-    cpu: z.array(z.string(), { message: errors.cpuInvalid }).optional(),
+    os: z.array(z.string(), { error: errors.osInvalid }).optional(),
+    cpu: z.array(z.string(), { error: errors.cpuInvalid }).optional(),
     sideEffects: z.any().optional(),
     unpkg: z.any().optional(),
     homepage: z.any().optional(),
@@ -224,7 +226,7 @@ export async function parsePackageJson({
   const packageJsonSchema = createPackageJsonSchema(sourceDir);
   const packageJson = await packageJsonSchema.safeParseAsync(rawJson);
   if (!packageJson.success) {
-    return packageJson.error.errors.map((error) => error.message);
+    return packageJson.error.issues.map((issue) => issue.message);
   }
 
   fillPackageJson(packageJson.data);

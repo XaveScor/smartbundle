@@ -1,9 +1,0 @@
-{
-  "name": "esm",
-  "version": "1.0.0",
-  "type": "module",
-  "private": true,
-  "dependencies": {
-    "test-lib": "file:/test-lib"
-  }
-}

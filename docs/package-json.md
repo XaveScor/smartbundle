@@ -35,31 +35,33 @@ These fields create ambiguity in module resolution. SmartBundle uses only the `e
 
 #### private Field
 
-- Declaration: "private": true  
+- Declaration: "private": true
 - Requirement: This field must be set to true to prevent accidental publishing.
 
 > [!INFO]  
-> When you run SmartBundle, it generates a new package.json in the output directory containing only the fields needed for publishing.  
+> When you run SmartBundle, it generates a new package.json in the output directory containing only the fields needed for publishing.
 
 #### type Field
 
-- Declaration: "type": "module"  
+- Declaration: "type": "module"
 - Requirement: SmartBundle only bundles ESM sources. Setting "type": "module" ensures that Node.js treats your .js files as ES modules, which is mandatory.
 
 #### Required Entry Points
 
-- **Requirement:** Your package.json must include *either* the `bin` field or the `exports` field. At least one of these is required so that SmartBundle can correctly determine the entry points for bundling and publishing.
+- **Requirement:** Your package.json must include _either_ the `bin` field or the `exports` field. At least one of these is required so that SmartBundle can correctly determine the entry points for bundling and publishing.
 
 #### bin Field
 
-- Declaration Example: 
+- Declaration Example:
+
 ```json5
 {
-  "bin": {
-    "my-command": "./src/bin.js"
-  }
+  bin: {
+    "my-command": "./src/bin.js",
+  },
 }
 ```
+
 - Requirement: SmartBundle supports bin specifications (except for `.sh` files). If defined, they are processed to generate executable scripts for your package.
 - For more details, see [Node.js package.json bin specification](https://nodejs.org/api/packages.html#bin).
 
@@ -69,8 +71,8 @@ The `exports` field defines the package’s entry points for SmartBundle’s ESM
 
 ### Overview
 
-- Declaration: "exports": "./src/index.js" (or object notation)  
-- Requirement: Defines the package entry point(s) that SmartBundle uses.  
+- Declaration: "exports": "./src/index.js" (or object notation)
+- Requirement: Defines the package entry point(s) that SmartBundle uses.
 - "." key: Denotes the root address of the package.
 
 > [!IMPORTANT]
@@ -79,40 +81,45 @@ The `exports` field defines the package’s entry points for SmartBundle’s ESM
 
 For more information, see the [Node.js Documentation: Package Exports](https://nodejs.org/api/packages.html#exports).
 
-
 > [!IMPORTANT]  
-> SmartBundle supports only direct string mappings in the exports field. Conditional keys (such as "import" or "require") and glob patterns (e.g. "**") are not supported.  
+> SmartBundle supports only direct string mappings in the exports field. Conditional keys (such as "import" or "require") and glob patterns (e.g. "\*\*") are not supported.
 
 ### Simple String Notation
 
 Example – Simple String Notation:
+
 ```json5
 {
-  "exports": "./src/index.js"
+  exports: "./src/index.js",
 }
 ```
 
 Ensure that your ESM source file follows this format:
+
 ```js
 // ./src/index.js
 export default function greet() {
-  console.log('Hello, world!');
+  console.log("Hello, world!");
 }
 export function farewell() {
-  console.log('Goodbye!');
+  console.log("Goodbye!");
 }
 ```
 
 Client Usage Examples:
+
 - ESM Import:
+
 ```js
-import greet, { farewell } from 'your-package';
+import greet, { farewell } from "your-package";
 greet();
 farewell();
 ```
+
 - CommonJS Import:
+
 ```js
-const pkg = require('your-package');
+const pkg = require("your-package");
 pkg.default(); // for the default export
 pkg.farewell();
 ```
@@ -120,27 +127,34 @@ pkg.farewell();
 ### Object Notation for Subpath Exports
 
 Example – Object Notation for Subpath Exports:
+
 ```json5
 {
-  "exports": {
+  exports: {
     ".": "./src/index.js",
-    "./feature": "./src/feature/entrypoint.js"
-  }
+    "./feature": "./src/feature/entrypoint.js",
+  },
 }
 ```
 
 Usage Examples:
+
 - Main Import (ESM):
+
 ```js
-import main from 'your-package';
+import main from "your-package";
 ```
+
 - Feature Import (ESM):
+
 ```js
-import feature from 'your-package/feature';
+import feature from "your-package/feature";
 ```
+
 For CommonJS, access the default export:
+
 ```js
-const mainPkg = require('your-package');
+const mainPkg = require("your-package");
 mainPkg.default();
 ```
 

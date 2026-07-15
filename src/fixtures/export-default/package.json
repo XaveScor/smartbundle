@@ -5,6 +5,6 @@
   "version": "1.0.0",
   "exports": "./entrypoint.ts",
   "devDependencies": {
-      "typescript": "^6.0.3"
+    "typescript": "^6.0.3"
   }
 }

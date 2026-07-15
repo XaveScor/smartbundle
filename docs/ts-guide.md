@@ -1,7 +1,7 @@
 # SmartBundle TypeScript Integration Guide
 
-
 <!-- Table of Contents -->
+
 - [Requirements & Setup](#requirements--setup)
 - [Compatibility Matrix](#compatibility-matrix)
 - [TypeScript Configuration: verbatimModuleSyntax](#typescript-configuration-verbatimmodulesyntax)
@@ -9,11 +9,9 @@
   - [Bin Field Example](#bin-field-example)
   - [Exports Field Example](#exports-field-example)
 
-
 This guide explains how SmartBundle integrates with TypeScript to produce consistent and reliable builds. SmartBundle supports TypeScript 5, 6, and 7 by requiring a specific TS configuration and by extending package.json semantics. In addition to outlining how to install and configure TypeScript, this guide explains how fields such as bin and exports are interpreted—similar to our JavaScript workflows but with TS-aware adjustments.
 
 For detailed information on how SmartBundle extends package.json semantics, refer to our [package.json guide](./package-json.md).
-
 
 ## Requirements & Setup
 
@@ -61,14 +59,14 @@ SmartBundle requires that the TypeScript compilation option **"verbatimModuleSyn
 Enabling `"verbatimModuleSyntax": true` ensures that the original ES module import/export syntax is maintained throughout the build process. This is essential because SmartBundle analyzes the source code to correctly generate package exports and executable scripts, avoiding any side effects caused by module system transformations.
 
 > [!TIP]  
-> If you haven't already, update your tsconfig.json to include `"verbatimModuleSyntax": true` to preserve ESM import/export syntax for proper export generation.  
+> If you haven't already, update your tsconfig.json to include `"verbatimModuleSyntax": true` to preserve ESM import/export syntax for proper export generation.
 
 To enable this option, update your tsconfig.json:
 
 ```json
 {
   "compilerOptions": {
-    "verbatimModuleSyntax": true,
+    "verbatimModuleSyntax": true
     // ...other options
   }
 }
@@ -126,6 +124,7 @@ It is possible to mix both TypeScript and JavaScript entrypoints within your pac
 ```
 
 This configuration demonstrates:
+
 - Main entry point (`"."`) uses TypeScript:
   - SmartBundle compiles the TypeScript file
   - Type definitions are automatically generated

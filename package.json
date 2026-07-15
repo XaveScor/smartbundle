@@ -46,8 +46,9 @@
     "@types/node": "^22.10.7",
     "@types/semver": "^7.5.8",
     "@types/yargs": "^17.0.33",
+    "@typescript/typescript6": "^6.0.2",
     "prettier": "^3.4.2",
-    "typescript": "^5.7.3",
+    "typescript": "^6.0.3",
     "vitest": "^3.0.2",
     "vitest-directory-snapshot": "^0.4.0",
     "zx": "^8.3.0"
@@ -61,11 +62,15 @@
   },
   "peerDependencies": {
     "@babel/core": "^7.26.0",
-    "typescript": "^5.0.0",
+    "@typescript/typescript6": "^6.0.2",
+    "typescript": ">=5.0.0 <8.0.0",
     "vitest": "^3.0.0"
   },
   "peerDependenciesMeta": {
     "@babel/core": {
+      "optional": true
+    },
+    "@typescript/typescript6": {
       "optional": true
     },
     "typescript": {

@@ -4,12 +4,8 @@
 Ensure that all tests and fixture projects comply with SmartBundle's rules as described in the docs. In particular:
   - Each fixture's package.json must include `"private": true` and `"type": "module"` and **must not** include banned fields such as `files`, `main`, `module`, `browser`, or `types`.
   - For TypeScript fixtures, ensure the tsconfig.json has `"verbatimModuleSyntax": true`.
-  - Do not disable logging in tests.
-
-# Compliance with SmartBundle Guidelines
-Ensure that all tests and fixture projects comply with SmartBundle's rules as described in the docs. In particular:
-  - Each fixture's package.json must include `"private": true` and `"type": "module"` and **must not** include banned fields such as `files`, `main`, `module`, `browser`, or `types`.
-  - For TypeScript fixtures, ensure the tsconfig.json has `"verbatimModuleSyntax": true`.
+  - SmartBundle supports `typescript@>=5.0.0 <8.0.0`; TypeScript 7 fixtures must also install `@typescript/typescript6`.
+  - Generic TypeScript fixtures should use the root TypeScript 6 version. Version-specific compatibility tests must install exact versions in isolated temporary projects.
   - Do not disable logging in tests.
 
 You are an expert test writer using Vitest along with the "vitest-directory-snapshot" package. Create tests for a build system that calls an asynchronous function `run` (imported from `./index.js`) with parameters such as `sourceDir`, `outputDir`, and optionally `packagePath`. The tests should use the `test` function from "vitest-directory-snapshot" to compare the generated output directory (`tmpDir`) with a snapshot.
@@ -48,10 +44,10 @@ You are an expert test writer using Vitest along with the "vitest-directory-snap
        outputDir: tmpDir,
        sourceDir: "./src/fixtures/136-ts-not-installed",
      });
-     expect(res.error).toBeTruthy();
-     expect(res.errors[0]).toMatchInlineSnapshot(
-       `"smartbundle found the .ts entrypoint but required \"typescript\" to build .d.ts files. Please install the \"typescript\" dependency."`
-     );
+      expect(res.error).toBeTruthy();
+      expect(res.errors[0]).toMatchInlineSnapshot(
+        `"SmartBundle found a .ts entrypoint but requires \"typescript@>=5.0.0 <8.0.0\" to build .d.ts files. Please install it with \`npm install --save-dev \"typescript@>=5.0.0 <8.0.0\"\`. TypeScript 7 projects must also install \"@typescript/typescript6\"."`
+      );
      ```
 
 5. **Pre-test Setup**  

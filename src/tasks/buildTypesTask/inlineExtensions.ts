@@ -1,4 +1,4 @@
-import type * as TS from "typescript";
+import type * as TS from "@typescript/typescript6";
 import { join } from "node:path";
 
 // It needs for VSCode. It cannot resolve the import/export if it has no extension
@@ -6,14 +6,14 @@ import { join } from "node:path";
 export type FileExists = (path: string) => boolean;
 
 function transformAndExtractImports(
-  ts: typeof import("typescript"),
+  ts: typeof import("@typescript/typescript6"),
   content: string,
   ext: string,
   dtsExt: string,
   fileExists: FileExists,
 ) {
   function addExtension(
-    ts: typeof import("typescript"),
+    ts: typeof import("@typescript/typescript6"),
     node: TS.StringLiteral,
     ext: string,
     dtsExt: string,
@@ -149,7 +149,7 @@ function transformAndExtractImports(
 }
 
 export function inlineExtensionsMjs(
-  ts: typeof import("typescript"),
+  ts: typeof import("@typescript/typescript6"),
   content: string,
   fileExists: FileExists,
 ) {
@@ -157,7 +157,7 @@ export function inlineExtensionsMjs(
 }
 
 export function inlineExtensionsCjs(
-  ts: typeof import("typescript"),
+  ts: typeof import("@typescript/typescript6"),
   content: string,
   fileExists: FileExists,
 ) {

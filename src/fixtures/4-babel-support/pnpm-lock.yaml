@@ -12,8 +12,8 @@ importers:
         specifier: ^7.26.0
         version: 7.26.0
       typescript:
-        specifier: ^5.7.3
-        version: 5.7.3
+        specifier: ^6.0.3
+        version: 6.0.3
 
 packages:
 
@@ -166,8 +166,8 @@ packages:
     resolution: {integrity: sha512-BR7VvDCVHO+q2xBEWskxS6DJE1qRnb7DxzUrogb71CWoSficBxYsiAGd+Kl0mmq/MprG9yArRkyrQxTO6XjMzA==}
     hasBin: true
 
-  typescript@5.7.3:
-    resolution: {integrity: sha512-84MVSjMEHP+FQRPy3pX9sTVV/INIex71s9TL2Gm5FG/WG1SqXeKyZ0k7/blY/4FdOzI12CBy1vGc4og/eus0fw==}
+  typescript@6.0.3:
+    resolution: {integrity: sha512-y2TvuxSZPDyQakkFRPZHKFm+KKVqIisdg9/CZwm9ftvKXLP8NRWj38/ODjNbr43SsoXqNuAisEf1GdCxqWcdBw==}
     engines: {node: '>=14.17'}
     hasBin: true
 
@@ -343,7 +343,7 @@ snapshots:
 
   semver@6.3.1: {}
 
-  typescript@5.7.3: {}
+  typescript@6.0.3: {}
 
   update-browserslist-db@1.1.1(browserslist@4.24.2):
     dependencies:

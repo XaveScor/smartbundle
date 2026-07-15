@@ -92,12 +92,14 @@ Every bundled package is tested in real environments - from Node.js and Bun to W
 | Next.js/Turbopack| ^13.0.0   | ✔        | -        |
 
 ### TypeScript Module Resolution
-| Strategy    | Supported | E2E Tests |
-|-------------|:---------:|:---------:|
-| bundler     | ✔        | ✔        |
-| node10      | ✔        | ✔        |
-| node16es    | ✔        | ✔        |
-| node16cjs   | ✔        | ✔        |
+| Strategy    | TS 5.6.3 | TS 6.0.3 | TS 7.0.2 |
+|-------------|:--------:|:--------:|:--------:|
+| bundler     | ✔       | ✔       | ✔       |
+| node10      | ✔       | ✔       | -        |
+| node16es    | ✔       | ✔       | ✔       |
+| node16cjs   | ✔       | ✔       | ✔       |
+
+Each supported combination builds the test package with the corresponding TypeScript version and then type-checks an isolated consumer against the generated package. TypeScript 7 builds use `@typescript/typescript6` for SmartBundle's compiler API. TypeScript 7 does not support the removed `node10` resolution strategy.
 
 We aim to support as many bundlers and runtimes as possible. If the bundled package doesn't work with your bundler, please let us know.
 
@@ -106,7 +108,19 @@ We aim to support as many bundlers and runtimes as possible. If the bundled pack
 SmartBundle automatically detects and integrates with your tools - just add what you need to your project.
 
 ### TypeScript
-Add `typescript@^5.0.0` as a dev dependency and start creating `.ts` files. SmartBundle will handle the rest.
+SmartBundle supports TypeScript 5, 6, and 7. Install TypeScript as a dev dependency and start creating `.ts` files:
+
+```sh
+npm install --save-dev "typescript@>=5.0.0 <8.0.0"
+```
+
+TypeScript 7.0 does not expose the compiler API that SmartBundle needs to generate declarations. TypeScript 7 projects must also install the official TypeScript 6 compatibility bridge:
+
+```sh
+npm install --save-dev "typescript@>=7.0.0 <8.0.0" @typescript/typescript6
+```
+
+SmartBundle continues to use the project's TypeScript API directly on TypeScript 5 and 6. On TypeScript 7 it uses the bridge only for declaration emit and declaration-file transforms.
 
 ### Babel
 Add `@babel/core@^7.0.0` as a dev dependency and create a Babel configuration file in your project root. SmartBundle will automatically apply your transformations.

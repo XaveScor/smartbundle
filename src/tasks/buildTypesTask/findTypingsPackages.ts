@@ -1,4 +1,4 @@
-import type * as ts from "typescript";
+import type * as ts from "@typescript/typescript6";
 import * as path from "node:path";
 import * as fs from "node:fs";
 import type { TS } from "../../detectModules.js";

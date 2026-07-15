@@ -3,27 +3,49 @@
 
 <!-- Table of Contents -->
 - [Requirements & Setup](#requirements--setup)
+- [Compatibility Matrix](#compatibility-matrix)
 - [TypeScript Configuration: verbatimModuleSyntax](#typescript-configuration-verbatimmodulesyntax)
 - [Example Package.json Configuration for TypeScript Projects](#example-packagejson-configuration-for-typescript-projects)
   - [Bin Field Example](#bin-field-example)
   - [Exports Field Example](#exports-field-example)
 
 
-This guide explains how SmartBundle integrates with TypeScript to produce consistent and reliable builds. SmartBundle supports projects using TypeScript (v5.0 and above) by requiring a specific TS configuration and by extending package.json semantics. In addition to outlining how to install and configure TypeScript, this guide explains how fields such as bin and exports are interpreted—similar to our JavaScript workflows but with TS-aware adjustments.
+This guide explains how SmartBundle integrates with TypeScript to produce consistent and reliable builds. SmartBundle supports TypeScript 5, 6, and 7 by requiring a specific TS configuration and by extending package.json semantics. In addition to outlining how to install and configure TypeScript, this guide explains how fields such as bin and exports are interpreted—similar to our JavaScript workflows but with TS-aware adjustments.
 
 For detailed information on how SmartBundle extends package.json semantics, refer to our [package.json guide](./package-json.md).
 
 
 ## Requirements & Setup
 
-- Minimum TypeScript version: **>= 5.0**.  
+- Supported TypeScript versions: **>= 5.0.0 < 8.0.0**.
 - To enable TypeScript support in your project, simply install TypeScript:
 
 ```bash
-npm install --save-dev typescript
+npm install --save-dev "typescript@>=5.0.0 <8.0.0"
 ```
 
 SmartBundle detects and uses the locally installed TypeScript.
+
+### TypeScript 7
+
+TypeScript 7.0 does not provide the stable compiler API that SmartBundle uses to emit and transform declaration files. TypeScript 7 projects must install Microsoft's compatibility bridge alongside TypeScript:
+
+```bash
+npm install --save-dev "typescript@>=7.0.0 <8.0.0" @typescript/typescript6
+```
+
+SmartBundle detects the actual TypeScript version installed in the project. For TypeScript 5 and 6 it uses that package's compiler API. For TypeScript 7 it uses `@typescript/typescript6` for declaration emit and declaration-file transforms; the project's `tsc` command remains TypeScript 7.
+
+## Compatibility Matrix
+
+| Module resolution | TS 5.6.3 | TS 6.0.3 | TS 7.0.2 |
+|-------------------|:--------:|:--------:|:--------:|
+| bundler           | ✔       | ✔       | ✔       |
+| node10            | ✔       | ✔       | -        |
+| node16 ESM        | ✔       | ✔       | ✔       |
+| node16 CommonJS   | ✔       | ✔       | ✔       |
+
+Each supported combination is tested end to end: SmartBundle builds the library with the listed TypeScript version, then the same compiler type-checks an isolated consumer of the generated package. TypeScript 7 does not provide the removed `node10` resolution strategy.
 
 ## TypeScript Configuration: verbatimModuleSyntax
 

@@ -238,12 +238,15 @@ importers:
       '@types/yargs':
         specifier: ^17.0.33
         version: 17.0.33
+      '@typescript/typescript6':
+        specifier: ^6.0.2
+        version: 6.0.2
       prettier:
         specifier: ^3.4.2
         version: 3.4.2
       typescript:
-        specifier: ^5.7.3
-        version: 5.7.3
+        specifier: ^6.0.3
+        version: 6.0.3
       vitest:
         specifier: ^3.0.2
         version: 3.0.2(@types/node@22.10.7)(terser@5.31.3)
@@ -640,6 +643,10 @@ packages:
   '@types/yargs@17.0.33':
     resolution: {integrity: sha512-WpxBCKWPLr4xSsHgz511rFJAM+wS28w2zEO1QDNY5zM/S8ok70NNfztH0xwhqKyaK0OHCbN98LDAZuy1ctxDkA==}
 
+  '@typescript/typescript6@6.0.2':
+    resolution: {integrity: sha512-mbCddXd+jm7hfx7w2YU64/Av4/NqqeG3GoRZgxPcgoTxYjhrcfJRw9ULch71SS4G+Q3bOXFhRvPqjguN0Hyp5w==}
+    hasBin: true
+
   '@vitest/expect@3.0.2':
     resolution: {integrity: sha512-dKSHLBcoZI+3pmP5hiZ7I5grNru2HRtEW8Z5Zp4IXog8QYcxhlox7JUPyIIFWfN53+3HW3KPLIl6nSzUGgKSuQ==}
 
@@ -930,8 +937,8 @@ packages:
     resolution: {integrity: sha512-n1cw8k1k0x4pgA2+9XrOkFydTerNcJ1zWCO5Nn9scWHTD+5tp8dghT2x1uduQePZTZgd3Tupf+x9BxJjeJi77Q==}
     engines: {node: '>=14.0.0'}
 
-  typescript@5.7.3:
-    resolution: {integrity: sha512-84MVSjMEHP+FQRPy3pX9sTVV/INIex71s9TL2Gm5FG/WG1SqXeKyZ0k7/blY/4FdOzI12CBy1vGc4og/eus0fw==}
+  typescript@6.0.3:
+    resolution: {integrity: sha512-y2TvuxSZPDyQakkFRPZHKFm+KKVqIisdg9/CZwm9ftvKXLP8NRWj38/ODjNbr43SsoXqNuAisEf1GdCxqWcdBw==}
     engines: {node: '>=14.17'}
     hasBin: true
 
@@ -1381,6 +1388,10 @@ snapshots:
     dependencies:
       '@types/yargs-parser': 21.0.3
 
+  '@typescript/typescript6@6.0.2':
+    dependencies:
+      '@typescript/old': typescript@6.0.3
+
   '@vitest/expect@3.0.2':
     dependencies:
       '@vitest/spy': 3.0.2
@@ -1656,7 +1667,7 @@ snapshots:
 
   tinyspy@3.0.2: {}
 
-  typescript@5.7.3: {}
+  typescript@6.0.3: {}
 
   undici-types@6.20.0: {}
 

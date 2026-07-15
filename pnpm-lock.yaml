@@ -287,8 +287,8 @@ importers:
         specifier: ^22.20.0
         version: 22.20.1
       '@types/semver':
-        specifier: ^7.5.8
-        version: 7.5.8
+        specifier: ^7.7.1
+        version: 7.7.1
       '@types/yargs':
         specifier: ^17.0.35
         version: 17.0.35
@@ -571,8 +571,8 @@ packages:
   '@types/node@22.20.1':
     resolution: {integrity: sha512-EANqOCF9QFyra+4pfxUcX9STKJpCLjMbObVzljIJomAWSnuSIEAvyzEU53GaajbXJEgdh0iEcPL+DGvpUd4k1Q==}
 
-  '@types/semver@7.5.8':
-    resolution: {integrity: sha512-I8EUhyrgfLrcTkzV3TSsGyl1tSuPrEDzr0yd5m90UgNxQkyDXULk3b6MlQqTCpZpNtWe1K0hzclnZkTcLBe2UQ==}
+  '@types/semver@7.7.1':
+    resolution: {integrity: sha512-FmgJfu+MOcQ370SD0ev7EI8TlCAfKYU+B4m5T3yXc1CiRN94g/SZPtsCkk506aUDtlMnFZvasDwHHUcZUEaYuA==}
 
   '@types/yargs-parser@21.0.3':
     resolution: {integrity: sha512-I4q9QU9MQv4oEOz4tAHJtNz1cwuLxn2F3xcc2iV5WdqLPpUnj30aUuxt1mAxYTG+oe8CZMV/+6rU4S4gRDzqtQ==}
@@ -1351,7 +1351,7 @@ snapshots:
     dependencies:
       undici-types: 6.21.0
 
-  '@types/semver@7.5.8': {}
+  '@types/semver@7.7.1': {}
 
   '@types/yargs-parser@21.0.3': {}
 

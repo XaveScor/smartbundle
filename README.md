@@ -68,7 +68,7 @@ npm run build
 
 ## Compatibility
 
-Every bundled package is tested in real environments - from Node.js and Bun to Webpack and Metro - to ensure it just works.
+SmartBundle is guaranteed to work on all active and maintenance LTS releases, plus the current release. Former LTS versions that have reached end-of-life remain supported on a best-effort basis. Every bundled package is tested in real environments — from Node.js and Bun to Webpack and Metro — to ensure it just works.
 
 ### Runtimes
 
@@ -77,7 +77,7 @@ Every bundled package is tested in real environments - from Node.js and Bun to W
 | Node.js | ^18.0.0 |    ✔     |    ✔     |
 |         | ^20.0.0 |    ✔     |    ✔     |
 |         | ^22.0.0 |    ✔     |    ✔     |
-|         | ^23.0.0 |    ✔     |    ✔     |
+|         | ^24.0.0 |    ✔     |    ✔     |
 | Bun     | ^1.0.0  |    ✔     |    ✔     |
 | Deno    | ^2.0.0  |    ✔     |     -     |
 

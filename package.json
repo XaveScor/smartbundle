@@ -62,7 +62,7 @@
     "vite": "^8.1.4",
     "yargs": "^18.0.0",
     "youch": "4.1.1",
-    "zod": "^3.24.1"
+    "zod": "^4.4.3"
   },
   "peerDependencies": {
     "@babel/core": "^7.26.0",

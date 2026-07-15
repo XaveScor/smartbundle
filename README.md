@@ -92,14 +92,20 @@ Every bundled package is tested in real environments - from Node.js and Bun to W
 | Next.js/Turbopack| ^13.0.0   | ✔        | -        |
 
 ### TypeScript Module Resolution
-| Strategy    | TS 5.6.3 | TS 6.0.3 | TS 7.0.2 |
-|-------------|:--------:|:--------:|:--------:|
-| bundler     | ✔       | ✔       | ✔       |
-| node10      | ✔       | ✔       | -        |
-| node16es    | ✔       | ✔       | ✔       |
-| node16cjs   | ✔       | ✔       | ✔       |
 
-Each supported combination builds the test package with the corresponding TypeScript version and then type-checks an isolated consumer against the generated package. TypeScript 7 builds use `@typescript/typescript6` for SmartBundle's compiler API. TypeScript 7 does not support the removed `node10` resolution strategy.
+| Built with | Consumed with | bundler | node10 | node16 ESM | node16 CommonJS |
+| ---------- | ------------- | :-----: | :----: | :--------: | :-------------: |
+| TS 5.9.3   | TS 5.9.3      |   ✔    |   ✔   |     ✔     |       ✔        |
+| TS 5.9.3   | TS 6.0.3      |   ✔    |   ✔   |     ✔     |       ✔        |
+| TS 5.9.3   | TS 7.0.2      |   ✔    |   -    |     ✔     |       ✔        |
+| TS 6.0.3   | TS 5.9.3      |   ✔    |   ✔   |     ✔     |       ✔        |
+| TS 6.0.3   | TS 6.0.3      |   ✔    |   ✔   |     ✔     |       ✔        |
+| TS 6.0.3   | TS 7.0.2      |   ✔    |   -    |     ✔     |       ✔        |
+| TS 7.0.2   | TS 5.9.3      |   ✔    |   ✔   |     ✔     |       ✔        |
+| TS 7.0.2   | TS 6.0.3      |   ✔    |   ✔   |     ✔     |       ✔        |
+| TS 7.0.2   | TS 7.0.2      |   ✔    |   -    |     ✔     |       ✔        |
+
+Each supported combination builds the test package with the listed build version and then type-checks an isolated consumer with the listed consumer version. The matrix tests the latest release of each supported TypeScript major. TypeScript 7 builds use `@typescript/typescript6` for SmartBundle's compiler API. TypeScript 7 consumers do not support the removed `node10` resolution strategy.
 
 We aim to support as many bundlers and runtimes as possible. If the bundled package doesn't work with your bundler, please let us know.
 

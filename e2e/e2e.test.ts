@@ -424,31 +424,21 @@ describe("e2e", () => {
       "node16cjs",
       "node16es",
     ] as const;
-    const typescriptVersions = [
-      { version: "5.6.3", moduleResolutions: allModuleResolutions },
-      { version: "6.0.3", moduleResolutions: allModuleResolutions },
-      {
-        version: "7.0.2",
-        moduleResolutions: allModuleResolutions.filter(
-          (resolution) => resolution !== "node10",
-        ),
-      },
-    ];
+    const typescriptVersions = ["5.9.3", "6.0.3", "7.0.2"] as const;
 
-    for (const { version, moduleResolutions } of typescriptVersions) {
-      describe(`TypeScript ${version}`, () => {
+    for (const buildVersion of typescriptVersions) {
+      describe(`built with TypeScript ${buildVersion}`, () => {
         let testDirPath = "";
-        let sourceDirPath = "";
+        let builtPackageDirPath = "";
 
         beforeAll(async () => {
           testDirPath = await fs.realpath(
             await fs.mkdtemp(
-              path.join(tmpdir(), `smartbundle-typescript-${version}-`),
+              path.join(tmpdir(), `smartbundle-typescript-${buildVersion}-`),
             ),
           );
-          sourceDirPath = path.join(testDirPath, "source");
-          const builtPackageDirPath = path.join(testDirPath, "test-lib");
-          const consumerDirPath = path.join(testDirPath, "consumer");
+          const sourceDirPath = path.join(testDirPath, "source");
+          builtPackageDirPath = path.join(testDirPath, "test-lib");
           copyDirectory(
             path.resolve(import.meta.dirname, "test-lib"),
             sourceDirPath,
@@ -459,8 +449,8 @@ describe("e2e", () => {
             await fs.readFile(sourcePackagePath, "utf8"),
           );
           sourcePackage.devDependencies = {
-            typescript: version,
-            ...(version.startsWith("7.")
+            typescript: buildVersion,
+            ...(buildVersion.startsWith("7.")
               ? { "@typescript/typescript6": "6.0.2" }
               : {}),
           };
@@ -478,76 +468,98 @@ describe("e2e", () => {
             buildResult.error,
             buildResult.error ? String(buildResult.errors[0]) : undefined,
           ).toBe(false);
-
-          await fs.mkdir(consumerDirPath);
-          await fs.writeFile(
-            path.join(consumerDirPath, "package.json"),
-            JSON.stringify({
-              private: true,
-              dependencies: {
-                "test-lib": `file:${builtPackageDirPath}`,
-              },
-            }),
-          );
-
-          for (const moduleResolution of moduleResolutions) {
-            const fixtureDirPath = path.resolve(
-              import.meta.dirname,
-              "typescript",
-              moduleResolution,
-            );
-            const resolutionDirPath = path.join(
-              consumerDirPath,
-              moduleResolution,
-            );
-            await fs.mkdir(resolutionDirPath);
-            await Promise.all([
-              fs.copyFile(
-                path.join(fixtureDirPath, "index.ts"),
-                path.join(resolutionDirPath, "index.ts"),
-              ),
-              fs.copyFile(
-                path.join(fixtureDirPath, "tsconfig.json"),
-                path.join(resolutionDirPath, "tsconfig.json"),
-              ),
-            ]);
-
-            if (moduleResolution.startsWith("node16")) {
-              await fs.writeFile(
-                path.join(resolutionDirPath, "package.json"),
-                JSON.stringify({
-                  type: moduleResolution === "node16es" ? "module" : "commonjs",
-                }),
-              );
-            }
-          }
-
-          $.sync`pnpm --dir ${consumerDirPath} install --silent --ignore-workspace --lockfile=false`;
         }, 60_000);
 
         afterAll(async () => {
           await fs.rm(testDirPath, { recursive: true, force: true });
         });
 
-        test.each(moduleResolutions)(
-          "moduleResolution: %s",
-          (moduleResolution) => {
-            const tsconfigPath = path.join(
-              testDirPath,
-              "consumer",
-              moduleResolution,
-              "tsconfig.json",
-            );
-            const extraArgs =
-              version.startsWith("6.") && moduleResolution === "node10"
-                ? ["--ignoreDeprecations", "6.0"]
-                : [];
+        for (const consumerVersion of typescriptVersions) {
+          const moduleResolutions = consumerVersion.startsWith("7.")
+            ? allModuleResolutions.filter(
+                (resolution) => resolution !== "node10",
+              )
+            : allModuleResolutions;
 
-            expect(
-              $.sync`pnpm --dir ${sourceDirPath} --silent exec tsc --project ${tsconfigPath} ${extraArgs}`.text(),
-            ).toBe("");
-          },
-        );
+          describe(`consumed with TypeScript ${consumerVersion}`, () => {
+            let consumerDirPath = "";
+
+            beforeAll(async () => {
+              consumerDirPath = path.join(
+                testDirPath,
+                `consumer-${consumerVersion}`,
+              );
+              await fs.mkdir(consumerDirPath);
+              await fs.writeFile(
+                path.join(consumerDirPath, "package.json"),
+                JSON.stringify({
+                  private: true,
+                  dependencies: {
+                    "test-lib": `file:${builtPackageDirPath}`,
+                  },
+                  devDependencies: {
+                    typescript: consumerVersion,
+                  },
+                }),
+              );
+
+              for (const moduleResolution of moduleResolutions) {
+                const fixtureDirPath = path.resolve(
+                  import.meta.dirname,
+                  "typescript",
+                  moduleResolution,
+                );
+                const resolutionDirPath = path.join(
+                  consumerDirPath,
+                  moduleResolution,
+                );
+                await fs.mkdir(resolutionDirPath);
+                await Promise.all([
+                  fs.copyFile(
+                    path.join(fixtureDirPath, "index.ts"),
+                    path.join(resolutionDirPath, "index.ts"),
+                  ),
+                  fs.copyFile(
+                    path.join(fixtureDirPath, "tsconfig.json"),
+                    path.join(resolutionDirPath, "tsconfig.json"),
+                  ),
+                ]);
+
+                if (moduleResolution.startsWith("node16")) {
+                  await fs.writeFile(
+                    path.join(resolutionDirPath, "package.json"),
+                    JSON.stringify({
+                      type:
+                        moduleResolution === "node16es" ? "module" : "commonjs",
+                    }),
+                  );
+                }
+              }
+
+              $.sync`pnpm --dir ${consumerDirPath} install --silent --ignore-workspace --lockfile=false`;
+            }, 60_000);
+
+            test.each(moduleResolutions)(
+              "moduleResolution: %s",
+              (moduleResolution) => {
+                const tsconfigPath = path.join(
+                  consumerDirPath,
+                  moduleResolution,
+                  "tsconfig.json",
+                );
+                const extraArgs =
+                  consumerVersion.startsWith("6.") &&
+                  moduleResolution === "node10"
+                    ? ["--ignoreDeprecations", "6.0"]
+                    : [];
+
+                expect(
+                  $.sync`pnpm --dir ${consumerDirPath} --silent exec tsc --project ${tsconfigPath} ${extraArgs}`.text(),
+                ).toBe("");
+              },
+            );
+          });
+        }
       });
     }
   });

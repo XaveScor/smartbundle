@@ -3,7 +3,7 @@ import {
   TypeScriptBridgeRequiredError,
 } from "./detectModules.js";
 
-const ts5 = { version: "5.6.3" };
+const ts5 = { version: "5.9.3" };
 const ts6 = { version: "6.0.3" };
 const bridge = { version: "6.0.3" };
 
@@ -24,7 +24,7 @@ function createRequireMock(
 
 describe("loadTypescriptApi", () => {
   test.each([
-    ["5.6.3", ts5],
+    ["5.9.3", ts5],
     ["6.0.3", ts6],
   ])("uses the installed TypeScript %s API", (version, api) => {
     const result = loadTypescriptApi(

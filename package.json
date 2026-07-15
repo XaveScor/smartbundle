@@ -49,7 +49,7 @@
     "@types/babel__core": "^7.20.5",
     "@types/node": "^22.20.0",
     "@types/semver": "^7.5.8",
-    "@types/yargs": "^17.0.33",
+    "@types/yargs": "^17.0.35",
     "@typescript/typescript6": "^6.0.2",
     "prettier": "^3.4.2",
     "typescript": "^6.0.3",

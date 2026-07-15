@@ -269,7 +269,7 @@ importers:
         version: 7.8.5
       vite:
         specifier: ^8.1.4
-        version: 8.1.4(@types/node@22.20.1)(terser@5.31.3)
+        version: 8.1.4(@types/node@20.19.43)(terser@5.31.3)
       yargs:
         specifier: ^17.7.2
         version: 17.7.2
@@ -284,8 +284,8 @@ importers:
         specifier: ^7.20.5
         version: 7.20.5
       '@types/node':
-        specifier: ^22.20.0
-        version: 22.20.1
+        specifier: ^20.19.43
+        version: 20.19.43
       '@types/semver':
         specifier: ^7.7.1
         version: 7.7.1
@@ -303,10 +303,10 @@ importers:
         version: 6.0.3
       vitest:
         specifier: ^4.1.10
-        version: 4.1.10(@types/node@22.20.1)(vite@8.1.4(@types/node@22.20.1)(terser@5.31.3))
+        version: 4.1.10(@types/node@20.19.43)(vite@8.1.4(@types/node@20.19.43)(terser@5.31.3))
       vitest-directory-snapshot:
         specifier: ^0.6.1
-        version: 0.6.1(vitest@4.1.10(@types/node@22.20.1)(vite@8.1.4(@types/node@22.20.1)(terser@5.31.3)))
+        version: 0.6.1(vitest@4.1.10(@types/node@20.19.43)(vite@8.1.4(@types/node@20.19.43)(terser@5.31.3)))
       zx:
         specifier: ^8.8.5
         version: 8.8.5
@@ -560,8 +560,8 @@ packages:
   '@types/estree@1.0.6':
     resolution: {integrity: sha512-AYnb1nQyY49te+VRAVgmzfcgjYS91mY5P0TKUDCLEM+gNnA+3T6rWITXRLYCpahpqSQbN5cE+gHpnPyXjHWxcw==}
 
-  '@types/node@22.20.1':
-    resolution: {integrity: sha512-EANqOCF9QFyra+4pfxUcX9STKJpCLjMbObVzljIJomAWSnuSIEAvyzEU53GaajbXJEgdh0iEcPL+DGvpUd4k1Q==}
+  '@types/node@20.19.43':
+    resolution: {integrity: sha512-6oYBAi5ikg4Pl+kGsoYtawUMBT2zZMCvPNF7pVLnHZfd1zf38DRiWn/gT01RYCdUqkv7Fhr+C9ot4/tb+2sVvA==}
 
   '@types/semver@7.7.1':
     resolution: {integrity: sha512-FmgJfu+MOcQ370SD0ev7EI8TlCAfKYU+B4m5T3yXc1CiRN94g/SZPtsCkk506aUDtlMnFZvasDwHHUcZUEaYuA==}
@@ -1325,7 +1325,7 @@ snapshots:
 
   '@types/estree@1.0.6': {}
 
-  '@types/node@22.20.1':
+  '@types/node@20.19.43':
     dependencies:
       undici-types: 6.21.0
 
@@ -1350,13 +1350,13 @@ snapshots:
       chai: 6.2.2
       tinyrainbow: 3.1.0
 
-  '@vitest/mocker@4.1.10(vite@8.1.4(@types/node@22.20.1)(terser@5.31.3))':
+  '@vitest/mocker@4.1.10(vite@8.1.4(@types/node@20.19.43)(terser@5.31.3))':
     dependencies:
       '@vitest/spy': 4.1.10
       estree-walker: 3.0.3
       magic-string: 0.30.21
     optionalDependencies:
-      vite: 8.1.4(@types/node@22.20.1)(terser@5.31.3)
+      vite: 8.1.4(@types/node@20.19.43)(terser@5.31.3)
 
   '@vitest/pretty-format@4.1.10':
     dependencies:
@@ -1638,7 +1638,7 @@ snapshots:
       escalade: 3.2.0
       picocolors: 1.1.1
 
-  vite@8.1.4(@types/node@22.20.1)(terser@5.31.3):
+  vite@8.1.4(@types/node@20.19.43)(terser@5.31.3):
     dependencies:
       lightningcss: 1.32.0
       picomatch: 4.0.5
@@ -1646,18 +1646,18 @@ snapshots:
       rolldown: 1.1.5
       tinyglobby: 0.2.17
     optionalDependencies:
-      '@types/node': 22.20.1
+      '@types/node': 20.19.43
       fsevents: 2.3.3
       terser: 5.31.3
 
-  vitest-directory-snapshot@0.6.1(vitest@4.1.10(@types/node@22.20.1)(vite@8.1.4(@types/node@22.20.1)(terser@5.31.3))):
+  vitest-directory-snapshot@0.6.1(vitest@4.1.10(@types/node@20.19.43)(vite@8.1.4(@types/node@20.19.43)(terser@5.31.3))):
     dependencies:
-      vitest: 4.1.10(@types/node@22.20.1)(vite@8.1.4(@types/node@22.20.1)(terser@5.31.3))
+      vitest: 4.1.10(@types/node@20.19.43)(vite@8.1.4(@types/node@20.19.43)(terser@5.31.3))
 
-  vitest@4.1.10(@types/node@22.20.1)(vite@8.1.4(@types/node@22.20.1)(terser@5.31.3)):
+  vitest@4.1.10(@types/node@20.19.43)(vite@8.1.4(@types/node@20.19.43)(terser@5.31.3)):
     dependencies:
       '@vitest/expect': 4.1.10
-      '@vitest/mocker': 4.1.10(vite@8.1.4(@types/node@22.20.1)(terser@5.31.3))
+      '@vitest/mocker': 4.1.10(vite@8.1.4(@types/node@20.19.43)(terser@5.31.3))
       '@vitest/pretty-format': 4.1.10
       '@vitest/runner': 4.1.10
       '@vitest/snapshot': 4.1.10
@@ -1674,10 +1674,10 @@ snapshots:
       tinyexec: 1.2.4
       tinyglobby: 0.2.17
       tinyrainbow: 3.1.0
-      vite: 8.1.4(@types/node@22.20.1)(terser@5.31.3)
+      vite: 8.1.4(@types/node@20.19.43)(terser@5.31.3)
       why-is-node-running: 2.3.0
     optionalDependencies:
-      '@types/node': 22.20.1
+      '@types/node': 20.19.43
     transitivePeerDependencies:
       - msw
 

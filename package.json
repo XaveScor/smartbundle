@@ -49,7 +49,7 @@
     "@types/babel__core": "^7.20.5",
     "@types/node": "^20.19.43",
     "@types/semver": "^7.7.1",
-    "@types/yargs": "^17.0.35",
+    "@types/yargs": "17.0.35",
     "@typescript/typescript6": "^6.0.2",
     "prettier": "^3.9.5",
     "typescript": "7.0.2",
@@ -60,7 +60,7 @@
   "dependencies": {
     "semver": "^7.8.5",
     "vite": "^8.1.4",
-    "yargs": "^17.7.2",
+    "yargs": "^18.0.0",
     "youch": "4.1.1",
     "zod": "^3.24.1"
   },

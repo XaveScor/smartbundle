@@ -3,7 +3,7 @@ import { run } from "./index.js";
 import { $ } from "zx";
 import { test } from "vitest-directory-snapshot";
 import { disableLog } from "./log.js";
-import { errors } from "./errors";
+import { errors } from "./errors.js";
 
 disableLog();
 
@@ -213,9 +213,11 @@ describe("bugs", () => {
     });
 
     expect(res.error).toBeTruthy();
-    expect(res.errors[0]).toMatchInlineSnapshot(
-      `"The typings won't installed in bundled package: "devDep". Please install them into dependencies or peerDependencies."`,
-    );
+    if (res.error) {
+      expect(res.errors[0]).toMatchInlineSnapshot(
+        `"The typings won't installed in bundled package: "devDep". Please install them into dependencies or peerDependencies."`,
+      );
+    }
   });
 
   test("118-validate-dts-typings-imports", async ({
@@ -229,9 +231,11 @@ describe("bugs", () => {
     });
 
     expect(res.error).toBeTruthy();
-    expect(res.errors[0]).toMatchInlineSnapshot(
-      `"The typings won't installed in bundled package: "@types/dep", "@types/importDep", "@types/dynamicDep". Please install them into dependencies or peerDependencies."`,
-    );
+    if (res.error) {
+      expect(res.errors[0]).toMatchInlineSnapshot(
+        `"The typings won't installed in bundled package: "@types/dep", "@types/importDep", "@types/dynamicDep". Please install them into dependencies or peerDependencies."`,
+      );
+    }
   });
 
   test("122-check-types-deps", async ({ tmpDir }: { tmpDir: string }) => {
@@ -268,9 +272,11 @@ describe("bugs", () => {
     });
 
     expect(res.error).toBeTruthy();
-    expect(res.errors[0]).toMatchInlineSnapshot(
-      `"SmartBundle found a .ts entrypoint but requires "typescript@>=5.0.0 <8.0.0" to build .d.ts files. Please install it with \`npm install --save-dev "typescript@>=5.0.0 <8.0.0"\`. TypeScript 7 projects must also install "@typescript/typescript6"."`,
-    );
+    if (res.error) {
+      expect(res.errors[0]).toMatchInlineSnapshot(
+        `"SmartBundle found a .ts entrypoint but requires "typescript@>=5.0.0 <8.0.0" to build .d.ts files. Please install it with \`npm install --save-dev "typescript@>=5.0.0 <8.0.0"\`. TypeScript 7 projects must also install "@typescript/typescript6"."`,
+      );
+    }
   });
 
   test("135-should error when package.json lacks both exports and bin", async ({
@@ -283,7 +289,9 @@ describe("bugs", () => {
       sourceDir: "./src/fixtures/no-exports-no-bin",
     });
     expect(res.error).toBeTruthy();
-    expect(res.errors[0]).toBe(errors.exportsRequired);
+    if (res.error) {
+      expect(res.errors[0]).toBe(errors.exportsRequired);
+    }
   });
 });
 
@@ -296,9 +304,11 @@ describe("react", () => {
       });
 
       expect(res.error).toBeTruthy();
-      expect(res.errors[0]).toMatchInlineSnapshot(
-        `"[smartbundle:react] SmartBundle cannot find the react dependency inside dependencies, optionalDependencies or peerDependencies. Please, install it before bundling"`,
-      );
+      if (res.error) {
+        expect(res.errors[0]).toMatchInlineSnapshot(
+          `"[smartbundle:react] SmartBundle cannot find the react dependency inside dependencies, optionalDependencies or peerDependencies. Please, install it before bundling"`,
+        );
+      }
     });
   });
 

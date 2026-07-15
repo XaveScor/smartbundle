@@ -1,11 +1,13 @@
 # SmartBundle React Integration Guide
 
 <!-- Table of Contents -->
+
 - [Requirements & Setup](#requirements--setup)
 - [React JSX Transformation](#react-jsx-transformation)
 - [Example Package.json Configuration for React Projects](#example-packagejson-configuration-for-react-projects)
 
 <!-- Overview -->
+
 SmartBundle’s React Integration Guide explains how SmartBundle builds and optimizes your React applications by applying version-specific JSX transformations. This guide provides a step‐by‐step overview of required dependencies, setup instructions, and example package.json configurations for both application entry points and command-line scripts.
 
 ## Requirements & Setup
@@ -59,4 +61,3 @@ Below is a sample configuration. SmartBundle auto-detects React and applies the 
 ```
 
 In this example, using React 17 triggers the new JSX runtime.
-

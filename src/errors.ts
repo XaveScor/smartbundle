@@ -24,7 +24,7 @@ export const errors = {
   rollupError:
     "An error occurred while building the package. Please, report it to the issues on GitHub",
   typescriptNotFound:
-    "The package.json contains typescript entrypoints, but the typescript package is not found. Please, install typescript@^5.0.0",
+    'SmartBundle found a .ts entrypoint but requires "typescript@>=5.0.0 <8.0.0" to build .d.ts files. Please install it with `npm install --save-dev "typescript@>=5.0.0 <8.0.0"`. TypeScript 7 projects must also install "@typescript/typescript6".',
   optionalDependenciesInvalid:
     "The `optionalDependencies` field must be an Object<string, string>. Please, verify the value. More info: https://docs.npmjs.com/cli/v10/configuring-npm/package-json#optionaldependencies",
   repositoryInvalid:

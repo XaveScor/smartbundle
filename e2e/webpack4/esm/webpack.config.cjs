@@ -9,6 +9,6 @@ module.exports = {
   resolve: {
     extensions: [".js"],
   },
-  stats: 'minimal',
+  stats: "minimal",
   mode: "production",
 };

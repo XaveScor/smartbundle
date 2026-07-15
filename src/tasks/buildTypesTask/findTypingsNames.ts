@@ -1,4 +1,4 @@
-import type * as ts from "typescript";
+import type * as ts from "@typescript/typescript6";
 import { join, relative } from "node:path";
 import { readdirSync, statSync } from "node:fs";
 import type { TS } from "../../detectModules.js";

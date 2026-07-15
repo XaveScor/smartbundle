@@ -1,12 +1,15 @@
 import { type PackageJson } from "./packageJson.js";
 import semver from "semver";
+import { createRequire } from "node:module";
 import { okLog, errorLog, log, lineLog, warnLog } from "./log.js";
 import type { Dirs } from "./resolveDirs.js";
 
+type TypeScriptApi = typeof import("@typescript/typescript6");
+
 export type TS = {
-  ts: typeof import("typescript");
-  parsedConfig: import("typescript").ParsedCommandLine;
-  host: import("typescript").CompilerHost;
+  ts: TypeScriptApi;
+  parsedConfig: import("@typescript/typescript6").ParsedCommandLine;
+  host: import("@typescript/typescript6").CompilerHost;
 };
 export type DetectedModules = {
   ts?: TS;
@@ -57,6 +60,45 @@ export function getMinVersion(
   return minVersion;
 }
 
+type RequireModule = (specifier: string) => any;
+
+export class TypeScriptBridgeRequiredError extends Error {}
+export class UnsupportedTypeScriptVersionError extends Error {}
+
+export function loadTypescriptApi(requireModule: RequireModule): {
+  ts: TypeScriptApi;
+  installedVersion: string;
+} {
+  const { version: installedVersion } = requireModule(
+    "typescript/package.json",
+  ) as { version: string };
+  const parsedVersion = semver.parse(installedVersion);
+
+  if (!parsedVersion || parsedVersion.major < 5 || parsedVersion.major > 7) {
+    throw new UnsupportedTypeScriptVersionError(
+      `Unsupported TypeScript version ${installedVersion}. SmartBundle supports TypeScript >=5.0.0 <8.0.0.`,
+    );
+  }
+
+  if (parsedVersion.major === 7) {
+    try {
+      return {
+        ts: requireModule("@typescript/typescript6") as TypeScriptApi,
+        installedVersion,
+      };
+    } catch {
+      throw new TypeScriptBridgeRequiredError(
+        "SmartBundle requires @typescript/typescript6 to build .d.ts files for TypeScript 7 projects. Please install it with `npm install --save-dev @typescript/typescript6`.",
+      );
+    }
+  }
+
+  return {
+    ts: requireModule("typescript") as TypeScriptApi,
+    installedVersion,
+  };
+}
+
 async function detectBabel(
   packageJson: PackageJson,
 ): Promise<typeof import("@babel/core") | undefined> {
@@ -99,16 +141,26 @@ async function detectTypescript(
     return;
   }
 
-  let ts: typeof import("typescript");
+  let ts: TypeScriptApi;
+  let installedVersion: string;
   try {
-    // ts <=4.3 has no named exports. The all methods is located in the default export
-    ts = (await import("typescript")).default;
-  } catch {
+    const loaded = loadTypescriptApi(createRequire(dirs.packagePath));
+    ts = loaded.ts;
+    installedVersion = loaded.installedVersion;
+  } catch (error) {
+    if (
+      error instanceof TypeScriptBridgeRequiredError ||
+      error instanceof UnsupportedTypeScriptVersionError
+    ) {
+      throw error;
+    }
     errorLog("typescript");
     return;
   }
 
-  okLog("typescript, version:", ts.version);
+  const apiVersion =
+    installedVersion === ts.version ? "" : ` (compiler API: ${ts.version})`;
+  okLog("typescript, version:", installedVersion + apiVersion);
 
   const configFilePath = ts.findConfigFile(dirs.sourceDir, ts.sys.fileExists);
   if (!configFilePath) {

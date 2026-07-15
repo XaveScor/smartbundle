@@ -1,1 +1,1 @@
-export const a = 'first';
+export const a = "first";

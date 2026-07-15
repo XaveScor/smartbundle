@@ -269,7 +269,7 @@ describe("bugs", () => {
 
     expect(res.error).toBeTruthy();
     expect(res.errors[0]).toMatchInlineSnapshot(
-      `"smartbundle found the .ts entrypoint but required "typescript" to build .d.ts files. Please install the "typescript" dependency."`,
+      `"SmartBundle found a .ts entrypoint but requires "typescript@>=5.0.0 <8.0.0" to build .d.ts files. Please install it with \`npm install --save-dev "typescript@>=5.0.0 <8.0.0"\`. TypeScript 7 projects must also install "@typescript/typescript6"."`,
     );
   });
 

@@ -4,6 +4,7 @@ import { okLog } from "../../log.js";
 import type { DetectedModules } from "../../detectModules.js";
 import { type PackageJson } from "../../packageJson.js";
 import { type Dirs } from "../../resolveDirs.js";
+import { errors } from "../../errors.js";
 
 type BuildTypesTaskOption = {
   entrypoints: Map<string, string>;
@@ -19,17 +20,15 @@ export async function buildTypesTask({
   modules,
 }: BuildTypesTaskOption) {
   const { outDir } = dirs;
-  const tsEntrypoints = [...entrypoints.values()].filter((entry) =>
-    entry.endsWith(".ts") || entry.endsWith(".tsx"),
+  const tsEntrypoints = [...entrypoints.values()].filter(
+    (entry) => entry.endsWith(".ts") || entry.endsWith(".tsx"),
   );
   const reversedEntrypoints = reverseMap(entrypoints);
 
   const entrypointToEsDtsMap = new Map<string, string>();
   const entrypointToCjsDtsMap = new Map<string, string>();
   if (tsEntrypoints.length > 0 && modules.ts == null) {
-    throw new Error(
-      'smartbundle found the .ts entrypoint but required "typescript" to build .d.ts files. Please install the "typescript" dependency.',
-    );
+    throw new Error(errors.typescriptNotFound);
   }
   if (tsEntrypoints.length === 0 || modules.ts == null) {
     return { entrypointToEsDtsMap, entrypointToCjsDtsMap };

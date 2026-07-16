@@ -54,7 +54,7 @@
     "prettier": "^3.9.5",
     "typescript": "7.0.2",
     "vitest": "^4.1.10",
-    "vitest-directory-snapshot": "^0.6.1",
+    "vitest-directory-snapshot": "^0.7.1",
     "zx": "^8.8.5"
   },
   "dependencies": {

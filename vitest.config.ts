@@ -9,7 +9,7 @@ export default defineConfig(async () => {
       test: {
         testTimeout: 20_000,
         globals: true,
-        setupFiles: ["./setupFile.ts"],
+        setupFiles: ["vitest-directory-snapshot/setup"],
         typecheck: {
           enabled: true,
         },

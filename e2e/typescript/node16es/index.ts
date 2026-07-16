@@ -1,3 +1,4 @@
-import { a } from "test-lib/reexport";
+import { a, type Bar } from "test-lib/reexport";
 
-console.log(a);
+const bar: Bar = { x: 1 };
+console.log(a, bar.x);

@@ -9,60 +9,80 @@ import { createRequire } from "node:module";
 
 const { ts } = loadTypescriptApi(createRequire(import.meta.url));
 
-const exts = [{ ext: ".cjs" }, { ext: ".mjs" }, { ext: ".js" }];
+const inputExts = [".js", ".mjs", ".cjs"];
 
 const fileExists: FileExists = (path) => true;
 const fileIndexExists: FileExists = (path) => path.includes("index");
 
 describe("inlineExtensionsMjs", () => {
-  describe("not changed", () => {
+  describe("normalizes existing extension", () => {
     describe("from file", () => {
-      test.each(exts)("reexport all: ${ext}", ({ ext }) => {
-        const content = `export * from "./resolveDirs${ext}";\n`;
-        expect(inlineExtensionsMjs(ts, content, fileExists)).toBe(content);
+      test.each(inputExts)("reexport all: %s", (inputExt) => {
+        const input = `export * from "./resolveDirs${inputExt}";\n`;
+        expect(inlineExtensionsMjs(ts, input, fileExists)).toBe(
+          `export * from "./resolveDirs.mjs";\n`,
+        );
       });
 
-      test.each(exts)("reexport named: ${ext}", ({ ext }) => {
-        const content = `export { resolveDirs } from "./resolveDirs${ext}";\n`;
-        expect(inlineExtensionsMjs(ts, content, fileExists)).toBe(content);
+      test.each(inputExts)("reexport named: %s", (inputExt) => {
+        const input = `export { resolveDirs } from "./resolveDirs${inputExt}";\n`;
+        expect(inlineExtensionsMjs(ts, input, fileExists)).toBe(
+          `export { resolveDirs } from "./resolveDirs.mjs";\n`,
+        );
       });
 
-      test.each(exts)("reexport named with alias: ${ext}", ({ ext }) => {
-        const content = `export { resolveDirs as dirs } from "./resolveDirs${ext}";\n`;
-        expect(inlineExtensionsMjs(ts, content, fileExists)).toBe(content);
+      test.each(inputExts)("reexport named with alias: %s", (inputExt) => {
+        const input = `export { resolveDirs as dirs } from "./resolveDirs${inputExt}";\n`;
+        expect(inlineExtensionsMjs(ts, input, fileExists)).toBe(
+          `export { resolveDirs as dirs } from "./resolveDirs.mjs";\n`,
+        );
       });
 
-      test.each(exts)("import default: ${ext}", ({ ext }) => {
-        const content = `import resolveDirs from "./resolveDirs${ext}";\n`;
-        expect(inlineExtensionsMjs(ts, content, fileExists)).toBe(content);
+      test.each(inputExts)("import default: %s", (inputExt) => {
+        const input = `import resolveDirs from "./resolveDirs${inputExt}";\n`;
+        expect(inlineExtensionsMjs(ts, input, fileExists)).toBe(
+          `import resolveDirs from "./resolveDirs.mjs";\n`,
+        );
       });
 
-      test.each(exts)("import named: ${ext}", ({ ext }) => {
-        const content = `import { resolveDirs } from "./resolveDirs${ext}";\n`;
-        expect(inlineExtensionsMjs(ts, content, fileExists)).toBe(content);
+      test.each(inputExts)("import named: %s", (inputExt) => {
+        const input = `import { resolveDirs } from "./resolveDirs${inputExt}";\n`;
+        expect(inlineExtensionsMjs(ts, input, fileExists)).toBe(
+          `import { resolveDirs } from "./resolveDirs.mjs";\n`,
+        );
       });
 
-      test.each(exts)("import named with alias: ${ext}", ({ ext }) => {
-        const content = `import { resolveDirs as dirs } from "./resolveDirs${ext}";\n`;
-        expect(inlineExtensionsMjs(ts, content, fileExists)).toBe(content);
+      test.each(inputExts)("import named with alias: %s", (inputExt) => {
+        const input = `import { resolveDirs as dirs } from "./resolveDirs${inputExt}";\n`;
+        expect(inlineExtensionsMjs(ts, input, fileExists)).toBe(
+          `import { resolveDirs as dirs } from "./resolveDirs.mjs";\n`,
+        );
       });
 
-      test.each(exts)("import type: ${ext}", ({ ext }) => {
-        const content = `import type { Dirs } from "./resolveDirs${ext}";\n`;
-        expect(inlineExtensionsMjs(ts, content, fileExists)).toBe(content);
+      test.each(inputExts)("import type: %s", (inputExt) => {
+        const input = `import type { Dirs } from "./resolveDirs${inputExt}";\n`;
+        expect(inlineExtensionsMjs(ts, input, fileExists)).toBe(
+          `import type { Dirs } from "./resolveDirs.mjs";\n`,
+        );
       });
 
-      test.each(exts)("import type with alias: ${ext}", ({ ext }) => {
-        const content = `import type { Dirs as Directories } from "./resolveDirs${ext}";\n`;
-        expect(inlineExtensionsMjs(ts, content, fileExists)).toBe(content);
+      test.each(inputExts)("import type with alias: %s", (inputExt) => {
+        const input = `import type { Dirs as Directories } from "./resolveDirs${inputExt}";\n`;
+        expect(inlineExtensionsMjs(ts, input, fileExists)).toBe(
+          `import type { Dirs as Directories } from "./resolveDirs.mjs";\n`,
+        );
       });
 
-      test.each(exts)("dynamic import: ${ext}", ({ ext }) => {
-        const content = `await import("./resolveDirs${ext}");\n`;
-        expect(inlineExtensionsMjs(ts, content, fileExists)).toBe(content);
+      test.each(inputExts)("dynamic import: %s", (inputExt) => {
+        const input = `await import("./resolveDirs${inputExt}");\n`;
+        expect(inlineExtensionsMjs(ts, input, fileExists)).toBe(
+          `await import("./resolveDirs.mjs");\n`,
+        );
       });
     });
+  });
 
+  describe("not changed", () => {
     describe("from lib", () => {
       test("import from lib", () => {
         const content = `import { something } from "test-lib";\n`;
@@ -212,54 +232,74 @@ describe("inlineExtensionsMjs", () => {
 });
 
 describe("inlineExtensionsCjs", () => {
-  describe("not changed", () => {
+  describe("normalizes existing extension", () => {
     describe("from file", () => {
-      test.each(exts)("reexport all: ${ext}", ({ ext }) => {
-        const content = `export * from "./resolveDirs${ext}";\n`;
-        expect(inlineExtensionsCjs(ts, content, fileExists)).toBe(content);
+      test.each(inputExts)("reexport all: %s", (inputExt) => {
+        const input = `export * from "./resolveDirs${inputExt}";\n`;
+        expect(inlineExtensionsCjs(ts, input, fileExists)).toBe(
+          `export * from "./resolveDirs.js";\n`,
+        );
       });
 
-      test.each(exts)("reexport named: ${ext}", ({ ext }) => {
-        const content = `export { resolveDirs } from "./resolveDirs${ext}";\n`;
-        expect(inlineExtensionsCjs(ts, content, fileExists)).toBe(content);
+      test.each(inputExts)("reexport named: %s", (inputExt) => {
+        const input = `export { resolveDirs } from "./resolveDirs${inputExt}";\n`;
+        expect(inlineExtensionsCjs(ts, input, fileExists)).toBe(
+          `export { resolveDirs } from "./resolveDirs.js";\n`,
+        );
       });
 
-      test.each(exts)("reexport named with alias: ${ext}", ({ ext }) => {
-        const content = `export { resolveDirs as dirs } from "./resolveDirs${ext}";\n`;
-        expect(inlineExtensionsCjs(ts, content, fileExists)).toBe(content);
+      test.each(inputExts)("reexport named with alias: %s", (inputExt) => {
+        const input = `export { resolveDirs as dirs } from "./resolveDirs${inputExt}";\n`;
+        expect(inlineExtensionsCjs(ts, input, fileExists)).toBe(
+          `export { resolveDirs as dirs } from "./resolveDirs.js";\n`,
+        );
       });
 
-      test.each(exts)("import default: ${ext}", ({ ext }) => {
-        const content = `import resolveDirs from "./resolveDirs${ext}";\n`;
-        expect(inlineExtensionsCjs(ts, content, fileExists)).toBe(content);
+      test.each(inputExts)("import default: %s", (inputExt) => {
+        const input = `import resolveDirs from "./resolveDirs${inputExt}";\n`;
+        expect(inlineExtensionsCjs(ts, input, fileExists)).toBe(
+          `import resolveDirs from "./resolveDirs.js";\n`,
+        );
       });
 
-      test.each(exts)("import named: ${ext}", ({ ext }) => {
-        const content = `import { resolveDirs } from "./resolveDirs${ext}";\n`;
-        expect(inlineExtensionsCjs(ts, content, fileExists)).toBe(content);
+      test.each(inputExts)("import named: %s", (inputExt) => {
+        const input = `import { resolveDirs } from "./resolveDirs${inputExt}";\n`;
+        expect(inlineExtensionsCjs(ts, input, fileExists)).toBe(
+          `import { resolveDirs } from "./resolveDirs.js";\n`,
+        );
       });
 
-      test.each(exts)("import named with alias: ${ext}", ({ ext }) => {
-        const content = `import { resolveDirs as dirs } from "./resolveDirs${ext}";\n`;
-        expect(inlineExtensionsCjs(ts, content, fileExists)).toBe(content);
+      test.each(inputExts)("import named with alias: %s", (inputExt) => {
+        const input = `import { resolveDirs as dirs } from "./resolveDirs${inputExt}";\n`;
+        expect(inlineExtensionsCjs(ts, input, fileExists)).toBe(
+          `import { resolveDirs as dirs } from "./resolveDirs.js";\n`,
+        );
       });
 
-      test.each(exts)("import type: ${ext}", ({ ext }) => {
-        const content = `import type { Dirs } from "./resolveDirs${ext}";\n`;
-        expect(inlineExtensionsCjs(ts, content, fileExists)).toBe(content);
+      test.each(inputExts)("import type: %s", (inputExt) => {
+        const input = `import type { Dirs } from "./resolveDirs${inputExt}";\n`;
+        expect(inlineExtensionsCjs(ts, input, fileExists)).toBe(
+          `import type { Dirs } from "./resolveDirs.js";\n`,
+        );
       });
 
-      test.each(exts)("import type with alias: ${ext}", ({ ext }) => {
-        const content = `import type { Dirs as Directories } from "./resolveDirs${ext}";\n`;
-        expect(inlineExtensionsCjs(ts, content, fileExists)).toBe(content);
+      test.each(inputExts)("import type with alias: %s", (inputExt) => {
+        const input = `import type { Dirs as Directories } from "./resolveDirs${inputExt}";\n`;
+        expect(inlineExtensionsCjs(ts, input, fileExists)).toBe(
+          `import type { Dirs as Directories } from "./resolveDirs.js";\n`,
+        );
       });
 
-      test.each(exts)("dynamic import: ${ext}", ({ ext }) => {
-        const content = `await import("./resolveDirs${ext}");\n`;
-        expect(inlineExtensionsCjs(ts, content, fileExists)).toBe(content);
+      test.each(inputExts)("dynamic import: %s", (inputExt) => {
+        const input = `await import("./resolveDirs${inputExt}");\n`;
+        expect(inlineExtensionsCjs(ts, input, fileExists)).toBe(
+          `await import("./resolveDirs.js");\n`,
+        );
       });
     });
+  });
 
+  describe("not changed", () => {
     describe("from lib", () => {
       test("import from lib", () => {
         const content = `import { something } from "test-lib";\n`;

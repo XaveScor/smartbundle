@@ -25,14 +25,6 @@ function transformAndExtractImports(
       return node;
     }
 
-    if (
-      importPath.endsWith(".cjs") ||
-      importPath.endsWith(".mjs") ||
-      importPath.endsWith(".js")
-    ) {
-      return node;
-    }
-
     const cleanedImportPath = importPath.replace(/\.[cm]?js$/, "");
 
     if (fileExists(`${cleanedImportPath}${dtsExt}`)) {

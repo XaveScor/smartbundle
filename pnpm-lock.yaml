@@ -305,8 +305,8 @@ importers:
         specifier: ^4.1.10
         version: 4.1.10(@types/node@20.19.43)(vite@8.1.4(@types/node@20.19.43)(terser@5.31.3))
       vitest-directory-snapshot:
-        specifier: ^0.6.1
-        version: 0.6.1(vitest@4.1.10(@types/node@20.19.43)(vite@8.1.4(@types/node@20.19.43)(terser@5.31.3)))
+        specifier: ^0.7.1
+        version: 0.7.1(vitest@4.1.10(@types/node@20.19.43)(vite@8.1.4(@types/node@20.19.43)(terser@5.31.3)))
       zx:
         specifier: ^8.8.5
         version: 8.8.5
@@ -1098,10 +1098,11 @@ packages:
       yaml:
         optional: true
 
-  vitest-directory-snapshot@0.6.1:
-    resolution: {integrity: sha512-pDFBHO8qfIMu/6umOjZXzFEiqLuEa+tD5cHEFHboHB9tHebXGH0d+1nZQBNytiDHvTpfzFtiD9xr25PuDPFkRg==}
+  vitest-directory-snapshot@0.7.1:
+    resolution: {integrity: sha512-MWri5xWSaYlXsfSMAUHdf9cMduxDYspBUtg+6C6E5MjGWcx6tP7Y1KDZ2apMY8ct1mUh/P+j+EBEET6vejTqDg==}
+    engines: {node: ^20.0.0 || ^22.0.0 || >=24.0.0}
     peerDependencies:
-      vitest: ^2.0.0 || ^3.0.0
+      vitest: ^4.1.10
 
   vitest@4.1.10:
     resolution: {integrity: sha512-R9jUTe5S4Qb0HCd4TNqpC7oGcrMssMRGXLW80ubjWsW9VH5GF8y1Y0SFLY9AbqSk6nt0PnOx4H4WNJYZ13GUPw==}
@@ -1837,7 +1838,7 @@ snapshots:
       fsevents: 2.3.3
       terser: 5.31.3
 
-  vitest-directory-snapshot@0.6.1(vitest@4.1.10(@types/node@20.19.43)(vite@8.1.4(@types/node@20.19.43)(terser@5.31.3))):
+  vitest-directory-snapshot@0.7.1(vitest@4.1.10(@types/node@20.19.43)(vite@8.1.4(@types/node@20.19.43)(terser@5.31.3))):
     dependencies:
       vitest: 4.1.10(@types/node@20.19.43)(vite@8.1.4(@types/node@20.19.43)(terser@5.31.3))
 

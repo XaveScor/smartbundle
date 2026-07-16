@@ -1,7 +1,7 @@
 import { describe, expect } from "vitest";
 import { run } from "./index.js";
 import { $ } from "zx";
-import { test } from "vitest-directory-snapshot";
+import { test } from "./test-utils.js";
 import { disableLog } from "./log.js";
 import { errors } from "./errors.js";
 

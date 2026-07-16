@@ -1,6 +1,6 @@
 import { describe, expect } from "vitest";
 import { run } from "./index.js";
-import { test } from "vitest-directory-snapshot";
+import { test } from "./test-utils.js";
 import { disableLog } from "./log.js";
 
 disableLog();

@@ -1,0 +1,10 @@
+{
+  "name": "raw-only",
+  "type": "commonjs",
+  "version": "1.0.0",
+  "description": "",
+  "exports": {
+    "./skill": "./SKILL.md",
+    "./package.json": "./package.json"
+  }
+}

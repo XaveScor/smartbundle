@@ -1,0 +1,1 @@
+# Raw assets fixture

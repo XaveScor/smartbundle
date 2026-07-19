@@ -6,6 +6,7 @@ import { babelPlugin } from "./plugins/babel/index.js";
 import { reactPlugin } from "./plugins/react/index.js";
 import { type DetectedModules } from "./detectModules.js";
 import { importsPlugin } from "./plugins/imports/index.js";
+import { isCodeExport } from "./exports.js";
 
 type CreateViteConfigParam = {
   dirs: Dirs;
@@ -33,10 +34,12 @@ export function createViteConfig({
   const { sourceDir, outDir, esmOutDir, cjsOutDir } = dirs;
 
   const entrypoints = new Map<string, string>();
+  const rawExports = new Map<string, string>();
   if (packageJson.exports) {
     for (const [key, value] of packageJson.exports) {
       const entry = join(sourceDir, value);
-      entrypoints.set(key, entry);
+      if (isCodeExport(value)) entrypoints.set(key, entry);
+      else rawExports.set(key, value);
     }
   }
 
@@ -110,5 +113,5 @@ export function createViteConfig({
     },
   });
 
-  return { viteConfig, entrypoints, bins };
+  return { viteConfig, entrypoints, rawExports, bins };
 }

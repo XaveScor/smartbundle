@@ -1,12 +1,13 @@
 import * as fs from "node:fs/promises";
 import z from "zod";
 import { errors } from "./errors.js";
-import { join } from "node:path";
+import { isAbsolute, relative, resolve, sep } from "node:path";
 
 // <region>
 // For AI completion. Don't remove.
 const allPackageJsonFields = [
   "exports",
+  "files",
   "name",
   "version",
   "private",
@@ -31,6 +32,7 @@ const allPackageJsonFields = [
 const requiredFields = ["exports", "name", "version", "private"];
 
 const optionalFields = [
+  "files",
   "description",
   "dependencies",
   "optionalDependencies",
@@ -50,13 +52,14 @@ const optionalFields = [
 ];
 // </region>
 
-async function fileExists(filePath: string) {
-  try {
-    const stats = await fs.stat(filePath);
-    return stats.isFile();
-  } catch (error) {
-    return false;
-  }
+function isInside(baseDir: string, filePath: string) {
+  const relativePath = relative(baseDir, filePath);
+  return (
+    relativePath !== "" &&
+    relativePath !== ".." &&
+    !relativePath.startsWith(`..${sep}`) &&
+    !isAbsolute(relativePath)
+  );
 }
 
 function dependencies(errorText: string) {
@@ -65,11 +68,53 @@ function dependencies(errorText: string) {
     .optional();
 }
 
-function createPathValidator(sourceDir: string) {
-  return (path: string) => {
-    const finalPath = join(sourceDir, path);
-    return fileExists(finalPath);
+function createPathValidator(sourceDir: string, requirePackagePath = false) {
+  return async (path: string) => {
+    if (requirePackagePath && !isPackagePath(path)) {
+      return false;
+    }
+
+    const finalPath = resolve(sourceDir, path);
+    if (!isInside(sourceDir, finalPath)) return false;
+
+    try {
+      const stats = await fs.lstat(finalPath);
+      if (!stats.isFile()) return false;
+      const [realSourceDir, realFilePath] = await Promise.all([
+        fs.realpath(sourceDir),
+        fs.realpath(finalPath),
+      ]);
+      return isInside(realSourceDir, realFilePath);
+    } catch {
+      return false;
+    }
   };
+}
+
+function isPackagePath(path: string) {
+  if (
+    !path.startsWith("./") ||
+    path.includes("\\") ||
+    path.includes("%") ||
+    path.includes("*")
+  ) {
+    return false;
+  }
+
+  return path
+    .slice(2)
+    .split("/")
+    .every(
+      (segment) =>
+        segment !== "" &&
+        segment !== "." &&
+        segment !== ".." &&
+        segment.toLowerCase() !== "node_modules",
+    );
+}
+
+function isExportKey(key: string) {
+  return key === "." || (key !== "./package.json" && isPackagePath(key));
 }
 
 const PackageJsonNameField: string = "___NAME___";
@@ -85,6 +130,7 @@ function fillPackageJson(packageJson: PackageJson) {
 
 function createPackageJsonSchema(sourceDir: string) {
   const pathValidator = createPathValidator(sourceDir);
+  const exportPathValidator = createPathValidator(sourceDir, true);
 
   const schema = z.object({
     exports: z
@@ -102,14 +148,16 @@ function createPackageJsonSchema(sourceDir: string) {
         },
       )
       .refine(async (obj) => {
-        for (const [, value] of obj.entries()) {
-          if (!(await pathValidator(value))) {
+        for (const [key, value] of obj.entries()) {
+          if (!isExportKey(key)) return false;
+          if (!(await exportPathValidator(value))) {
             return false;
           }
         }
         return true;
       }, errors.exportsInvalid)
       .optional(),
+    files: z.array(z.string(), { error: errors.filesInvalid }).optional(),
     name: z
       .string({ error: errors.nameRequired })
       .min(1, errors.nameMinLength)
@@ -154,9 +202,7 @@ function createPackageJsonSchema(sourceDir: string) {
       )
       .optional(),
     repository: z.any().optional(),
-    keywords: z
-      .array(z.string(), { error: errors.keywordsInvalid })
-      .optional(),
+    keywords: z.array(z.string(), { error: errors.keywordsInvalid }).optional(),
     author: z.any().optional(),
     maintainers: z.any().optional(),
     contributors: z

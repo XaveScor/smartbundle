@@ -4,7 +4,10 @@ import { parsePackageJson } from "./packageJson.js";
 import { type ExportsObject, writePackageJson } from "./writePackageJson.js";
 import { resolveDirs } from "./resolveDirs.js";
 import { createViteConfig } from "./createViteConfig.js";
-import { copyStaticFilesTask } from "./tasks/copyStaticFilesTask.js";
+import {
+  copyStaticFilesTask,
+  createCopyManifest,
+} from "./tasks/copyStaticFilesTask.js";
 import { buildTypesTask } from "./tasks/buildTypesTask/buildTypesTask.js";
 import { BuildError } from "./error.js";
 import { jsFilesTask } from "./tasks/jsFilesTask.js";
@@ -81,7 +84,7 @@ export async function run(args: Args): Promise<RunResult> {
     return { error: true, errors: modulesResult.errors };
   }
   const { modules } = modulesResult;
-  const { viteConfig, entrypoints, bins } = createViteConfig({
+  const { viteConfig, entrypoints, rawExports, bins } = createViteConfig({
     dirs,
     packageJson,
     modules,
@@ -89,9 +92,18 @@ export async function run(args: Args): Promise<RunResult> {
 
   const exportsMap = new Map<string, ExportsObject>();
   const binsMap = new Map<string, string>();
+  for (const [name, target] of rawExports) {
+    exportsMap.set(name, { raw: target });
+  }
+  let copyManifest;
+  try {
+    copyManifest = await createCopyManifest(dirs, packageJson, rawExports);
+  } catch (error) {
+    const message = error instanceof BuildError ? error.error : String(error);
+    return { error: true, errors: [message] };
+  }
 
-  const tasksRes = await runSettled(args, [
-    copyStaticFilesTask(sourceDir, outDir),
+  const tasks: Promise<unknown>[] = [
     buildTypesTask({
       dirs,
       packageJson,
@@ -112,33 +124,40 @@ export async function run(args: Args): Promise<RunResult> {
         });
       }
     }),
-    viteTask({ viteConfig }).then((viteOutput) =>
-      runSettled(args, [
-        jsFilesTask({ buildOutput: viteOutput, entrypoints, outDir }).then(
-          (res) => {
-            for (const [filePath, name] of res) {
-              setExports(exportsMap, name, (entry) => {
-                const format = filePath.endsWith(".js") ? "cjs" : "es";
-                if (format === "es") {
-                  entry.mjs = "./" + filePath;
-                } else if (format === "cjs") {
-                  entry.cjs = "./" + filePath;
-                }
-                return entry;
-              });
-            }
-          },
-        ),
-        binsTask({ outBinsDir, bins, buildOutput: viteOutput, outDir }).then(
-          (res) => {
-            for (const [value, key] of res) {
-              binsMap.set(key, value);
-            }
-          },
-        ),
-      ]),
-    ),
-  ]);
+  ];
+
+  if (entrypoints.size > 0 || bins.size > 0) {
+    tasks.push(
+      viteTask({ viteConfig }).then((viteOutput) =>
+        runSettled(args, [
+          jsFilesTask({ buildOutput: viteOutput, entrypoints, outDir }).then(
+            (res) => {
+              for (const [filePath, name] of res) {
+                setExports(exportsMap, name, (entry) => {
+                  const format = filePath.endsWith(".js") ? "cjs" : "es";
+                  if (format === "es") {
+                    entry.mjs = "./" + filePath;
+                  } else if (format === "cjs") {
+                    entry.cjs = "./" + filePath;
+                  }
+                  return entry;
+                });
+              }
+            },
+          ),
+          binsTask({ outBinsDir, bins, buildOutput: viteOutput, outDir }).then(
+            (res) => {
+              for (const [value, key] of res) {
+                binsMap.set(key, value);
+              }
+            },
+          ),
+        ]),
+      ),
+    );
+  }
+
+  const tasksRes = await runSettled(args, tasks);
 
   const errors = promiseSettledResultErrors(tasksRes).map((res) => {
     if (res instanceof PrettyError) {
@@ -154,6 +173,16 @@ export async function run(args: Args): Promise<RunResult> {
 
   if (errors.length > 0) {
     return { error: true, errors };
+  }
+
+  const copyResults = await runSettled(args, [
+    copyStaticFilesTask(copyManifest),
+  ]);
+  const copyErrors = promiseSettledResultErrors(copyResults).map(
+    (error) => error.message,
+  );
+  if (copyErrors.length > 0) {
+    return { error: true, errors: copyErrors };
   }
 
   await writePackageJson(outDir, packageJson, {

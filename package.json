@@ -5,6 +5,9 @@
   "description": "zero-config bundler for npm packages",
   "bin": "./src/run.ts",
   "type": "module",
+  "files": [
+    "docs/**/*.md"
+  ],
   "scripts": {
     "build": "bun src/run.ts",
     "test": "vitest src",
@@ -58,6 +61,7 @@
     "zx": "^8.8.5"
   },
   "dependencies": {
+    "glob": "^13.0.6",
     "semver": "^7.8.5",
     "vite": "^8.1.4",
     "yargs": "^18.0.0",

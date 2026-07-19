@@ -3,6 +3,7 @@ import { join, relative } from "node:path";
 import type { Rolldown } from "vite";
 import { reverseMap } from "./utils.js";
 import { okLog } from "../log.js";
+import { BuildError } from "../error.js";
 
 type BinsTaskOption = {
   buildOutput: Rolldown.OutputChunk[];
@@ -42,9 +43,20 @@ export async function binsTask({
         `#!/usr/bin/env node
 import("${totalPath}");
 `,
+        { mode: 0o755 },
       );
       res.set(relative(outDir, execPath), binName);
     }
+  }
+
+  if (res.size !== bins.size) {
+    const builtNames = new Set(res.values());
+    const missingNames = [...bins.keys()].filter(
+      (name) => !builtNames.has(name),
+    );
+    throw new BuildError(
+      `Cannot find output chunks for bins: ${missingNames.join(", ")}`,
+    );
   }
 
   if (res.size) {

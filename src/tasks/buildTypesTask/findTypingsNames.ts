@@ -1,5 +1,5 @@
 import type * as ts from "@typescript/typescript6";
-import { join, relative } from "node:path";
+import { dirname, join, relative, resolve } from "node:path";
 import { readdirSync, statSync } from "node:fs";
 import type { TS } from "../../detectModules.js";
 
@@ -51,10 +51,16 @@ export function findTypingsNames(
   const processedFiles = new Set<string>();
   const filesQueue = [relative(sourceDir, entrypoint)];
 
-  function processModuleSpecifier(moduleSpecifier: ts.StringLiteral) {
+  function processModuleSpecifier(
+    moduleSpecifier: ts.StringLiteral,
+    currentFile: string,
+  ) {
     const moduleName = moduleSpecifier.text;
     if (moduleName.startsWith(".")) {
-      filesQueue.push(moduleName.replace(/\.js$/, ext));
+      const declarationPath = moduleName.replace(/\.(?:mjs|cjs|js)$/, ext);
+      filesQueue.push(
+        relative(sourceDir, resolve(dirname(currentFile), declarationPath)),
+      );
       return;
     }
 
@@ -75,7 +81,7 @@ export function findTypingsNames(
         ts.isImportDeclaration(node) &&
         ts.isStringLiteral(node.moduleSpecifier)
       ) {
-        processModuleSpecifier(node.moduleSpecifier);
+        processModuleSpecifier(node.moduleSpecifier, currentFile);
       }
 
       // Generic<import("node")>;
@@ -84,7 +90,7 @@ export function findTypingsNames(
         ts.isLiteralTypeNode(node.argument) &&
         ts.isStringLiteral(node.argument.literal)
       ) {
-        processModuleSpecifier(node.argument.literal);
+        processModuleSpecifier(node.argument.literal, currentFile);
       }
 
       // export * from "moduleSpecifier";
@@ -93,7 +99,7 @@ export function findTypingsNames(
         node.moduleSpecifier &&
         ts.isStringLiteral(node.moduleSpecifier)
       ) {
-        processModuleSpecifier(node.moduleSpecifier);
+        processModuleSpecifier(node.moduleSpecifier, currentFile);
       }
 
       ts.forEachChild(node, visit);

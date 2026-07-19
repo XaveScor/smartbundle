@@ -1,0 +1,10 @@
+{
+  "name": "typescript-emit-error",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "exports": "./index.ts",
+  "devDependencies": {
+    "typescript": "7.0.2"
+  }
+}

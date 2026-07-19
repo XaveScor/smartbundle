@@ -42,7 +42,7 @@ export async function callTypescript({
     ts.parsedConfig.options,
     ts.host,
   );
-  program.emit(undefined, (fileName, data) => {
+  const emitResult = program.emit(undefined, (fileName, data) => {
     // .d.ts for cjs because "type": "commonjs" in package.json
     // .d.mts for esm
     const relativePath = path.relative(sourceDir, fileName);
@@ -66,6 +66,24 @@ export async function callTypescript({
     sourceToCjsDtsMap.set(sourceFileNameTS, cjsFinalPath);
     sourceToCjsDtsMap.set(sourceFileNameTSX, cjsFinalPath);
   });
+  const diagnostics = [
+    ...ts.ts.getPreEmitDiagnostics(program),
+    ...emitResult.diagnostics,
+  ];
+  if (emitResult.emitSkipped) {
+    const diagnosticHost: import("@typescript/typescript6").FormatDiagnosticsHost =
+      {
+        getCanonicalFileName: (fileName) => fileName,
+        getCurrentDirectory: () => sourceDir,
+        getNewLine: () => ts.ts.sys.newLine,
+      };
+    throw new BuildError(
+      `TypeScript declaration emit failed:\n${ts.ts.formatDiagnostics(
+        diagnostics,
+        diagnosticHost,
+      )}`,
+    );
+  }
   // </build d.ts>
 
   // <fix vscode typings>

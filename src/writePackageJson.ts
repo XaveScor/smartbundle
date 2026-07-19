@@ -65,11 +65,8 @@ export async function writePackageJson(
       anExport.require.default = value.cjs;
     }
 
-    // should be first for correct resolving
     anExport.types = value.dcts ?? value.dmts;
-    // because we need to have default and types key on the end
-    // JSON.stringify will put it on the end if we put value at the last step
-    anExport.default = value.cjs;
+    anExport.default = value.cjs ?? value.mjs;
 
     allExports[key] = anExport;
   }

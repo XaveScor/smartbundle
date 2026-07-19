@@ -153,6 +153,19 @@ describe("build", () => {
     expect(res.error).toBeFalsy();
     expect(tmpDir).toMatchDirSnapshot();
   });
+
+  test("fails when TypeScript cannot emit declarations", async ({ tmpDir }) => {
+    const res = await run({
+      outputDir: tmpDir,
+      sourceDir: "./src/fixtures/typescript-emit-error",
+    });
+
+    expect(res.error).toBe(true);
+    if (res.error) {
+      expect(res.errors[0]).toContain("TypeScript declaration emit failed:");
+      expect(res.errors[0]).toContain("index.ts");
+    }
+  });
 });
 
 describe("bugs", () => {

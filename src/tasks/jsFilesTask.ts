@@ -2,6 +2,7 @@ import type { Rolldown } from "vite";
 import { dirname, join, relative } from "node:path";
 import { mkdir, writeFile } from "node:fs/promises";
 import { okLog } from "../log.js";
+import { BuildError } from "../error.js";
 
 type JsFilesTaskOption = {
   buildOutput: Rolldown.OutputChunk[];
@@ -30,7 +31,9 @@ function findCompiledPath(
       }
     }
   }
-  return { path: "", hasDefault: false };
+  throw new BuildError(
+    `Cannot find the ${type === "mjs" ? "ESM" : "CommonJS"} output chunk for ${originalFile}`,
+  );
 }
 
 export async function jsFilesTask({

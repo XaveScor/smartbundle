@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { isCodeExport } from "./exports.js";
+import { isCodeExport, isUnsupportedCodeExport } from "./exports.js";
 
 describe("isCodeExport", () => {
   test.each(["index.js", "index.mjs", "index.jsx", "index.ts", "index.tsx"])(
@@ -15,5 +15,17 @@ describe("isCodeExport", () => {
     "LICENSE",
   ])("treats %s as raw", (filePath) =>
     expect(isCodeExport(filePath)).toBe(false),
+  );
+});
+
+describe("isUnsupportedCodeExport", () => {
+  test.each(["index.cjs", "index.mts", "index.cts", "INDEX.MTS"])(
+    "rejects %s instead of treating it as a raw asset",
+    (filePath) => expect(isUnsupportedCodeExport(filePath)).toBe(true),
+  );
+
+  test.each(["index.js", "index.ts", "schema.json", "types.d.ts"])(
+    "allows %s",
+    (filePath) => expect(isUnsupportedCodeExport(filePath)).toBe(false),
   );
 });

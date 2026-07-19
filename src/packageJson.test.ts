@@ -95,6 +95,55 @@ describe("parse package.json", () => {
     }
   });
 
+  test("preserves contributor and funding object fields", async () => {
+    const sourceDir = await mkdtemp(join(tmpdir(), "smartbundle-metadata-"));
+    try {
+      await writeFile(join(sourceDir, "index.js"), "export {};");
+      await writeFile(
+        join(sourceDir, "package.json"),
+        JSON.stringify({
+          name: "metadata",
+          version: "1.0.0",
+          private: true,
+          exports: "./index.js",
+          contributors: [
+            {
+              name: "Alice",
+              email: "alice@example.test",
+              url: "https://example.test/alice",
+            },
+          ],
+          funding: {
+            type: "github",
+            url: "https://github.com/sponsors/example",
+          },
+        }),
+      );
+
+      const packageJson = await parsePackageJson({
+        sourceDir,
+        packagePath: join(sourceDir, "package.json"),
+      });
+
+      expect(packageJson).not.toStrictEqual(expect.any(Array));
+      if (!Array.isArray(packageJson)) {
+        expect(packageJson.contributors).toEqual([
+          {
+            name: "Alice",
+            email: "alice@example.test",
+            url: "https://example.test/alice",
+          },
+        ]);
+        expect(packageJson.funding).toEqual({
+          type: "github",
+          url: "https://github.com/sponsors/example",
+        });
+      }
+    } finally {
+      await rm(sourceDir, { recursive: true, force: true });
+    }
+  });
+
   test.each(["reserved-export.json", "pattern-export.json"])(
     "rejects invalid export map in %s",
     async (fileName) => {
@@ -138,6 +187,35 @@ describe("parse package.json", () => {
       await rm(rootDir, { recursive: true, force: true });
     }
   });
+
+  test.each(["cjs", "mts", "cts"])(
+    "rejects unsupported .%s code exports",
+    async (extension) => {
+      const sourceDir = await mkdtemp(join(tmpdir(), "smartbundle-extension-"));
+      try {
+        const entrypoint = `./index.${extension}`;
+        await writeFile(join(sourceDir, `index.${extension}`), "export {};");
+        await writeFile(
+          join(sourceDir, "package.json"),
+          JSON.stringify({
+            name: "unsupported-extension",
+            version: "1.0.0",
+            private: true,
+            exports: entrypoint,
+          }),
+        );
+
+        const packageJson = await parsePackageJson({
+          sourceDir,
+          packagePath: join(sourceDir, "package.json"),
+        });
+
+        expect(packageJson).toContain(errors.exportsUnsupportedExtension);
+      } finally {
+        await rm(sourceDir, { recursive: true, force: true });
+      }
+    },
+  );
 
   describe("name", () => {
     test("is required", async () => {

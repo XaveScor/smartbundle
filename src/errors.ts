@@ -3,6 +3,8 @@ export const errors = {
     "The `exports` or `bin` field is required. Please, verify the value. More info: https://nodejs.org/api/packages.html#package-entry-points",
   exportsInvalid:
     "The `exports` field must be a path to entrypoint. Please, verify the value. More info: https://nodejs.org/api/packages.html#package-entry-points",
+  exportsUnsupportedExtension:
+    "The `exports` field uses an unsupported code extension. SmartBundle supports .js, .mjs, .jsx, .ts and .tsx entrypoints; .cjs, .mts and .cts are not supported.",
   filesInvalid:
     "The `files` field must be an array of strings. Please, verify the value. More info: https://docs.npmjs.com/cli/v11/configuring-npm/package-json#files",
   nameRequired:

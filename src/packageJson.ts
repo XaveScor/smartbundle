@@ -2,6 +2,7 @@ import * as fs from "node:fs/promises";
 import z from "zod";
 import { errors } from "./errors.js";
 import { isAbsolute, relative, resolve, sep } from "node:path";
+import { isUnsupportedCodeExport } from "./exports.js";
 
 // <region>
 // For AI completion. Don't remove.
@@ -147,6 +148,11 @@ function createPackageJsonSchema(sourceDir: string) {
           },
         },
       )
+      .refine(
+        (obj) =>
+          [...obj.values()].every((value) => !isUnsupportedCodeExport(value)),
+        errors.exportsUnsupportedExtension,
+      )
       .refine(async (obj) => {
         for (const [key, value] of obj.entries()) {
           if (!isExportKey(key)) return false;
@@ -209,7 +215,7 @@ function createPackageJsonSchema(sourceDir: string) {
       .array(
         z.union([
           z.string({ error: errors.contributorsInvalid }),
-          z.object({}, { error: errors.contributorsInvalid }),
+          z.looseObject({}, { error: errors.contributorsInvalid }),
         ]),
       )
       .optional(),
@@ -229,7 +235,7 @@ function createPackageJsonSchema(sourceDir: string) {
     funding: z
       .union([
         z.string({ error: errors.fundingInvalid }),
-        z.object({}, { error: errors.fundingInvalid }),
+        z.looseObject({}, { error: errors.fundingInvalid }),
       ])
       .optional(),
     os: z.array(z.string(), { error: errors.osInvalid }).optional(),
@@ -266,8 +272,19 @@ export async function parsePackageJson({
   sourceDir,
   packagePath,
 }: ParsePackageJsonArg): Promise<PackageJson | Errors> {
-  const packageString = await fs.readFile(packagePath, "utf-8");
-  const rawJson = JSON.parse(packageString);
+  let packageString: string;
+  try {
+    packageString = await fs.readFile(packagePath, "utf-8");
+  } catch (error) {
+    return [`Cannot read package.json: ${String(error)}`];
+  }
+
+  let rawJson: unknown;
+  try {
+    rawJson = JSON.parse(packageString);
+  } catch (error) {
+    return [`Cannot parse package.json: ${String(error)}`];
+  }
 
   const packageJsonSchema = createPackageJsonSchema(sourceDir);
   const packageJson = await packageJsonSchema.safeParseAsync(rawJson);

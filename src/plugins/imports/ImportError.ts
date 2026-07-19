@@ -27,11 +27,16 @@ export class ImportError extends PrettyError {
     const content = await fsReadFile(path, "utf-8");
     const lines = content.split("\n");
 
-    const affectedLine = lines.findIndex((line) => line.includes(importName));
+    const escapedImportName = importName.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const importPattern = new RegExp(
+      `\\b(?:import|export)\\b.*(?:from\\s*)?["']${escapedImportName}["']`,
+    );
+    const affectedLine = lines.findIndex((line) => importPattern.test(line));
 
     const error = new ImportError(importName, path);
+    const lineNumber = affectedLine < 0 ? 1 : affectedLine + 1;
     error.stack = `ImportError: you cannot import ${importName} because it marked as optional inside package.json \n
-    at ${path}:${affectedLine + 1}:0`;
+    at ${path}:${lineNumber}:0`;
 
     return error;
   }

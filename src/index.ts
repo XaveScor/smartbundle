@@ -14,7 +14,7 @@ import { jsFilesTask } from "./tasks/jsFilesTask.js";
 import { binsTask } from "./tasks/binsTask.js";
 import { detectModules } from "./detectModules.js";
 import { disableLog, lineLog, log, okLog } from "./log.js";
-import { runSettled } from "./pipeline.js";
+import { runSettled, type Task } from "./pipeline.js";
 import { type Args } from "./args.js";
 import { viteTask } from "./tasks/viteTask.js";
 import { promiseSettledResultErrors } from "./promiseSettledResultErrors.js";
@@ -32,10 +32,8 @@ function setExports(
 export async function defineViteConfig(args: Args = {}) {
   disableLog();
   const dirs = resolveDirs(args);
-  const { sourceDir, outDir, packagePath } = dirs;
+  const { sourceDir, packagePath } = dirs;
 
-  await rm(outDir, { recursive: true, force: true });
-  await mkdir(outDir, { recursive: true });
   const packageJson = await parsePackageJson({ sourceDir, packagePath });
 
   if (Array.isArray(packageJson)) {
@@ -71,8 +69,6 @@ export async function run(args: Args): Promise<RunResult> {
   const dirs = resolveDirs(args);
   const { sourceDir, outDir, packagePath, outBinsDir } = dirs;
 
-  await rm(outDir, { recursive: true, force: true });
-  await mkdir(outDir, { recursive: true });
   const packageJson = await parsePackageJson({ sourceDir, packagePath });
 
   if (Array.isArray(packageJson)) {
@@ -103,55 +99,64 @@ export async function run(args: Args): Promise<RunResult> {
     return { error: true, errors: [message] };
   }
 
-  const tasks: Promise<unknown>[] = [
-    buildTypesTask({
-      dirs,
-      packageJson,
-      entrypoints,
-      modules,
-    }).then(({ entrypointToEsDtsMap, entrypointToCjsDtsMap }) => {
-      for (const [entrypoint, dts] of entrypointToEsDtsMap) {
-        setExports(exportsMap, entrypoint, (entry) => {
-          entry.dmts = "./" + relative(outDir, dts);
-          return entry;
-        });
-      }
+  await rm(outDir, { recursive: true, force: true });
+  await mkdir(outDir, { recursive: true });
 
-      for (const [entrypoint, dts] of entrypointToCjsDtsMap) {
-        setExports(exportsMap, entrypoint, (entry) => {
-          entry.dcts = "./" + relative(outDir, dts);
-          return entry;
-        });
-      }
-    }),
+  const tasks: Task<unknown>[] = [
+    () =>
+      buildTypesTask({
+        dirs,
+        packageJson,
+        entrypoints,
+        modules,
+      }).then(({ entrypointToEsDtsMap, entrypointToCjsDtsMap }) => {
+        for (const [entrypoint, dts] of entrypointToEsDtsMap) {
+          setExports(exportsMap, entrypoint, (entry) => {
+            entry.dmts = "./" + relative(outDir, dts);
+            return entry;
+          });
+        }
+
+        for (const [entrypoint, dts] of entrypointToCjsDtsMap) {
+          setExports(exportsMap, entrypoint, (entry) => {
+            entry.dcts = "./" + relative(outDir, dts);
+            return entry;
+          });
+        }
+      }),
   ];
 
   if (entrypoints.size > 0 || bins.size > 0) {
-    tasks.push(
+    tasks.push(() =>
       viteTask({ viteConfig }).then((viteOutput) =>
         runSettled(args, [
-          jsFilesTask({ buildOutput: viteOutput, entrypoints, outDir }).then(
-            (res) => {
-              for (const [filePath, name] of res) {
-                setExports(exportsMap, name, (entry) => {
-                  const format = filePath.endsWith(".js") ? "cjs" : "es";
-                  if (format === "es") {
-                    entry.mjs = "./" + filePath;
-                  } else if (format === "cjs") {
-                    entry.cjs = "./" + filePath;
-                  }
-                  return entry;
-                });
-              }
-            },
-          ),
-          binsTask({ outBinsDir, bins, buildOutput: viteOutput, outDir }).then(
-            (res) => {
+          () =>
+            jsFilesTask({ buildOutput: viteOutput, entrypoints, outDir }).then(
+              (res) => {
+                for (const [filePath, name] of res) {
+                  setExports(exportsMap, name, (entry) => {
+                    const format = filePath.endsWith(".js") ? "cjs" : "es";
+                    if (format === "es") {
+                      entry.mjs = "./" + filePath;
+                    } else if (format === "cjs") {
+                      entry.cjs = "./" + filePath;
+                    }
+                    return entry;
+                  });
+                }
+              },
+            ),
+          () =>
+            binsTask({
+              outBinsDir,
+              bins,
+              buildOutput: viteOutput,
+              outDir,
+            }).then((res) => {
               for (const [value, key] of res) {
                 binsMap.set(key, value);
               }
-            },
-          ),
+            }),
         ]),
       ),
     );
@@ -168,7 +173,7 @@ export async function run(args: Args): Promise<RunResult> {
       return res.error;
     }
 
-    return res.message;
+    return res instanceof Error ? res.message : String(res);
   });
 
   if (errors.length > 0) {
@@ -176,10 +181,10 @@ export async function run(args: Args): Promise<RunResult> {
   }
 
   const copyResults = await runSettled(args, [
-    copyStaticFilesTask(copyManifest),
+    () => copyStaticFilesTask(copyManifest),
   ]);
   const copyErrors = promiseSettledResultErrors(copyResults).map(
-    (error) => error.message,
+    (error) => (error instanceof Error ? error.message : String(error)),
   );
   if (copyErrors.length > 0) {
     return { error: true, errors: copyErrors };

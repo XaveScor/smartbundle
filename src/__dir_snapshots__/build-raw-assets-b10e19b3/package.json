@@ -1,0 +1,22 @@
+{
+  "name": "raw-assets",
+  "type": "commonjs",
+  "version": "1.0.0",
+  "module": "./__compiled__/esm/index.mjs",
+  "main": "./__compiled__/cjs/index.js",
+  "description": "",
+  "exports": {
+    "./skill": "./skills/SKILL.md",
+    "./schema": "./assets/schema.json",
+    ".": {
+      "import": {
+        "default": "./__compiled__/esm/index.mjs"
+      },
+      "require": {
+        "default": "./__compiled__/cjs/index.js"
+      },
+      "default": "./__compiled__/cjs/index.js"
+    },
+    "./package.json": "./package.json"
+  }
+}

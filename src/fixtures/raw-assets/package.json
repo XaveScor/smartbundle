@@ -1,0 +1,17 @@
+{
+  "name": "raw-assets",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./index.js",
+    "./skill": "./skills/SKILL.md",
+    "./schema": "./assets/schema.json"
+  },
+  "files": [
+    "docs",
+    "assets/**",
+    "!assets/private.txt",
+    ".hidden"
+  ]
+}

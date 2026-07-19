@@ -16,6 +16,7 @@ This guide explains the required configuration and why certain constraints exist
 - [Overview](#overview)
 - [Banned Fields](#banned-fields)
 - [SmartBundle-specific Fields](#smartbundle-specific-fields)
+- [Files](#files)
 - [Exports](#exports)
 
 ## Banned Fields
@@ -23,11 +24,7 @@ This guide explains the required configuration and why certain constraints exist
 > [!WARNING]
 > The following fields must not be included in your source package.json as they conflict with SmartBundle’s automated handling.
 
-### files Field
-
-SmartBundle calculates the import graph automatically and includes all necessary files. Using the 'files' field may result in missed dependencies or an overly bloated package.
-
-### main, module, browser, types Fields
+### main, module, types Fields
 
 These fields create ambiguity in module resolution. SmartBundle uses only the `exports` field for entry points, and the distributed package.json automatically includes the correct values, ensuring consistent behavior across environments.
 
@@ -63,7 +60,23 @@ These fields create ambiguity in module resolution. SmartBundle uses only the `e
 ```
 
 - Requirement: SmartBundle supports bin specifications (except for `.sh` files). If defined, they are processed to generate executable scripts for your package.
-- For more details, see [Node.js package.json bin specification](https://nodejs.org/api/packages.html#bin).
+- For more details, see the [npm package.json bin specification](https://docs.npmjs.com/cli/v11/configuring-npm/package-json#bin).
+
+## Files
+
+The standard npm `files` field selects files that SmartBundle copies to the output package without preprocessing. Entries are resolved relative to the source package directory and may be files, directories, glob patterns, or ordered exclusions starting with `!`.
+
+```json5
+{
+  files: ["skills/**", "docs/**/*.md", "schemas", "!docs/internal/**"],
+}
+```
+
+Directories are copied recursively and relative paths are preserved. JavaScript and TypeScript files selected by `files` are also copied as-is; this does not change how the same file is processed when it is a code entry in `exports`.
+
+SmartBundle intentionally does not evaluate `.npmignore` or `.gitignore` while building. Generated paths, package manager lock files, VCS directories, `node_modules`, the output directory, and the source `package.json` are never copied. The generated output `package.json` does not retain `files`, because the output directory is already the complete publishable package.
+
+Root README, LICENSE/LICENCE, and COPYING files are copied automatically and do not need to be listed.
 
 ## Exports
 
@@ -83,6 +96,37 @@ For more information, see the [Node.js Documentation: Package Exports](https://n
 
 > [!IMPORTANT]  
 > SmartBundle supports only direct string mappings in the exports field. Conditional keys (such as "import" or "require") and glob patterns (e.g. "\*\*") are not supported.
+
+Export keys must be `.` or start with `./`. Targets must start with `./`, stay inside the package, and point to an existing file.
+
+### Raw Exports
+
+Exports ending in `.js`, `.mjs`, `.jsx`, `.ts`, or `.tsx` are code entry points and are compiled. Every other export target is copied byte-for-byte and emitted as a direct string mapping in the generated `package.json`.
+
+```json5
+{
+  exports: {
+    ".": "./src/index.ts",
+    "./skill": "./skills/SKILL.md",
+    "./schema": "./schemas/config.json",
+  },
+}
+```
+
+Raw export targets are copied automatically, even when they are not selected by `files`. Use `files` for resources that should be present in the package but do not need a public package subpath.
+
+Node's filesystem APIs do not resolve package exports themselves. Resolve the public subpath first, then read the returned URL:
+
+```js
+import { readFile } from "node:fs/promises";
+
+const skill = await readFile(
+  new URL(import.meta.resolve("my-package/skill")),
+  "utf8",
+);
+```
+
+Importing a raw file as a module, for example `import "my-package/skill"`, still fails for extensions such as `.md`. Use `import.meta.resolve()` in ESM or `require.resolve()` in CommonJS and pass the result to `fs`.
 
 ### Simple String Notation
 

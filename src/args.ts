@@ -29,18 +29,9 @@ const argsSchema = yargs()
 
 export const args = argsSchema.parseSync(hideBin(process.argv));
 
-type OmitUnknown<T> = {
-  [K in keyof T as string extends K ? never : K]: T[K];
+export type Args = {
+  sourceDir?: string;
+  packagePath?: string;
+  outputDir?: string;
+  seq?: boolean;
 };
-type ConvertUndefinedToOptional<T> = {
-  [K in keyof T as undefined extends T[K] ? K : never]?: Exclude<
-    T[K],
-    undefined
-  >;
-} & {
-  [K in keyof T as undefined extends T[K] ? never : K]: T[K];
-};
-
-export type Args = ConvertUndefinedToOptional<
-  Omit<OmitUnknown<typeof args>, "_" | "$0">
->;

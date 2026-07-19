@@ -43,6 +43,11 @@ export async function writePackageJson(
   // If you want to export something, please, specify them
   const allExports: Record<string, ExportsPackageJsonObj> = {};
   for (const [key, value] of exportsMap) {
+    if (value.raw) {
+      allExports[key] = value.raw;
+      continue;
+    }
+
     const anExport: ExportsPackageJsonObj = {};
 
     if (value.mjs) {

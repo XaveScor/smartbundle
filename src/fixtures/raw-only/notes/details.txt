@@ -1,0 +1,1 @@
+No JavaScript entrypoint is required.

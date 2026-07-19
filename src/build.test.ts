@@ -4,6 +4,12 @@ import { $ } from "zx";
 import { test } from "./test-utils.js";
 import { disableLog } from "./log.js";
 import { errors } from "./errors.js";
+import { mkdir, rm, symlink } from "node:fs/promises";
+import { basename, join } from "node:path";
+import { execFile } from "node:child_process";
+import { promisify } from "node:util";
+
+const execFileAsync = promisify(execFile);
 
 disableLog();
 
@@ -106,6 +112,42 @@ describe("build", () => {
     const res = await run({
       outputDir: tmpDir,
       sourceDir: "./src/fixtures/114-license",
+    });
+
+    expect(res.error).toBeFalsy();
+    expect(tmpDir).toMatchDirSnapshot();
+  });
+
+  test("raw assets", async ({ tmpDir }: { tmpDir: string }) => {
+    const res = await run({
+      outputDir: tmpDir,
+      sourceDir: "./src/fixtures/raw-assets",
+    });
+
+    expect(res.error).toBeFalsy();
+    expect(tmpDir).toMatchDirSnapshot();
+
+    const consumerDir = join(tmpDir, "..", `${basename(tmpDir)}-consumer`);
+    const nodeModulesDir = join(consumerDir, "node_modules");
+    await rm(consumerDir, { recursive: true, force: true });
+    await mkdir(nodeModulesDir, { recursive: true });
+    await symlink(tmpDir, join(nodeModulesDir, "raw-assets"), "dir");
+    const { stdout } = await execFileAsync(
+      process.execPath,
+      [
+        "--input-type=module",
+        "--eval",
+        'import { readFile } from "node:fs/promises"; console.log(await readFile(new URL(import.meta.resolve("raw-assets/skill")), "utf8"));',
+      ],
+      { cwd: consumerDir },
+    );
+    expect(stdout).toContain("Example skill");
+  });
+
+  test("raw-only package", async ({ tmpDir }: { tmpDir: string }) => {
+    const res = await run({
+      outputDir: tmpDir,
+      sourceDir: "./src/fixtures/raw-only",
     });
 
     expect(res.error).toBeFalsy();

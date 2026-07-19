@@ -2,7 +2,7 @@
 
 <div align="center">
   <h3>The Library Bundler That Respects Your Time</h3>
-  
+
   <p>
     <a href="#getting-started">Getting Started</a> •
     <a href="#features">Features</a> •
@@ -29,8 +29,14 @@ SmartBundle makes it easy to bundle your library for any JavaScript environment.
   private: true,
   // SmartBundle supports only ES modules
   type: "module",
+  // Copy these files to the package without preprocessing
+  files: ["skills/**", "docs/**/*.md"],
   // Entry point used by SmartBundle
-  exports: "./src/index.js",
+  exports: {
+    ".": "./src/index.js",
+    // Raw exports can be resolved by package consumers
+    "./skill": "./skills/SKILL.md",
+  },
   scripts: {
     // Run this to build your package
     build: "smartbundle",
@@ -62,6 +68,7 @@ npm run build
 - **Zero Configuration** - Point to your entry file and build
 - **Universal Output** - ESM and CommonJS bundles generated automatically
 - **TypeScript Ready** - Full TypeScript support with type definitions
+- **Raw Files** - Copy documentation, skills, schemas, and other assets without preprocessing
 - **React Support** - Automatic JSX transformations for modern and legacy modes
 - **Developer Friendly** - Source maps included for better debugging
 - **Broad Compatibility** - Works with Node.js, Webpack, Vite, Rollup, Bun, and more

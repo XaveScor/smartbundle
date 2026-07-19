@@ -3,6 +3,8 @@ import { join } from "node:path";
 import { parsePackageJson } from "./packageJson.js";
 import { errors } from "./errors.js";
 import { disableLog } from "./log.js";
+import { mkdir, mkdtemp, rm, symlink, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
 
 disableLog();
 describe("parse package.json", () => {
@@ -73,6 +75,68 @@ describe("parse package.json", () => {
       expect(packageJson).toStrictEqual(expect.any(Array));
       expect(packageJson).toContain(errors.exportsInvalid);
     });
+  });
+
+  test("preserves files patterns", async () => {
+    const sourceDir = join(import.meta.dirname, "fixtures", "raw-assets");
+    const packageJson = await parsePackageJson({
+      sourceDir,
+      packagePath: join(sourceDir, "package.json"),
+    });
+
+    expect(packageJson).not.toStrictEqual(expect.any(Array));
+    if (!Array.isArray(packageJson)) {
+      expect(packageJson.files).toEqual([
+        "docs",
+        "assets/**",
+        "!assets/private.txt",
+        ".hidden",
+      ]);
+    }
+  });
+
+  test.each(["reserved-export.json", "pattern-export.json"])(
+    "rejects invalid export map in %s",
+    async (fileName) => {
+      const sourceDir = join(import.meta.dirname, "fixtures", "raw-assets");
+      const packageJson = await parsePackageJson({
+        sourceDir,
+        packagePath: join(sourceDir, fileName),
+      });
+
+      expect(packageJson).toStrictEqual(expect.any(Array));
+      expect(packageJson).toContain(errors.exportsInvalid);
+    },
+  );
+
+  test("rejects an export through a symlink outside the package", async () => {
+    const rootDir = await mkdtemp(join(tmpdir(), "smartbundle-symlink-"));
+    const sourceDir = join(rootDir, "package");
+    const outsideDir = join(rootDir, "outside");
+    try {
+      await mkdir(sourceDir);
+      await mkdir(outsideDir);
+      await writeFile(join(outsideDir, "secret.md"), "secret");
+      await symlink(outsideDir, join(sourceDir, "linked"), "dir");
+      await writeFile(
+        join(sourceDir, "package.json"),
+        JSON.stringify({
+          name: "symlink-export",
+          version: "1.0.0",
+          private: true,
+          exports: "./linked/secret.md",
+        }),
+      );
+
+      const packageJson = await parsePackageJson({
+        sourceDir,
+        packagePath: join(sourceDir, "package.json"),
+      });
+      expect(packageJson).toStrictEqual(expect.any(Array));
+      expect(packageJson).toContain(errors.exportsInvalid);
+    } finally {
+      await rm(rootDir, { recursive: true, force: true });
+    }
   });
 
   describe("name", () => {

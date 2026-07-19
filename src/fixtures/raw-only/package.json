@@ -1,0 +1,12 @@
+{
+  "name": "raw-only",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./skill": "./SKILL.md"
+  },
+  "files": [
+    "notes"
+  ]
+}

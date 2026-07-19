@@ -4,7 +4,7 @@
 
 Ensure that all tests and fixture projects comply with SmartBundle's rules as described in the docs. In particular:
 
-- Each fixture's package.json must include `"private": true` and `"type": "module"` and **must not** include banned fields such as `files`, `main`, `module`, `browser`, or `types`.
+- Each fixture's package.json must include `"private": true` and `"type": "module"` and **must not** include generated fields such as `main`, `module`, or `types`. The standard `files` field is supported for raw files.
 - For TypeScript fixtures, ensure the tsconfig.json has `"verbatimModuleSyntax": true`.
 - SmartBundle supports `typescript@>=5.0.0 <8.0.0`; TypeScript 7 fixtures must also install `@typescript/typescript6`.
 - Generic TypeScript fixtures should use the root TypeScript 6 version. Version-specific compatibility tests must install exact versions in isolated temporary projects.

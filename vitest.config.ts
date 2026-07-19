@@ -9,7 +9,19 @@ export default defineConfig(async () => {
       test: {
         testTimeout: 20_000,
         globals: true,
-        setupFiles: ["vitest-directory-snapshot/setup"],
+        setupFiles: ["./vitest.setup.ts"],
+        coverage: {
+          provider: "v8",
+          reportsDirectory: "coverage",
+          include: ["src/**/*.ts"],
+          exclude: [
+            "src/**/*.test.ts",
+            "src/test-utils.ts",
+            "src/fixtures/**",
+            "src/__dir_snapshots__/**",
+          ],
+          reporter: ["text", "html", "lcov"],
+        },
         typecheck: {
           enabled: true,
         },

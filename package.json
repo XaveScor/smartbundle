@@ -11,6 +11,7 @@
   "scripts": {
     "build": "bun src/run.ts",
     "test": "vitest src",
+    "test:coverage": "vitest run src --coverage",
     "test:vitest-compat": "node scripts/test-vitest-compat.js",
     "test:update-snapshots": "pnpm test -- -u",
     "test:e2e": "vitest e2e",
@@ -54,6 +55,7 @@
     "@types/semver": "^7.7.1",
     "@types/yargs": "17.0.35",
     "@typescript/typescript6": "^6.0.2",
+    "@vitest/coverage-v8": "^4.1.10",
     "prettier": "^3.9.5",
     "typescript": "7.0.2",
     "vitest": "^4.1.10",

@@ -1,23 +1,12 @@
-import { args } from "./args.js";
-import { run } from "./index.js";
-import { PrettyError } from "./PrettyErrors.js";
-import { Youch } from "youch";
+import { hideBin } from "yargs/helpers";
+import { runCli } from "./cli/root.js";
+import { formatUnexpectedError } from "./cli/errors.js";
 
-const youch = new Youch();
-
-(async () => {
-  const res = await run(args);
-
-  if (!res.error) {
-    return;
-  }
-
-  for (const error of res.errors) {
-    if (!(error instanceof PrettyError)) {
-      console.error("\x1b[31m[ERROR]", error, "\x1b[0m");
-      continue;
-    }
-
-    console.error(await youch.toANSI(error));
+void (async () => {
+  try {
+    process.exitCode = await runCli(hideBin(process.argv));
+  } catch (error) {
+    console.error(formatUnexpectedError(error));
+    process.exitCode = 1;
   }
 })();

@@ -6,10 +6,10 @@
   "bin": "./src/run.ts",
   "type": "module",
   "files": [
-    "docs/**/*.md"
+    "skills/**/*.md"
   ],
   "scripts": {
-    "build": "bun src/run.ts",
+    "build": "bun src/run.ts build",
     "test": "vitest src",
     "test:coverage": "vitest run src --coverage",
     "test:vitest-compat": "node scripts/test-vitest-compat.js",

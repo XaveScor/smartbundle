@@ -1,9 +1,9 @@
-import { type Args } from "./args.js";
+import { type BuildArgs } from "./buildArgs.js";
 
 export type Task<T> = () => T | PromiseLike<T>;
 
 export async function runSettled<T>(
-  args: Args,
+  args: BuildArgs,
   tasks: Iterable<Task<T>>,
 ): Promise<PromiseSettledResult<Awaited<T>>[]> {
   if (args.seq) {

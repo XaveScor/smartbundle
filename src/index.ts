@@ -15,7 +15,7 @@ import { binsTask } from "./tasks/binsTask.js";
 import { detectModules } from "./detectModules.js";
 import { disableLog, lineLog, log, okLog } from "./log.js";
 import { runSettled, type Task } from "./pipeline.js";
-import { type Args } from "./args.js";
+import { type BuildArgs } from "./buildArgs.js";
 import { viteTask } from "./tasks/viteTask.js";
 import { promiseSettledResultErrors } from "./promiseSettledResultErrors.js";
 import { PrettyError } from "./PrettyErrors.js";
@@ -29,7 +29,7 @@ function setExports(
   exportsMap.set(exportName, mapFn(entry));
 }
 
-export async function defineViteConfig(args: Args = {}) {
+export async function defineViteConfig(args: BuildArgs = {}) {
   disableLog();
   const dirs = resolveDirs(args);
   const { sourceDir, packagePath } = dirs;
@@ -65,7 +65,7 @@ type RunResult =
       errors: Array<string | PrettyError>;
     };
 
-export async function run(args: Args): Promise<RunResult> {
+export async function run(args: BuildArgs): Promise<RunResult> {
   const dirs = resolveDirs(args);
   const { sourceDir, outDir, packagePath, outBinsDir } = dirs;
 
@@ -183,8 +183,8 @@ export async function run(args: Args): Promise<RunResult> {
   const copyResults = await runSettled(args, [
     () => copyStaticFilesTask(copyManifest),
   ]);
-  const copyErrors = promiseSettledResultErrors(copyResults).map(
-    (error) => (error instanceof Error ? error.message : String(error)),
+  const copyErrors = promiseSettledResultErrors(copyResults).map((error) =>
+    error instanceof Error ? error.message : String(error),
   );
   if (copyErrors.length > 0) {
     return { error: true, errors: copyErrors };

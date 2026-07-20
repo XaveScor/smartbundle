@@ -4,7 +4,7 @@
   <h3>The Library Bundler That Respects Your Time</h3>
 
   <p>
-    <a href="#getting-started">Getting Started</a> •
+    <a href="#installation">Installation</a> •
     <a href="#features">Features</a> •
     <a href="#compatibility">Compatibility</a> •
     <a href="#tool-integration">Tool Integration</a> •
@@ -15,9 +15,15 @@
 
 Build your library for any JavaScript environment without the complexity
 
-## Getting Started
+## Installation
 
-SmartBundle makes it easy to bundle your library for any JavaScript environment. Just create a minimal package.json (see below), install SmartBundle, and run the build command.
+Install SmartBundle as a development dependency with your project's package manager:
+
+```bash
+npm install --save-dev smartbundle
+```
+
+Add a build script and the package entrypoints and assets you intend to publish:
 
 ```json5
 {
@@ -39,29 +45,20 @@ SmartBundle makes it easy to bundle your library for any JavaScript environment.
   },
   scripts: {
     // Run this to build your package
-    build: "smartbundle",
+    build: "smartbundle build",
   },
 }
 ```
 
-Need more details? See our [package.json guide](./docs/package-json.md) for a full explanation of each field. If you plan to use TypeScript, check out our [TS guide](./docs/ts-guide.md) for tailored advice.
-
-To build your package:
-
-1. Create the package.json as shown above
-2. Install SmartBundle:
-
-```bash
-npm install --save-dev smartbundle@latest
-```
-
-3. Build your package:
+`smartbundle build` validates the package configuration and builds it into `./dist`. Run it through the package script:
 
 ```bash
 npm run build
 ```
 
-4. Your built files (including an auto-generated package.json) will be in the ./dist folder
+If the build fails, fix the configuration, dependency, or source file identified by the error and run the build again. Repeat until it succeeds. The built files, including an automatically generated `package.json`, will be in `./dist`.
+
+See the [package.json guide](./docs/package-json.md) for a full explanation of each field. TypeScript projects should also consult the [TypeScript guide](./docs/ts-guide.md).
 
 ## Features
 
